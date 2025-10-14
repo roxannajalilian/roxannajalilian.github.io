@@ -1,3 +1,14 @@
 /* h1 {
   color: blue;
   font-size : 12px;} */
+
+.name{
+
+  color: palevioletred;
+}
+
+.question{
+  color: blueviolet;
+  border: Spx;
+  border-color: blueviolet;
+}
