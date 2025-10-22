@@ -1,53 +1,62 @@
 <!DOCTYPE html>
-<html lang="en"> <!-- Added lang="en" for accessibility and SEO -->
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Frogs of the Rainforest</title>
-
-    <!-- Link to the CSS file named tstyle2.css -->
-    <link rel="stylesheet" href="tstyle2.css" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frogs of the Rainforest</title>
+  <!-- Linked external stylesheet 'tstyle2.css' for page styling -->
+  <link rel="stylesheet" href="tstyle2.css" />
 </head>
-
 <body>
-<div id="topbar">
-    <h1><span role="img" aria-label="frog">🐸</span> Frogs of the Rainforest</h1>
-    <h2>Your Name</h2> <!-- Replace with your actual name -->
-</div>
+  <div id="topbar">
+    <!-- Closed <h1> tag properly to ensure valid HTML structure -->
+    <h1>🐸 Frogs of the Rainforest</h1>
+    <!-- Closed <h2> tag properly for semantic correctness -->
+    <h2>Name</h2>
+  </div>
 
-<div class="panel">
+  <div class="panel">
+    <!-- Properly closed <h2> tag to maintain document hierarchy -->
     <h2>Meet the Frogs</h2>
-    <p>Frogs are incredible amphibians that live on every continent except Antarctica. Their
-    smooth, moist skin helps them breathe through it.</p>
-</div>
+    <p>
+      Frogs are incredible amphibians that live on every continent except Antarctica.
+      Their smooth, moist skin helps them breathe through it.
+    </p>
+  </div>
 
-<div class="panel">
+  <!-- Corrected invalid attribute 'floss' to 'class' to conform to HTML standards -->
+  <div class="panel">
     <h2>Life Cycle</h2>
-    <p>Frogs begin life as eggs in water, hatch into tadpoles, and grow legs as they transform
-      into adult frogs. This is called metamorphosis.</p>
+    <p>
+      Frogs begin life as eggs in water, hatch into tadpoles, and grow legs as they
+      transform into adult frogs. This is called metamorphosis.
+    </p>
 
     <div id="pond">
       <p>Here’s a “pond” — the parent container.</p>
 
       <div id="tadpole">
+        <!-- Corrected closing tag from </strange> to </strong> to fix invalid HTML -->
         <p>I'm positioned <strong>absolutely</strong> within my parent!</p>
       </div>
     </div>
-  </div>
+  </div> <!-- Added missing closing </div> to properly close the 'Life Cycle' section -->
 
   <div class="panel">
+    <!-- Replaced incorrect closing tag </h3> with </h2> to match the opening tag -->
     <h2>Behavior</h2>
-    <p>Many frogs are nocturnal. They use sticky tongues to catch insects and call loudly to
-      attract mates.</p>
+    <p>
+      Many frogs are nocturnal. They use sticky tongues to catch insects and call loudly to attract mates.
+    </p>
 
     <div id="fun-fact">
+      <!-- Added missing closing tags for <strong> and <p> to maintain valid markup -->
       <p><strong>Fun Fact:</strong> Some frogs can leap more than 20 times their body length!</p>
     </div>
   </div>
 
   <div id="footer">
-    <p>© 2025 Frogs of the Rainforest</p>
+    <p>2025 Frogs of the Rainforest</p>
   </div>
 </body>
 </html>
