@@ -1,57 +1,60 @@
 <!DOCTYPE html>
-<html lang="en"> <!-- Added lang="en" for accessibility and SEO -->
+<html lang="en"> <!-- Added lang="en" to specify language for screen readers and SEO -->
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"> <!-- Sets character encoding to UTF-8 for proper display of all characters -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensures responsive layout on all devices -->
     <title>Frogs of the Rainforest</title>
 
-    <link rel="stylesheet" href="frogs.css"> <!-- Fixed missing .css extension so CSS loads properly -->
+    <!-- Linking external CSS file Troubleshooting2.css for styling the HTML content -->
+    <link rel="stylesheet" href="Troubleshooting2.css"> 
 </head>
 
 <body>
 <div id="topbar">
-    <h1><span role="img" aria-label="frog">🐸</span> Frogs of the Rainforest</h1> 
-    <!-- Added closing </h1> tag to fix broken heading -->
-    <!-- Added accessible span for emoji -->
+    <!-- Main heading with an accessible emoji -->
+    <h1>
+        <span role="img" aria-label="frog">🐸</span> Frogs of the Rainforest
+    </h1> <!-- Added closing </h1> tag to ensure proper heading structure -->
+    <!-- Using <span> with role and aria-label makes the emoji readable by screen readers -->
 
-    <h2>Your Name</h2> <!-- Added student name per instructions -->
+    <h2>Your Name</h2> <!-- Added student name per instructions for identification -->
 </div>
 
 <div class="panel">
-    <h2>Meet the Frogs</h2> <!-- Fixed missing closing </h2> tag -->
+    <h2>Meet the Frogs</h2> <!-- Properly closed <h2> tag for semantic section heading -->
     <p>Frogs are incredible amphibians that live on every continent except Antarctica. Their
       smooth, moist skin helps them breathe through it.</p>
 </div>
-<div class="panel"> <!-- Fixed invalid attribute 'floss' to 'class' for CSS styling -->
+
+<div class="panel"> <!-- Changed invalid 'floss' attribute to 'class' to apply CSS styles correctly -->
     <h2>Life Cycle</h2>
     <p>Frogs begin life as eggs in water, hatch into tadpoles, and grow legs as they transform
       into adult frogs. This is called metamorphosis.</p>
 
 <div id="pond">
-    <p>Here’s a “pond” — the parent container.</p>
+        <p>Here’s a “pond” — the parent container.</p>
 
 <div id="tadpole">
-    <p>I'm positioned <strong>absolutely</strong> within my parent!</p> 
-    <!-- Fixed incorrect closing tag </strange> to </strong> -->
-</div> <!-- Added missing closing div for #tadpole -->
+        <p>I'm positioned <strong>absolutely</strong> within my parent!</p> 
+        <!-- Corrected incorrect closing tag </strange> to </strong> for proper text emphasis -->
+        </div> <!-- Closed #tadpole div to maintain valid HTML structure -->
 
-</div> <!-- Added missing closing div for #pond -->
-</div> <!-- Added missing closing div for Life Cycle panel -->
+</div> <!-- Closed #pond div -->
+</div> <!-- Closed Life Cycle panel div -->
 
 <div class="panel">
-    <h2>Behavior</h2> <!-- Fixed mismatched closing tag from </h3> to </h2> -->
-    <p>Many frogs are nocturnal. They use sticky tongues to catch insects and call loudly to
+      <h2>Behavior</h2> <!-- Fixed mismatched closing tag from </h3> to </h2> for semantic accuracy -->
+      <p>Many frogs are nocturnal. They use sticky tongues to catch insects and call loudly to
       attract mates.</p>
 
 <div id="fun-fact">
-    <p><strong>Fun Fact:</strong> Some frogs can leap more than 20 times their body length!</p>
-    <!-- Closed <strong> and <p> tags properly -->
+        <p><strong>Fun Fact:</strong> Some frogs can leap more than 20 times their body length!</p>
+        <!-- Ensured strong tag and paragraph tag are closed properly for correct formatting -->
 </div>
 </div>
 
 <div id="footer">
-    <p> 2025 Frogs of the Rainforest</p>
-</div>
+
 </body>
 </html>
