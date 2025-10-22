@@ -2,56 +2,52 @@
 <html lang="en"> <!-- Added lang="en" for accessibility and SEO -->
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Frogs of the Rainforest</title>
 
-    <link rel="stylesheet" href="frogs.css"> <!-- Fixed missing .css extension so CSS loads properly --> </head>
+    <!-- Link to the CSS file named tstyle2.css -->
+    <link rel="stylesheet" href="tstyle2.css" />
+</head>
 
 <body>
 <div id="topbar">
-    <h1><span role="img" aria-label="frog">🐸</span> Frogs of the Rainforest</h1> 
-    <!-- Added closing </h1> tag to fix broken heading -->
-    <!-- Added accessible span for emoji -->
-   
-    <h2>Your Name</h2> <!-- Added student name per instructions -->
+    <h1><span role="img" aria-label="frog">🐸</span> Frogs of the Rainforest</h1>
+    <h2>Your Name</h2> <!-- Replace with your actual name -->
 </div>
 
 <div class="panel">
-    <h2>Meet the Frogs</h2> <!-- Fixed missing closing </h2> tag -->
+    <h2>Meet the Frogs</h2>
     <p>Frogs are incredible amphibians that live on every continent except Antarctica. Their
     smooth, moist skin helps them breathe through it.</p>
 </div>
 
-<div class="panel"> <!-- Fixed invalid attribute 'floss' to 'class' for CSS styling -->
+<div class="panel">
     <h2>Life Cycle</h2>
     <p>Frogs begin life as eggs in water, hatch into tadpoles, and grow legs as they transform
-    into adult frogs. This is called metamorphosis.</p>
+      into adult frogs. This is called metamorphosis.</p>
 
-<div id="pond">
+    <div id="pond">
       <p>Here’s a “pond” — the parent container.</p>
-<div id="tadpole">
-    <p>I'm positioned <strong>absolutely</strong> within my parent!</p> 
-    <!-- Fixed incorrect closing tag </strange> to </strong> -->
-</div> <!-- Added missing closing div for #tadpole -->
 
-</div> <!-- Added missing closing div for #pond -->
-</div> <!-- Added missing closing div for Life Cycle panel -->
+      <div id="tadpole">
+        <p>I'm positioned <strong>absolutely</strong> within my parent!</p>
+      </div>
+    </div>
+  </div>
 
-<div class="panel">
-    <h2>Behavior</h2> <!-- Fixed mismatched closing tag from </h3> to </h2> -->
+  <div class="panel">
+    <h2>Behavior</h2>
     <p>Many frogs are nocturnal. They use sticky tongues to catch insects and call loudly to
       attract mates.</p>
-  
-<div id="fun-fact">
-    <p><strong>Fun Fact:</strong> Some frogs can leap more than 20 times their body length!</p>
-    <!-- Closed <strong> and <p> tags properly -->
-</div>
-</div>
 
-<div id="footer">
+    <div id="fun-fact">
+      <p><strong>Fun Fact:</strong> Some frogs can leap more than 20 times their body length!</p>
+    </div>
+  </div>
+
+  <div id="footer">
     <p>© 2025 Frogs of the Rainforest</p>
-</div>
+  </div>
 </body>
-
 </html>
