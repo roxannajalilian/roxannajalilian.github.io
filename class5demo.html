@@ -1,56 +1,130 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CSS Lesson 5</title>
-<style>
-#header{
-position: sticky;
-top: o%;
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+        height: 30px;
+        text-align: center;
+        margin: auto;
+        padding: 30px;
+        border-radius: 35px;
+       }
+
+
+#header p, h2{ display: inline;}
+#parent
+{
+margin: 5% auto;
 width: 80%;
-height: 30px; 
-  background-color: #7b9e89;
-  z-index: 1;
-}
-#header p, h2{
-    display: inline;
+height: 550px;
+background-color: #fc9e4f;
+color: #020122;
+border-radius: 70px;
 }
 
+#parent p, h3{
+padding: 3%;
+font-size: 1.25rem;
+} 
 
-#parent{
-    position: relative;
-    width: 80%;
-    height: 550px;
-    margin: auto;
-    background-color: #fc9e4f
+#child 
+{ 
+width: 75%;
+height: 350px;
+background-color: #f4442e;
+color: #020122; }
+#child p, h3{
+padding: 3%;
+font-size: 1.25rem;
 }
-#child{
-    position: absolute;
-    width: 75%
-    height: 350px;
-    background-color: #f4442e
-    right: 7%;
+
+#fixed
+{
+width: 30%;
+height: auto;
+border-radius: 55px;
+background-color: #fc9e4f;
+color: #020122;
 }
-  
-</style>
-</head>
-<body>
-<h1>CSS: Sizing, Positioning & Selectors</h1>
 
-  <div id="header">
-<h2>I'm Sticky</h2>
-<p><i>Text colour: #020122 </i></p>
-<p><i>Background colour: #7b9e89</i></p></div>
- 
-  <div id="parent">
-<h3>3 things you learned </h3>
-<p>response</p> <p>response </p> <p>response </p>
+#fixed p{
+display: inline;
+padding: 5%; 
+}
 
-    <div id="child">
-<h3>2 things you would like to know more about</h3>
-<p>response </p> <p>response</p>
+#relative
+{
+width: 60%;
+height: 350px;
+background-color: #edd382;
+color: #020122;
+}
 
-    </div></div>
-  <body>
+#relative p, 
+h3{
+padding: 3%;
+font-size: 1.25rem;
+}
+
+</body>
 </html>
