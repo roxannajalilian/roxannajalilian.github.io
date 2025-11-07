@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Score Tracker</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #ff66cc;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      margin-top: 20px;
+      cursor: pointer;
+      background-color: #00ffff;
+      border: none;
+      border-radius: 5px;
+      color: #121212;
+    }
+    p {
+      font-size: 1.2em;
+    }
+</style>
+</head>
+<body>
+  <h1> Game Score Tracker</h1>
+  <p>Click the button below to enter your scores!</p>
+  <button onclick="trackScores()">Start Game</button>
+
+  <div id="results"></div>
+
+  <script>
+    function trackScores() {
+      // 1. Get player info and convert inputs to numbers
+      let playerName = prompt("Enter your player name:");
+      let score1 = Number(prompt("Enter your first game score:"));
+      let score2 = Number(prompt("Enter your second game score:"));
+      let bonus = Number(prompt("Enter your bonus points:"));
+
+      // 2. Calculate total score
+      let totalScore = score1 + score2 + bonus;
+
+      // 3. Math operations
+      let sum = score1 + score2;
+      let difference = score1 - score2;
+      let product = score1 * score2;
+      let quotient = score1 / score2;
+
+      // 4. Display results in the page
+      document.getElementById("results").innerHTML = `
+        <h2>Player: ${playerName}</h2>
+        <p>Total Score (with bonus): ${totalScore}</p>
+        <p>Sum of first two scores: ${sum}</p>
+        <p>Difference between first two scores: ${difference}</p>
+        <p>Product of first two scores: ${product}</p>
+        <p>Quotient of first two scores: ${quotient.toFixed(2)}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
