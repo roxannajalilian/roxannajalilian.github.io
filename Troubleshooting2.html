@@ -4,19 +4,29 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Frogs of the Rainforest</title>
-  <!-- Linked external stylesheet 'tstyle2.css' for page styling -->
-  <link rel="stylesheet" href="tstyle2.css" />
+  <!-- Linked external stylesheet 'tstyle2.css' for page styling.
+       This link connects the HTML to an external CSS file that defines
+       how the elements on the page should look — including colors, layout, and fonts.
+       Keeping styles in a separate file improves organization and makes maintenance easier. -->
+<link rel="stylesheet" href="tstyle2.css" />
 </head>
 <body>
-  <div id="topbar">
-      <!-- Closed <h1> tag properly to ensure valid HTML structure -->
+<div id="topbar">
+      <!-- Closed <h1> tag properly to ensure valid HTML structure.
+           The <h1> tag defines the main heading of the page, which is important for both accessibility and SEO.
+           Leaving it unclosed could break the document structure and cause rendering issues in browsers. -->
       <h1>🐸 Frogs of the Rainforest</h1>
-      <!-- Closed <h2> tag properly for semantic correctness -->
+
+      <!-- Closed <h2> tag properly for semantic correctness.
+           The <h2> heading helps organize content hierarchically under the main title.
+           Proper heading structure improves screen reader navigation and search engine readability. -->
       <h2>Name</h2>
 </div>
 
 <div class="panel">
-     <!-- Properly closed <h2> tag to maintain document hierarchy -->
+     <!-- Properly closed <h2> tag to maintain document hierarchy.
+          Consistent heading levels create logical content flow and make the webpage easier to navigate.
+          This also ensures that assistive technologies can correctly interpret the content structure. -->
      <h2>Meet the Frogs</h2>
      <p>
      Frogs are incredible amphibians that live on every continent except Antarctica.
@@ -24,7 +34,9 @@
      </p>
 </div>
 
-     <!-- Corrected invalid attribute 'floss' to 'class' to conform to HTML standards -->
+     <!-- Corrected invalid attribute 'floss' to 'class' to conform to HTML standards.
+          Using the correct 'class' attribute allows CSS to target and style this section effectively.
+          Invalid attributes are ignored by browsers and can break the intended layout or design. -->
 <div class="panel">
      <h2>Life Cycle</h2>
      <p>
@@ -36,25 +48,33 @@
      <p>Here’s a “pond” — the parent container.</p>
 
 <div id="tadpole">
-        <!-- Corrected closing tag from </strange> to </strong> to fix invalid HTML -->
+        <!-- Corrected closing tag from </strange> to </strong> to fix invalid HTML.
+             The <strong> tag is used to emphasize important words or phrases, typically displaying them in bold.
+             Incorrect closing tags can break the page structure or cause unexpected text formatting issues. -->
       <p>I'm positioned <strong>absolutely</strong> within my parent!</p>
       </div>
       </div>
-      </div> <!-- Added missing closing </div> to properly close the 'Life Cycle' section -->
+      </div> <!-- Added missing closing </div> to properly close the 'Life Cycle' section.
+                  Without this tag, the structure of nested elements would be broken,
+                  which could lead to layout errors or unexpected behavior in styling. -->
 <div class="panel">
-      <!-- Replaced incorrect closing tag </h3> with </h2> to match the opening tag -->
+      <!-- Replaced incorrect closing tag </h3> with </h2> to match the opening tag.
+           Matching tags ensure that HTML remains valid and predictable.
+           Using inconsistent heading levels or incorrect closures can confuse both browsers and users. -->
       <h2>Behavior</h2>
       <p>
       Many frogs are nocturnal. They use sticky tongues to catch insects and call loudly to attract mates.
       </p>
 
 <div id="fun-fact">
-     <!-- Added missing closing tags for <strong> and <p> to maintain valid markup -->
+     <!-- Added missing closing tags for <strong> and <p> to maintain valid markup.
+          Every opened tag in HTML should be properly closed to keep the structure clean.
+          Missing tags can cause display errors, broken layouts, or issues with accessibility tools. -->
      <p><strong>Fun Fact:</strong> Some frogs can leap more than 20 times their body length!</p>
 </div>
 </div>
 
-  <div id="footer">
+<div id="footer">
       <p>2025 Frogs of the Rainforest</p>
 </div>
       </body>
