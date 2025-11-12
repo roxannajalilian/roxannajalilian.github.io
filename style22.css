@@ -1,131 +1,111 @@
-/* General Styles */
+/* GENERAL STYLING */
+/* The body font, background color, and text color are set here. 
+   We chose a warm brown background with cream text for a cozy vibe.
+   All pages using this CSS will inherit this aesthetic. */
 body {
     margin: 0;
-    font-family: 'Quicksand', sans-serif;
-    background-color: #fff0f5; /* soft pastel pink */
-    color: #333;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5efe6; /* light brown/cream */
+    color: #3e2f2f; /* dark brown text */
 }
 
-/* Sticky Header */
-header {
+/* NAVIGATION BAR */
+/* We create a sticky navigation bar that stays at the top when scrolling.
+   Each link changes background color on hover for interactivity.
+   The navbar layout uses flex for even spacing of links. */
+nav {
     position: sticky;
     top: 0;
-    background-color: #ffe4e1; /* light pink */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 50px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    z-index: 100;
-}
-
-header .logo {
-    font-family: 'Pacifico', cursive;
-    font-size: 28px;
-    color: #ff69b4;
-}
-
-header nav ul {
-    list-style: none;
-    display: flex;
-    gap: 25px;
-}
-
-header nav ul li a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 600;
-    padding: 6px 12px;
-    border-radius: 8px;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-header nav ul li a:hover {
-    background-color: #ff69b4;
-    color: white;
-}
-
-/* Hero Section */
-.hero {
-    text-align: center;
-    padding: 100px 20px;
-    background-color: #fff5ee; /* light peach */
-    border-radius: 20px;
-    margin: 20px;
-}
-
-.hero h1 {
-    font-family: 'Pacifico', cursive;
-    font-size: 50px;
-    color: #ff69b4;
-}
-
-.hero p {
-    font-size: 22px;
-    margin: 20px 0;
-}
-
-.btn {
-    display: inline-block;
-    padding: 12px 25px;
-    background-color: #ff69b4;
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-    border-radius: 12px;
-    transition: background-color 0.3s;
-}
-
-.btn:hover {
-    background-color: #ff85c1;
-}
-
-/* About Section */
-.about {
-    text-align: center;
-    margin: 50px 20px;
-    padding: 40px;
-    background-color: #ffe4e1;
-    border-radius: 20px;
-}
-
-/* Features Section */
-.features {
+    background-color: #8b5e3c; /* cozy brown */
     display: flex;
     justify-content: space-around;
-    flex-wrap: wrap;
-    margin: 50px 20px;
+    align-items: center;
+    padding: 15px 0;
+    z-index: 1000;
 }
 
-.feature {
-    background-color: #fff0f5;
-    padding: 30px;
-    border-radius: 20px;
-    margin: 20px;
-    flex: 1 1 250px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+nav a {
+    text-decoration: none;
+    color: #f5efe6;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    background-color: #a1745e; /* slightly lighter brown on hover */
+}
+
+/* HERO IMAGE */
+/* This section styles the top hero image of the homepage.
+   It stretches the image full width and maintains aspect ratio.
+   A subtle border-radius is added for soft edges. */
+.hero {
+    width: 100%;
+    height: 400px;
+    background-image: url('images/coffee-hero.jpg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+}
+
+/* HEADINGS */
+/* Define heading sizes and spacing for hierarchy.
+   h1 is the largest for main titles, h2 for sub-sections.
+   Margins added for visual separation of content. */
+h1 {
     text-align: center;
+    margin-top: 20px;
+    font-size: 3em;
 }
 
-.feature h3 {
-    font-family: 'Pacifico', cursive;
-    color: #ff69b4;
-}
-
-/* Contact Section */
-.contact {
-    text-align: center;
-    padding: 50px 20px;
-    background-color: #fff5ee;
-    border-radius: 20px;
-    margin: 20px;
-}
-
-/* Footer */
-footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #ffe4e1;
+h2 {
+    font-size: 2em;
     margin-top: 30px;
 }
 
+/* BUTTONS */
+/* Buttons have a soft brown background, rounded edges, and a hover effect.
+   Hover slightly brightens the button to indicate interactivity.
+   Consistent padding and margin make them uniform. */
+button {
+    background-color: #a1745e;
+    color: #f5efe6;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #bc8c6f;
+}
+
+/* IMAGES */
+/* Menu item images are styled with width, height, and border radius.
+   Hover effect slightly scales the image for visual interaction.
+   Margin separates images from text. */
+.menu-item img {
+    width: 200px;
+    height: 150px;
+    border-radius: 10px;
+    margin-right: 20px;
+    transition: 0.3s;
+}
+
+.menu-item img:hover {
+    transform: scale(1.05);
+}
+
+/* MENU ITEM CONTAINER */
+/* Flexbox used to align images next to text neatly.
+   Padding ensures spacing between items.
+   Consistent layout across all menu items. */
+.menu-item {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
