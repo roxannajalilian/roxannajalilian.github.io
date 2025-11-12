@@ -1,111 +1,104 @@
-/* GENERAL STYLING */
-/* The body font, background color, and text color are set here. 
-   We chose a warm brown background with cream text for a cozy vibe.
-   All pages using this CSS will inherit this aesthetic. */
+
+/* GENERAL BODY STYLING */
+/* Set cozy warm brown background and cream text for a soft vibe.
+   Added comfortable padding and font-family for readability.
+   All pages using this CSS inherit this cozy aesthetic. */
 body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
-    background-color: #f5efe6; /* light brown/cream */
-    color: #3e2f2f; /* dark brown text */
+    background-color: #f2e6dc; /* soft warm cream */
+    color: #4b3621; /* dark brown text */
 }
 
 /* NAVIGATION BAR */
-/* We create a sticky navigation bar that stays at the top when scrolling.
-   Each link changes background color on hover for interactivity.
-   The navbar layout uses flex for even spacing of links. */
+/* Sticky nav bar stays at top while scrolling.
+   Soft brown background, cream links, and hover effect.
+   Flex layout for evenly spaced links. */
 nav {
     position: sticky;
     top: 0;
-    background-color: #8b5e3c; /* cozy brown */
+    background-color: #8b5e3c;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    justify-content: center;
     padding: 15px 0;
     z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* subtle shadow */
 }
 
 nav a {
     text-decoration: none;
-    color: #f5efe6;
+    color: #f2e6dc;
     font-weight: bold;
-    padding: 8px 15px;
-    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 10px;
     transition: 0.3s;
 }
 
 nav a:hover {
-    background-color: #a1745e; /* slightly lighter brown on hover */
+    background-color: #a1745e;
 }
 
-/* HERO IMAGE */
-/* This section styles the top hero image of the homepage.
-   It stretches the image full width and maintains aspect ratio.
-   A subtle border-radius is added for soft edges. */
+/* HERO SECTION */
+/* Full-width hero image with soft rounded corners.
+   Shadow and margin added for a cozy look.
+   Gives welcoming cafe vibe. */
 .hero {
-    width: 100%;
+    width: 90%;
+    max-width: 1000px;
     height: 400px;
+    margin: 20px auto;
     background-image: url('images/coffee-hero.jpg');
     background-size: cover;
     background-position: center;
-    border-radius: 10px;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
 /* HEADINGS */
-/* Define heading sizes and spacing for hierarchy.
-   h1 is the largest for main titles, h2 for sub-sections.
-   Margins added for visual separation of content. */
+/* h1 for main title, h2 for sub-sections.
+   Soft margins for spacing, centered for cozy feel. */
 h1 {
     text-align: center;
-    margin-top: 20px;
     font-size: 3em;
+    margin-top: 30px;
 }
 
 h2 {
     font-size: 2em;
-    margin-top: 30px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* MAIN CONTENT BOX */
+/* Light brown background box with rounded corners and padding.
+   Soft shadow gives it depth and cozy feel.
+   Max-width for readable lines, centered on page. */
+.content-box {
+    background-color: #d9c1a3;
+    margin: 30px auto;
+    padding: 25px;
+    max-width: 700px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 /* BUTTONS */
-/* Buttons have a soft brown background, rounded edges, and a hover effect.
-   Hover slightly brightens the button to indicate interactivity.
-   Consistent padding and margin make them uniform. */
+/* Rounded brown buttons with hover effect.
+   Hover slightly brightens color for interactivity.
+   Padding for comfy clickable area. */
 button {
     background-color: #a1745e;
-    color: #f5efe6;
+    color: #f2e6dc;
     border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    margin: 10px 0;
+    border-radius: 12px;
+    padding: 12px 25px;
+    margin: 15px 0;
     cursor: pointer;
     transition: 0.3s;
+    font-size: 1em;
 }
 
 button:hover {
     background-color: #bc8c6f;
-}
-
-/* IMAGES */
-/* Menu item images are styled with width, height, and border radius.
-   Hover effect slightly scales the image for visual interaction.
-   Margin separates images from text. */
-.menu-item img {
-    width: 200px;
-    height: 150px;
-    border-radius: 10px;
-    margin-right: 20px;
-    transition: 0.3s;
-}
-
-.menu-item img:hover {
-    transform: scale(1.05);
-}
-
-/* MENU ITEM CONTAINER */
-/* Flexbox used to align images next to text neatly.
-   Padding ensures spacing between items.
-   Consistent layout across all menu items. */
-.menu-item {
-    display: flex;
-    align-items: center;
-    margin: 20px 0;
 }
