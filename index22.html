@@ -3,63 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cozy Café</title>
-    <!-- Link to the CSS file -->
+    <title>Cozy Café Aurora</title>
+    <!-- Linking Google Fonts for cozy and readable fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- Linking CSS file -->
     <link rel="stylesheet" href="style22.css">
-    <!-- Google Font for cute cozy vibe -->
-    <link href="https://fonts.googleapis.com/css2?family=Cookie&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation bar that stays at the top using sticky positioning -->
+    <!-- ===============================
+         Navigation Bar
+         ===============================
+         Sticky navbar stays on top as user scrolls.
+         Flexbox ensures logo and links are spaced evenly.
+         Brown tones keep the cozy theme consistent. -->
     <nav class="navbar">
-        <!-- This nav bar uses flexbox to space out the links. Sticky keeps it on top as you scroll. -->
-        <a href="index22.html" class="nav-logo">Cozy Café</a>
-        <div class="nav-links">
-            <a href="index22.html">Home</a>
-            <a href="menu.html">Menu</a>
-            <a href="contact.html">Contact</a>
-        </div>
+        <div class="logo">Cozy Café Aurora</div>
+        <ul class="nav-links">
+            <li><a href="index22.html">Home</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
     </nav>
 
-    <!-- Hero section with cozy background color and image -->
-    <header class="hero">
-        <!-- Hero section sets the mood of the site with a warm cozy image and welcoming text. -->
-        <h1>Welcome to Cozy Café!</h1>
-        <p>Your warm cup of happiness awaits ☕</p>
-        <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8Y29mZmVlfHx8fHx8MTY5OTMwOTAxOA&ixlib=rb-4.0.3&q=80&w=400" alt="Cozy café coffee" class="hero-img">
-    </header>
+    <!-- ===============================
+         Hero Section
+         ===============================
+         Introduces visitors to the café with welcoming text and a cozy image.
+         Image has rounded corners and shadow to appear inviting.
+         Light brown background matches the overall cozy aesthetic. -->
+    <section class="hero">
+        <h1>Welcome to Cozy Café Aurora</h1>
+        <p>Your local spot for the best coffee and baked treats in Aurora!</p>
+        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80" alt="Coffee and pastries">
+    </section>
 
-    <!-- About section -->
-    <section class="about">
-        <!-- About section explains the purpose of the café in a cozy tone. -->
+    <!-- ===============================
+         About Section
+         ===============================
+         Explains the café's story and mission.
+         Uses centered text for readability and cozy feel.
+         Consistent fonts and colors reinforce the warm brown theme. -->
+    <section class="about" id="about">
         <h2>About Us</h2>
-        <p>We’re a small local café bringing warmth and comfort to your day. Our coffee, pastries, and cozy vibes will make you feel right at home.</p>
+        <p>Cozy Café Aurora is a family-run small business serving freshly brewed coffee and homemade pastries since 2015. We believe in creating a warm, welcoming space for our community to relax, study, or catch up with friends. Our beans are sourced locally and baked goods are made fresh daily to ensure the highest quality and flavor.</p>
     </section>
 
-    <!-- Menu preview section -->
-    <section class="menu-preview">
-        <!-- Menu preview highlights popular items with prices. -->
-        <h2>Our Favorites</h2>
-        <div class="menu-items">
-            <div class="item">
-                <h3>Latte</h3>
-                <p>Steamed milk with rich espresso. $4.50</p>
-            </div>
-            <div class="item">
-                <h3>Cappuccino</h3>
-                <p>Foamy perfection topped with cocoa. $4.00</p>
-            </div>
-            <div class="item">
-                <h3>Chocolate Croissant</h3>
-                <p>Flaky, buttery, and chocolate-filled. $3.25</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <!-- Footer gives contact info and a warm closing statement. -->
-        <p>Cozy Café © 2025 | 123 Warm St, YourTown</p>
+    <!-- ===============================
+         Footer Section
+         ===============================
+         Darker brown background separates footer from content.
+         Cream text maintains readability and cozy aesthetic.
+         Footer includes basic contact info and copyright notice. -->
+    <footer id="contact">
+        <p>123 Main Street, Aurora, ON | (555) 123-4567 | info@cozycafeaurora.ca</p>
+        <p>&copy; 2025 Cozy Café Aurora</p>
     </footer>
 </body>
 </html>
