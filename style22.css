@@ -1,104 +1,70 @@
-/* Reset default margin and padding */
-* {
+/* ===============================
+   General Body Styling
+   ===============================
+   Sets the overall background color and font for a warm, cozy feel.
+   All text uses Lato for readability and Playfair Display for headings to appear welcoming.
+   Adds spacing around the page to prevent content from sticking to edges. */
+body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-/* Body styling for cozy brown aesthetic */
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f5f0e6; /* warm beige background */
-    color: #4b2e2e; /* dark brown text for readability */
+    font-family: 'Lato', sans-serif;
+    background-color: #f5f0e6; /* light beige for cozy background */
+    color: #4b3b2a; /* dark brown text for readability and cozy vibe */
     line-height: 1.6;
 }
 
-/* Navigation bar styling */
+/* ===============================
+   Navbar Styling
+   ===============================
+   Sticky navbar stays visible at the top when scrolling for easy navigation.
+   Flexbox aligns logo on left and links on right for clean layout.
+   Darker brown background with cream links reinforces the cozy aesthetic. */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 50px;
-    background-color: #d9b08c; /* soft brown */
     position: sticky;
     top: 0;
+    background-color: #8b5e3c; /* warm brown for navbar */
+    padding: 15px 30px;
     z-index: 1000;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-.navbar a {
-    text-decoration: none;
-    color: #4b2e2e;
-    margin-left: 20px;
+.navbar .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
     font-weight: bold;
+    color: #fff8f0;
 }
 
-.navbar a:hover {
-    color: #8b5e3c; /* slightly lighter brown on hover */
+.navbar .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
 }
 
-/* Hero section */
+.navbar .nav-links li a {
+    text-decoration: none;
+    color: #fff8f0;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.navbar .nav-links li a:hover {
+    color: #d4b483; /* light brown hover effect for cozy look */
+}
+
+/* ===============================
+   Hero Section Styling
+   ===============================
+   Provides a welcoming image and introduction text for the café.
+   Centers text and image to draw attention and create a cozy first impression.
+   Rounded image corners and shadow add a soft, inviting aesthetic. */
 .hero {
     text-align: center;
     padding: 50px 20px;
-    background-color: #e8d3b9; /* lighter cozy brown */
+    background-color: #f5f0e6; 
 }
 
 .hero h1 {
-    font-family: 'Cookie', cursive;
-    font-size: 3em;
-    margin-bottom: 10px;
-}
-
-.hero p {
-    font-size: 1.5em;
-    margin-bottom: 20px;
-}
-
-.hero-img {
-    width: 300px;
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-
-/* About section */
-.about {
-    text-align: center;
-    padding: 40px 20px;
-    background-color: #f5f0e6;
-}
-
-/* Menu preview section */
-.menu-preview {
-    text-align: center;
-    padding: 40px 20px;
-    background-color: #f2e4d8;
-}
-
-.menu-items {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    flex-wrap: wrap;
-    margin-top: 20px;
-}
-
-.item {
-    background-color: #d9b08c;
-    padding: 20px;
-    border-radius: 15px;
-    width: 200px;
-    transition: transform 0.3s;
-}
-
-.item:hover {
-    transform: translateY(-5px);
-}
-
-/* Footer styling */
-footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #d9b08c;
-    color: #4b2e2e;
-}
+    font-family: 'Pl
