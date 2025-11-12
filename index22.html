@@ -3,42 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cozy Cafe</title>
-    <!-- Google Fonts for clean and cozy feel -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Cozy Café</title>
+    <!-- Link to the CSS file -->
     <link rel="stylesheet" href="style22.css">
+    <!-- Google Font for cute cozy vibe -->
+    <link href="https://fonts.googleapis.com/css2?family=Cookie&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- NAVIGATION BAR -->
-    <!-- Sticky navbar allows easy navigation between pages. 
-         Soft brown with cream links matches cozy aesthetic.
-         Hover effect highlights link for interactivity. -->
-    <nav>
-        <a href="index22.html">Home</a>
-        <a href="menu.html">Menu</a>
+    <!-- Navigation bar that stays at the top using sticky positioning -->
+    <nav class="navbar">
+        <!-- This nav bar uses flexbox to space out the links. Sticky keeps it on top as you scroll. -->
+        <a href="index22.html" class="nav-logo">Cozy Café</a>
+        <div class="nav-links">
+            <a href="index22.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="contact.html">Contact</a>
+        </div>
     </nav>
 
-    <!-- HERO IMAGE -->
-    <!-- Cozy, inviting hero image welcomes visitors. 
-         Rounded corners and shadow add warmth and depth. 
-         Gives a “comfortable cafe” vibe at first glance. -->
-    <div class="hero"></div>
+    <!-- Hero section with cozy background color and image -->
+    <header class="hero">
+        <!-- Hero section sets the mood of the site with a warm cozy image and welcoming text. -->
+        <h1>Welcome to Cozy Café!</h1>
+        <p>Your warm cup of happiness awaits ☕</p>
+        <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8Y29mZmVlfHx8fHx8MTY5OTMwOTAxOA&ixlib=rb-4.0.3&q=80&w=400" alt="Cozy café coffee" class="hero-img">
+    </header>
 
-    <!-- MAIN CONTENT -->
-    <div class="content-box">
-        <h1>Welcome to Cozy Cafe</h1>
-        <p>
-            Step inside our warm and inviting cafe, where every cup of coffee is brewed with love.
-            Relax in a cozy corner with our soft lighting and comfy seating. 
-            Enjoy fresh pastries and specialty drinks in a friendly, welcoming atmosphere.
-        </p>
-        <!-- BUTTON TO MENU -->
-        <!-- Directs users to view menu. 
-             Rounded, soft button matches cozy design. 
-             Hover effect makes it interactive and fun. -->
-        <div style="text-align:center;">
-            <button onclick="location.href='menu.html'">Check Out Our Menu</button>
+    <!-- About section -->
+    <section class="about">
+        <!-- About section explains the purpose of the café in a cozy tone. -->
+        <h2>About Us</h2>
+        <p>We’re a small local café bringing warmth and comfort to your day. Our coffee, pastries, and cozy vibes will make you feel right at home.</p>
+    </section>
+
+    <!-- Menu preview section -->
+    <section class="menu-preview">
+        <!-- Menu preview highlights popular items with prices. -->
+        <h2>Our Favorites</h2>
+        <div class="menu-items">
+            <div class="item">
+                <h3>Latte</h3>
+                <p>Steamed milk with rich espresso. $4.50</p>
+            </div>
+            <div class="item">
+                <h3>Cappuccino</h3>
+                <p>Foamy perfection topped with cocoa. $4.00</p>
+            </div>
+            <div class="item">
+                <h3>Chocolate Croissant</h3>
+                <p>Flaky, buttery, and chocolate-filled. $3.25</p>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <!-- Footer gives contact info and a warm closing statement. -->
+        <p>Cozy Café © 2025 | 123 Warm St, YourTown</p>
+    </footer>
 </body>
 </html>
