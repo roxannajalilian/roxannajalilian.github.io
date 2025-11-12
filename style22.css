@@ -1,104 +1,104 @@
-
-/* GENERAL BODY STYLING */
-/* Set cozy warm brown background and cream text for a soft vibe.
-   Added comfortable padding and font-family for readability.
-   All pages using this CSS inherit this cozy aesthetic. */
-body {
+/* Reset default margin and padding */
+* {
     margin: 0;
-    font-family: 'Roboto', sans-serif;
-    background-color: #f2e6dc; /* soft warm cream */
-    color: #4b3621; /* dark brown text */
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* NAVIGATION BAR */
-/* Sticky nav bar stays at top while scrolling.
-   Soft brown background, cream links, and hover effect.
-   Flex layout for evenly spaced links. */
-nav {
+/* Body styling for cozy brown aesthetic */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f0e6; /* warm beige background */
+    color: #4b2e2e; /* dark brown text for readability */
+    line-height: 1.6;
+}
+
+/* Navigation bar styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    background-color: #d9b08c; /* soft brown */
     position: sticky;
     top: 0;
-    background-color: #8b5e3c;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #4b2e2e;
+    margin-left: 20px;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    color: #8b5e3c; /* slightly lighter brown on hover */
+}
+
+/* Hero section */
+.hero {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #e8d3b9; /* lighter cozy brown */
+}
+
+.hero h1 {
+    font-family: 'Cookie', cursive;
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.hero-img {
+    width: 300px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+/* About section */
+.about {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #f5f0e6;
+}
+
+/* Menu preview section */
+.menu-preview {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #f2e4d8;
+}
+
+.menu-items {
     display: flex;
     justify-content: center;
-    padding: 15px 0;
-    z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* subtle shadow */
-}
-
-nav a {
-    text-decoration: none;
-    color: #f2e6dc;
-    font-weight: bold;
-    padding: 10px 20px;
-    margin: 0 10px;
-    border-radius: 10px;
-    transition: 0.3s;
-}
-
-nav a:hover {
-    background-color: #a1745e;
-}
-
-/* HERO SECTION */
-/* Full-width hero image with soft rounded corners.
-   Shadow and margin added for a cozy look.
-   Gives welcoming cafe vibe. */
-.hero {
-    width: 90%;
-    max-width: 1000px;
-    height: 400px;
-    margin: 20px auto;
-    background-image: url('images/coffee-hero.jpg');
-    background-size: cover;
-    background-position: center;
-    border-radius: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-
-/* HEADINGS */
-/* h1 for main title, h2 for sub-sections.
-   Soft margins for spacing, centered for cozy feel. */
-h1 {
-    text-align: center;
-    font-size: 3em;
-    margin-top: 30px;
-}
-
-h2 {
-    font-size: 2em;
+    gap: 30px;
+    flex-wrap: wrap;
     margin-top: 20px;
+}
+
+.item {
+    background-color: #d9b08c;
+    padding: 20px;
+    border-radius: 15px;
+    width: 200px;
+    transition: transform 0.3s;
+}
+
+.item:hover {
+    transform: translateY(-5px);
+}
+
+/* Footer styling */
+footer {
     text-align: center;
-}
-
-/* MAIN CONTENT BOX */
-/* Light brown background box with rounded corners and padding.
-   Soft shadow gives it depth and cozy feel.
-   Max-width for readable lines, centered on page. */
-.content-box {
-    background-color: #d9c1a3;
-    margin: 30px auto;
-    padding: 25px;
-    max-width: 700px;
-    border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-
-/* BUTTONS */
-/* Rounded brown buttons with hover effect.
-   Hover slightly brightens color for interactivity.
-   Padding for comfy clickable area. */
-button {
-    background-color: #a1745e;
-    color: #f2e6dc;
-    border: none;
-    border-radius: 12px;
-    padding: 12px 25px;
-    margin: 15px 0;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 1em;
-}
-
-button:hover {
-    background-color: #bc8c6f;
+    padding: 20px;
+    background-color: #d9b08c;
+    color: #4b2e2e;
 }
