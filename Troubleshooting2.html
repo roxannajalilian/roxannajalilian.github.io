@@ -5,69 +5,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Frogs of the Rainforest</title>
   <!-- Link to external CSS file for styling the page.
-       Separating CSS from HTML keeps the code organized, makes it easier to maintain, 
-       and allows the reuse of styles across pages. -->
-  <link rel="stylesheet" href="Troubleshooting.css" />
+       Separating CSS from HTML keeps the code organized, makes it easier to maintain, and allows the reuse of styles across pages. -->
+  <link rel="stylesheet" href="troubleshooting.css" />
 </head>
 <body>
-<div id="topbar">
-      <!-- Main heading of the page. Closed properly to ensure valid HTML.
-           Using <h1> is crucial for both SEO and accessibility, as screen readers rely on proper headings. -->
-      <h1>🐸 Frogs of the Rainforest</h1>
+  <div class="topbar">
+    <!-- Main heading of the page. Closed properly to ensure valid HTML.
+         Using <h1> is crucial for both SEO and accessibility, as screen readers rely on proper headings. -->
+    <h1>🐸 Frogs of the Rainforest</h1>
 
-      <!-- Subheading for the author name. A proper heading hierarchy improves content structure and readability. -->
-      <h2>Roxanna Jalilian</h2>
-</div>
+    <!-- Subheading for the author name. A proper heading hierarchy improves content structure and readability. -->
+    <h2>Roxanna Jalilian</h2>
+  </div>
 
-<div class="panel">
-     <!-- Section heading for 'Meet the Frogs'. Closed <h2> maintains logical content hierarchy.
-     Semantic HTML enhances accessibility and helps search engines understand page content. -->
+  <div class="panel">
+    <!-- Section heading for 'Meet the Frogs'. Closed <h2> maintains logical content hierarchy.
+         Semantic HTML enhances accessibility and helps search engines understand page content. -->
     <h2>Meet the Frogs</h2>
     <p>
-     Frogs are incredible amphibians that live on every continent except Antarctica.
-     Their smooth, moist skin helps them breathe through it.
+      Frogs are incredible amphibians that live on every continent except Antarctica.
+      Their smooth, moist skin helps them breathe through it.
     </p>
-</div>
+  </div>
 
-<div class="panel">
-     <!-- Corrected invalid attribute to 'class' to match HTML standards.
-          Using classes allows styling multiple elements with the same design, while IDs are unique to each page. -->
+  <div class="panel">
+    <!-- Corrected invalid attribute to 'class' to match HTML standards.
+         Using classes allows styling multiple elements with the same design, while IDs are unique to each page. -->
     <h2>Life Cycle</h2>
     <p>
-     Frogs begin life as eggs in water, hatch into tadpoles, and grow legs as they
-     transform into adult frogs. This is called metamorphosis.
+      Frogs begin life as eggs in water, hatch into tadpoles, and grow legs as they
+      transform into adult frogs. This is called metamorphosis.
     </p>
-  
-<div id="pond">
+
+    <div id="pond">
       <!-- 'pond' container holds the tadpole section. Using an ID here makes it unique for CSS or JavaScript targeting. -->
-    <p>This is a “pond” container that holds the tadpole section.</p>
+      <p>This is a “pond” container that holds the tadpole section.</p>
 
-<div id="tadpole">
-      <!-- Fixed closing tag from </strange> to </strong> for valid HTML.
-           <strong> is used to emphasize text; proper closure ensures bolding works correctly. -->
-    <p>I'm positioned <strong>absolutely</strong> within my parent!</p>
-</div>
-</div>
-</div> <!-- Closed Life Cycle section to prevent layout errors. Proper nesting keeps HTML predictable. -->
+      <div id="tadpole">
+        <!-- Fixed closing tag from </strange> to </strong> for valid HTML.
+             <strong> is used to emphasize text; proper closure ensures bolding works correctly. -->
+        <p>I'm positioned <strong>absolutely</strong> within my parent!</p>
+      </div>
+    </div>
+  </div> <!-- Closed Life Cycle section to prevent layout errors. Proper nesting keeps HTML predictable. -->
 
-<div class="panel">
-      <!-- Fixed heading tag mismatch. Matching opening and closing tags keeps HTML valid and prevents display issues. -->
+  <div class="panel">
+    <!-- Fixed heading tag mismatch. Matching opening and closing tags keeps HTML valid and prevents display issues. -->
     <h2>Behavior</h2>
     <p>
       Many frogs are nocturnal. They use sticky tongues to catch insects and call loudly to attract mates.
     </p>
 
-<div id="fun-fact">
+    <div id="fun-fact">
       <!-- Added missing closing tags for <strong> and <p>. A proper HTML structure ensures text displays correctly across browsers.
-          Using <strong> helps emphasize important information for readers and assistive technologies. -->
-     <p><strong>Fun Fact:</strong> Some frogs can leap more than 20 times their body length!</p>
-</div>
-</div>
+           Using <strong> helps emphasize important information for readers and assistive technologies. -->
+      <p><strong>Fun Fact:</strong> Some frogs can leap more than 20 times their body length!</p>
+    </div>
+  </div>
 
-<div id="footer">
-      <!-- Footer section. Closed properly and separated from the main content.
-           The footer often contains copyright or navigational information; keeping it distinct improves page structure. -->
-     <p>2025 Frogs of the Rainforest</p>
-</div>
+  <div id="footer">
+    <!-- Footer section. Closed properly and separated from the main content.
+         The footer often contains copyright or navigational information; keeping it distinct improves page structure. -->
+    <p>2025 Frogs of the Rainforest</p>
+  </div>
 </body>
 </html>
