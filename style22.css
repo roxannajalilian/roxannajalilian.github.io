@@ -1,70 +1,312 @@
-/* ===============================
-   General Body Styling
-   ===============================
-   Sets the overall background color and font for a warm, cozy feel.
-   All text uses Lato for readability and Playfair Display for headings to appear welcoming.
-   Adds spacing around the page to prevent content from sticking to edges. */
+/* ============================================================
+   🍫 Chocolate & Company — style22.css
+   ------------------------------------------------------------
+   This stylesheet creates a warm, elegant dessert-shop vibe
+   using smooth gradients, gold accents, and strong typography.
+   It also demonstrates:
+   - Sticky positioning
+   - Hover interactivity
+   - Consistent color and font hierarchy
+   - Clear, professional-level commenting
+   ============================================================ */
+
+
+/* -------------------------------
+   1. GLOBAL STYLES
+   -------------------------------
+   - Color palette inspired by chocolate and caramel.
+   - Soft gradient background creates warmth and sophistication.
+   - Sans-serif font (Open Sans) improves readability.
+   ------------------------------- */
 body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Lato', sans-serif;
-    background-color: #f5f0e6; /* light beige for cozy background */
-    color: #4b3b2a; /* dark brown text for readability and cozy vibe */
-    line-height: 1.6;
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  background: linear-gradient(180deg, #FFF8F0 0%, #FBEED6 100%);
+  color: #3E2723; /* Deep cocoa-brown text for strong contrast */
+  scroll-behavior: smooth;
 }
 
-/* ===============================
-   Navbar Styling
-   ===============================
-   Sticky navbar stays visible at the top when scrolling for easy navigation.
-   Flexbox aligns logo on left and links on right for clean layout.
-   Darker brown background with cream links reinforces the cozy aesthetic. */
+/* Resetting image and box defaults for consistency across browsers */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* -------------------------------
+   2. NAVIGATION BAR
+   -------------------------------
+   - Sticky navigation so users can always access key pages.
+   - Flexbox layout for spacing between logo and menu.
+   - Subtle shadow for depth; hover effect for interactivity.
+   ------------------------------- */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    background-color: #8b5e3c; /* warm brown for navbar */
-    padding: 15px 30px;
-    z-index: 1000;
+  background-color: #5C4033; /* Deep chocolate brown */
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-.navbar .logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #fff8f0;
+.logo {
+  font-family: 'Playfair Display', serif; /* Fancy serif adds luxury */
+  font-size: 1.4rem;
+  letter-spacing: 0.5px;
 }
 
-.navbar .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 20px;
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
 }
 
-.navbar .nav-links li a {
-    text-decoration: none;
-    color: #fff8f0;
-    font-weight: 600;
-    transition: color 0.3s ease;
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
 }
 
-.navbar .nav-links li a:hover {
-    color: #d4b483; /* light brown hover effect for cozy look */
+.navbar a:hover {
+  color: #C9A66B; /* Golden hover color symbolizes caramel sweetness */
 }
 
-/* ===============================
-   Hero Section Styling
-   ===============================
-   Provides a welcoming image and introduction text for the café.
-   Centers text and image to draw attention and create a cozy first impression.
-   Rounded image corners and shadow add a soft, inviting aesthetic. */
+.active {
+  color: #C9A66B;
+}
+
+/* -------------------------------
+   3. HERO SECTION
+   -------------------------------
+   - Large banner image sets the emotional tone instantly.
+   - Overlay ensures text readability regardless of image brightness.
+   - Button styled with gold accent and hover transition.
+   ------------------------------- */
 .hero {
-    text-align: center;
-    padding: 50px 20px;
-    background-color: #f5f0e6; 
+  background-image: url('https://images.unsplash.com/photo-1606312619349-7b1a5bdf30ec?auto=format&fit=crop&w=1500&q=80');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  text-align: center;
+  padding: 180px 20px;
+  position: relative;
+}
+
+/* Adds a semi-transparent dark overlay for contrast */
+.hero::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.hero-text {
+  position: relative;
+  z-index: 2;
 }
 
 .hero h1 {
-    font-family: 'Pl
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.hero p {
+  max-width: 600px;
+  margin: 15px auto 30px;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+/* Primary call-to-action button */
+.btn {
+  background-color: #C9A66B; /* Gold color — symbolizes luxury */
+  color: white;
+  padding: 12px 25px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #5C4033; /* Inverts to chocolate tone on hover */
+  transform: scale(1.05);
+}
+
+/* -------------------------------
+   4. ABOUT SECTION
+   -------------------------------
+   - 2-column flexbox layout balances image + storytelling.
+   - Rounded corners and shadows add a “crafted” visual touch.
+   ------------------------------- */
+.about {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  padding: 80px 10%;
+}
+
+.about img {
+  width: 40%;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.about-text {
+  max-width: 500px;
+}
+
+.about-text h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+/* -------------------------------
+   5. FEATURED HIGHLIGHTS
+   -------------------------------
+   - Displays 3 feature cards (Truffles, Caramels, Gelato).
+   - Hover animation creates sense of interactivity and polish.
+   ------------------------------- */
+.highlights {
+  text-align: center;
+  padding: 60px 10%;
+}
+
+.highlights h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  margin-bottom: 40px;
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+  width: 300px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 8px 15px rgba(0,0,0,0.2);
+}
+
+.card img {
+  width: 100%;
+  border-radius: 10px 10px 0 0;
+}
+
+.card h3 {
+  font-family: 'Playfair Display', serif;
+  margin: 15px 0 5px;
+}
+
+.card p {
+  padding: 0 15px 20px;
+  line-height: 1.5;
+}
+
+/* -------------------------------
+   6. MENU PAGE STYLING
+   -------------------------------
+   - Uses golden-to-brown gradient for title header to maintain theme.
+   - Card grid similar to highlights but simplified.
+   ------------------------------- */
+.menu-hero {
+  text-align: center;
+  background: linear-gradient(180deg, #C9A66B, #5C4033);
+  color: white;
+  padding: 80px 20px;
+}
+
+.menu-hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+}
+
+.menu-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  padding: 60px 10%;
+}
+
+.menu-item {
+  background-color: white;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.menu-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.menu-item img {
+  width: 100%;
+  border-radius: 10px 10px 0 0;
+}
+
+.menu-item h3 {
+  font-family: 'Playfair Display', serif;
+  margin-top: 15px;
+  color: #5C4033;
+}
+
+/* -------------------------------
+   7. FOOTER
+   -------------------------------
+   - Mirrored color from navbar to unify the design.
+   - Simple text ensures clarity.
+   ------------------------------- */
+footer {
+  background-color: #5C4033;
+  color: white;
+  text-align: center;
+  padding: 25px 0;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+/* -------------------------------
+   8. RESPONSIVE DESIGN
+   -------------------------------
+   - Ensures the website looks good on phones and tablets.
+   - Changes flexbox layouts to vertical stacks on small screens.
+   ------------------------------- */
+@media (max-width: 768px) {
+  .about {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .about img {
+    width: 80%;
+  }
+
+  .cards, .menu-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+}
