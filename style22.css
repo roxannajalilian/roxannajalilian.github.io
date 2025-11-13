@@ -1,109 +1,73 @@
-/* ===========================
-   Global Styles
-   ===========================
-   * We reset margin and padding to ensure consistent spacing across browsers.
-   * Box-sizing: border-box makes width/height calculations easier and predictable.
-   * 'Roboto' font is used for readability, 'Pacifico' for playful headings.
-*/
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Roboto', sans-serif;
-}
-
-/* ===========================
-   Body
-   ===========================
-   * Background color: soft cream to complement chocolate/brown palette.
-   * Text color: dark brown for readability and aesthetic harmony.
-   * Line-height improves text readability and gives airy feel.
-*/
+/* Body background: creamy light beige to contrast chocolate */
 body {
-    background-color: #f5f0e6; /* soft cream background */
-    color: #3b2f2f; /* dark chocolate text */
+    background-color: #F5EFE6;
+    color: #3b2f2f;
     line-height: 1.6;
 }
 
-/* ===========================
-   Header
-   ===========================
-   * Sticky position keeps navigation visible on scroll.
-   * Background: warm brown to reinforce chocolate brand aesthetic.
-   * Padding: provides breathing space around title and nav.
-*/
+/* Header: rich dark chocolate with white/cream text */
 header {
-    background-color: #8b5e3c; /* rich chocolate brown */
+    background-color: #6B4226;
     padding: 20px 0;
     text-align: center;
     position: sticky;
     top: 0;
-    z-index: 1000; /* ensures header is above other content */
+    z-index: 1000;
 }
 
-/* Header Title */
 header h1 {
-    font-family: 'Pacifico', cursive; /* playful, cute font */
-    color: #fff5e6; /* soft cream for contrast against brown */
+    font-family: 'Pacifico', cursive;
+    color: #FFF5E6;
     font-size: 3em;
     margin-bottom: 10px;
 }
 
-/* ===========================
-   Navigation Bar
-   ===========================
-   * Flexbox used for horizontal menu layout.
-   * Gap ensures space between items.
-*/
-nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    gap: 25px;
-}
-
-/* Navigation Links */
+/* Navigation links */
 nav ul li a {
     text-decoration: none;
-    color: #fff5e6; /* cream text for contrast */
+    color: #FFF5E6;
     font-weight: bold;
     padding: 5px 10px;
-    transition: all 0.3s ease; /* smooth hover effect */
+    transition: all 0.3s ease;
 }
 
-/* Hover effect for links */
 nav ul li a:hover {
-    background-color: #a16b4a; /* lighter chocolate for hover */
+    background-color: #A45C38;
     border-radius: 5px;
-    color: #fff; /* white text when hovering for clarity */
+    color: #fff;
 }
 
-/* ===========================
-   Welcome Section
-   ===========================
-   * Centered, limited width for easy reading.
-   * Padding creates breathing space on small screens.
-*/
-.welcome {
-    max-width: 900px;
-    margin: 40px auto;
-    text-align: center;
-    padding: 0 20px;
-}
-
-/* Welcome Heading */
-.welcome h2 {
-    font-family: 'Pacifico', cursive;
-    font-size: 2.5em;
-    margin-bottom: 20px;
-    color: #6f4e37; /* medium chocolate brown for headings */
-}
-
-/* ===========================
-   Location Section
-   ===========================
-   * Background slightly lighter than header to separate visually.
-   * Rounded corners create a soft, inviting feel.
-*/
+/* Location card */
 .location {
-    background-color: #d9bfa2; /* light chocolate/beige*
+    background-color: #D9BFA2;
+    margin: 40px auto;
+    padding: 30px;
+    max-width: 700px;
+    text-align: center;
+    border-radius: 15px;
+}
+
+.location a.button {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #6B4226;
+    color: #FFF5E6;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.location a.button:hover {
+    background-color: #A45C38;
+    color: #fff;
+}
+
+/* Footer */
+footer {
+    background-color: #6B4226;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
+    color: #FFF5E6;
+}
