@@ -1,110 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chocolate & Company | Handcrafted Truffles & Gelato</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chocolate & Company</title>
 
-  <!-- 
-    Google Fonts chosen:
-    - Playfair Display (for headings) → elegant, upscale, perfect for desserts.
-    - Open Sans (for body text) → clean, readable, modern complement.
-  -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Open+Sans&display=swap" rel="stylesheet">
+    <!-- 
+        Linking the external CSS file 'style22.css' allows us to separate
+        structure (HTML) from presentation (CSS), which is a best practice
+        in web development. This makes the code cleaner, easier to maintain,
+        and reusable across multiple pages.
+    -->
+    <link rel="stylesheet" href="style22.css">
 
-  <!-- External CSS file containing all layout, color, and styling rules -->
-  <link rel="stylesheet" href="style22.css" />
+    <!-- 
+        Google Fonts are used to enhance the visual aesthetics and branding
+        of the website. 'Pacifico' gives a playful, elegant vibe suitable
+        for a dessert-focused business, while 'Roboto' provides clean, 
+        readable body text for better user experience.
+    -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
-  <!-- 
-    Sticky Navigation Bar:
-    - Fixed at top using position: sticky for easy access on scroll.
-    - Warm chocolate color (#5C4033) gives rich, dessert feel to the website.
-    - Navigation links allow user to move between all pages which is something useful for the website.
-  -->
-  <header class="navbar">
-<div class="logo">🍫 Chocolate & Company</div>
-    <nav>
-      <ul>
-        <li><a href="index22.html" class="active">Home</a></li>
-        <li><a href="menu.html">Menu</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Allergens</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
+    <!-- 
+        Header Section: This section serves as the first visual element
+        the user sees and establishes brand identity. It includes:
+        - The business name/logo to ensure clear branding
+        - Navigation links for easy site usability and accessibility
+        A sticky header could be added in CSS to keep navigation visible
+        while scrolling, improving user experience.
+    -->
+    <header>
+        <h1>Chocolate & Company</h1>
+        <!-- Navigation bar linking to main pages: improves user navigation and site structure -->
+        <nav>
+            <ul>
+                <li><a href="index22.html">Home</a></li> <!-- Directs users back to homepage -->
+                <li><a href="menu.html">Menu</a></li> <!-- Provides quick access to products -->
+                <li><a href="#about">About</a></li> <!-- Scrolls to About section, reinforcing brand story -->
+                <li><a href="#contact">Contact</a></li> <!-- Scrolls to contact info for easy communication -->
+            </ul>
+        </nav>
+    </header>
 
-  <!-- 
-    Hero Section:
-    - Large background image featuring dessert theme to capture attention.
-    - Center-aligned text communicates brand message immediately.
-    - "Shop Now" button encourages user engagement with hover effect.
-  -->
-  <section class="hero">
-<div class="hero-text">
-      <h1>Handcrafted Truffles & Gelato</h1>
-      <p>Delighting Aurora one dessert at a time — made fresh onsite using only natural ingredients.</p>
-      <a href="menu.html" class="btn">Explore Our Menu</a>
-</div>
-   </section>
+    <!-- 
+        Welcome Section: Provides an introduction to the business and
+        sets the tone for the website. Key purposes include:
+        - Engaging visitors immediately with friendly, inviting copy
+        - Highlighting core values such as quality ingredients and handmade products
+        - Encouraging interaction through the included email link
+        This section improves usability by giving context and building trust.
+    -->
+    <section class="welcome">
+        <h2>Welcome!</h2>
+        <p>We make dessert truffles, caramels, gelato, and more – all crafted on-site with love. We only use the finest ingredients and never any artificial flavors or colors. Our goal is to delight you with every bite!</p>
+        <p>If you have questions, feel free to email us at <a href="mailto:info@chocolateandcompany.ca">info@chocolateandcompany.ca</a>.</p>
+    </section>
 
-   <!-- 
-    About Section:
-    - Introduces the brand’s values and focus on quality.
-    - 2-column layout with image and text using flexbox for balance.
-    - Warm, natural photo supports message of authenticity.
-  -->
-  <section class="about">
-    <img src="https://images.unsplash.com/photo-1603190287605-e6ade32fa852?auto=format&fit=crop&w=800&q=80" alt="Chocolate truffles" />
-<div class="about-text">
-      <h2>Our Story</h2>
-      <p>
-        At Chocolate & Company, we create gourmet truffles, caramels, and plant-based gelato right here in Aurora.
-        We never use artificial flavors or colors — only pure ingredients and a passion for sweetness.
-      </p>
-    </div>
-  </section>
+    <!-- 
+        Location & Hours Section: 
+        - Provides essential business information for visitors planning to visit in person.
+        - Clearly lists the address, phone number, and email for easy contact.
+        - Hours of operation are displayed for convenience, reducing frustration for customers.
+        - Includes a 'Get Directions' button linking to Google Maps, which enhances usability and encourages visits.
+        This section is important for converting website visitors into real-world customers.
+    -->
+    <section class="location">
+        <h2>Location & Hours</h2>
+        <p><strong>Chocolate & Company</strong><br>
+        1-14834 Yonge St, Aurora, Ontario L4G 1N2<br>
+        Phone: (905) 503-0285<br>
+        Email: <a href="mailto:info@chocolateandcompany.ca">info@chocolateandcompany.ca</a></p>
 
-  <!-- 
-    Highlights Section:
-    - Features 3 signature items in card layout (truffles, caramels, gelato).
-    - Each card has image, heading, and brief description.
-    - Hover animation (scale-up) adds interactivity and polish.
-  -->
-  <section class="highlights">
-    <h2>Our Specialties</h2>
-<div class="cards">
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1606851092220-df0c9b65e8e9?auto=format&fit=crop&w=600&q=80" alt="Truffles">
-        <h3>Dessert Truffles</h3>
-        <p>Luxurious chocolate truffles in a variety of flavors.</p>
-</div>
-<div class="card">
-        <img src="https://images.unsplash.com/photo-1606755962773-0c55c4622fd9?auto=format&fit=crop&w=600&q=80" alt="Caramels">
-        <h3>Caramels</h3>
-        <p>Soft, buttery caramels made in small batches daily.</p>
-</div>
-<div class="card">
-        <img src="https://images.unsplash.com/photo-1565958011705-44e211c2c107?auto=format&fit=crop&w=600&q=80" alt="Gelato">
-        <h3>Gelato & Sorbetto</h3>
-        <p>Rich, creamy gelato and refreshing sorbet made onsite.</p>
-</div>
-</div>
-  </section>
+        <p><strong>Hours:</strong><br>
+        Monday: Closed<br>
+        Tuesday - Friday: 11:00 a.m. - 6:00 p.m.<br>
+        Saturday - Sunday: 11:00 a.m. - 5:00 p.m.</p>
 
-  <!-- 
-    Footer Section:
-    - Dark background ties the design together visually.
-    - Repeats business contact info and hours for convenience.
-    - Simple, centered layout ensures readability.
-  -->
-  <footer>
-    <p>Chocolate & Company | 1-14834 Yonge St, Aurora, ON | info@chocolateandcompany.ca</p>
-    <p>Open Tues–Sun | 11:00 AM – 6:00 PM</p>
-  </footer>
+        <a href="https://www.google.com/maps/dir//Chocolate+&+Company+Aurora" class="button">Get Directions</a>
+    </section>
+
+    <!-- 
+        Footer Section:
+        - Provides a consistent closing element for every page.
+        - Contains copyright information, which is legally protective and professional.
+        - Mentions the designer's name to credit their work, which is important for portfolio and assessment purposes.
+        - Footer consistency across pages improves user experience and gives the site a polished, complete feel.
+    -->
+    <footer>
+        <p>&copy; 2025 Chocolate & Company | Designed by Roxanna Jalilian</p>
+    </footer>
 
 </body>
 </html>
