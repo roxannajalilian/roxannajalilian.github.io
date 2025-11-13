@@ -1,56 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grounded Coffee - Menu</title>
-    <link rel="stylesheet" href="style22.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu | Chocolate & Company</title>
+
+  <!-- Google Fonts: Playfair Display for headings, Open Sans for body text -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Open+Sans&display=swap" rel="stylesheet">
+
+  <!-- Link to our custom CSS for styling -->
+  <link rel="stylesheet" href="style22.css" />
 </head>
 <body>
-    <!-- Header / Navigation -->
-    <header>
-        <div class="logo">Grounded Coffee</div>
-        <nav>
-            <ul>
-                <li><a href="index22.html">Home</a></li>
-                <li><a href="menu.html">Menu</a></li>
-                <li><a href="index22.html#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <!-- Menu Section -->
-    <section class="menu">
-        <h1>Our Menu</h1>
-        <div class="menu-items">
-            <div class="menu-item">
-                <h3>Espresso</h3>
-                <p>Rich and bold, served straight or with milk.</p>
-            </div>
-            <div class="menu-item">
-                <h3>Cappuccino</h3>
-                <p>Espresso with steamed milk and foam.</p>
-            </div>
-            <div class="menu-item">
-                <h3>Latte</h3>
-                <p>Smooth espresso with lots of steamed milk.</p>
-            </div>
-            <div class="menu-item">
-                <h3>Tea Selection</h3>
-                <p>Black, green, and herbal teas available.</p>
-            </div>
-            <div class="menu-item">
-                <h3>Pastries</h3>
-                <p>Freshly baked croissants, muffins, and cookies.</p>
-            </div>
-        </div>
-    </section>
+  <!-- ==========================
+       Navigation Bar
+       - Sticky for easy access
+       - Hover highlights to guide user
+       ========================== -->
+  <nav class="navbar">
+    <div class="logo">Chocolate & Company</div>
+    <ul>
+      <li><a href="index22.html">Home</a></li>
+      <li><a href="menu.html" class="active">Menu</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 Grounded Coffee. All rights reserved.</p>
-    </footer>
+  <!-- ==========================
+       Hero Section
+       - Gradient background to match dessert theme
+       - Centered heading introduces menu
+       ========================== -->
+  <section class="menu-hero">
+    <h1>Our Delicious Menu</h1>
+    <p>Handcrafted truffles, caramels, gelato, and more — made fresh daily.</p>
+  </section>
+
+  <!-- ==========================
+       Menu Grid
+       - Flexbox layout for responsive cards
+       - Hover animation makes interaction playful
+       ========================== -->
+  <section class="menu-grid">
+    
+    <!-- Menu Item 1 -->
+    <div class="menu-item">
+      <img src="https://images.unsplash.com/photo-1612917613278-1c4d5f4f14d7?auto=format&fit=crop&w=800&q=80" alt="Chocolate Truffles">
+      <h3>Chocolate Truffles</h3>
+      <p>Rich, handmade truffles in a variety of flavors. Perfect for gifting or treating yourself.</p>
+    </div>
+
+    <!-- Menu Item 2 -->
+    <div class="menu-item">
+      <img src="https://images.unsplash.com/photo-1627362154760-bb3edc5f0ad3?auto=format&fit=crop&w=800&q=80" alt="Caramels">
+      <h3>Caramels</h3>
+      <p>Soft, buttery caramels crafted with natural ingredients. A delightful bite every time.</p>
+    </div>
+
+    <!-- Menu Item 3 -->
+    <div class="menu-item">
+      <img src="https://images.unsplash.com/photo-1612197528676-8d2e8b3c1477?auto=format&fit=crop&w=800&q=80" alt="Plant-Based Gelato">
+      <h3>Plant-Based Gelato</h3>
+      <p>Creamy and dreamy gelato made with plant-based ingredients. Full of flavor, zero compromise.</p>
+    </div>
+
+    <!-- Menu Item 4 -->
+    <div class="menu-item">
+      <img src="https://images.unsplash.com/photo-1606312619349-7b1a5bdf30ec?auto=format&fit=crop&w=800&q=80" alt="Gift Cards">
+      <h3>Gift Cards</h3>
+      <p>Give the gift of sweetness! Perfect for any occasion — let your loved ones choose their favorites.</p>
+    </div>
+
+  </section>
+
+  <!-- ==========================
+       Footer
+       - Matches navbar to unify site
+       - Simple, clear contact info
+       ========================== -->
+  <footer id="contact">
+    <p>&copy; 2025 Chocolate & Company | 1-14834 Yonge St, Aurora, Ontario | (905) 503-0285 | info@chocolateandcompany.ca</p>
+  </footer>
+
 </body>
 </html>
-
