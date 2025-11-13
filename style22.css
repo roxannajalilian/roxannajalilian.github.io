@@ -1,24 +1,24 @@
-/* 
-    Global styles: set fonts, box-sizing, background, and text color
-    Using Roboto for readability and Pacifico for headings for cute, friendly aesthetic.
-*/
+/* ---------------- Global Styles ---------------- */
+/* Reset default margin/padding and apply box-sizing for easier layout control */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto', sans-serif; /* Clean, readable font for body */
 }
 
-/* Body styling: light brown background for cozy chocolate theme */
+/* Body background and default text color */
+/* Soft creamy brown background for warm chocolate feel */
 body {
-    background-color: #f3e5d5; /* soft beige-brown background */
-    color: #4d2c2c; /* dark chocolate text color for readability */
+    background-color: #f5efe6;
+    color: #4b2e2e; /* Rich chocolate brown for text */
     line-height: 1.6;
 }
 
-/* Header styling: sticky navigation for usability */
+/* ---------------- Header ---------------- */
+/* Sticky header for easy navigation, always visible on scroll */
 header {
-    background-color: #a0522d; /* chocolate brown */
+    background-color: #a9746e; /* Warm brown for header */
     padding: 20px 0;
     text-align: center;
     position: sticky;
@@ -26,15 +26,15 @@ header {
     z-index: 1000;
 }
 
-/* Header title: Pacifico font for cute and modern aesthetic */
+/* Main site title */
 header h1 {
-    font-family: 'Pacifico', cursive;
-    color: #fff8f0; /* off-white for contrast */
+    font-family: 'Pacifico', cursive; /* Cute, inviting font */
+    color: #fff5e6; /* Light contrast for text */
     font-size: 3em;
     margin-bottom: 10px;
 }
 
-/* Navigation bar: horizontal and spaced */
+/* Navigation menu styling */
 nav ul {
     list-style: none;
     display: flex;
@@ -44,62 +44,53 @@ nav ul {
 
 nav ul li a {
     text-decoration: none;
-    color: #fff8f0;
+    color: #fff5e6;
     font-weight: bold;
     padding: 5px 10px;
     transition: all 0.3s ease;
 }
 
-/* Hover effect for nav links: visual feedback for users */
 nav ul li a:hover {
-    background-color: #d2691e; /* lighter chocolate */
+    background-color: #8c5a52; /* Darker brown on hover */
     border-radius: 5px;
     color: #fff;
 }
 
-/* Welcome Section: centered with padding for readability */
-.welcome {
+/* ---------------- Welcome / About Section ---------------- */
+section {
     max-width: 900px;
     margin: 40px auto;
-    text-align: center;
-    padding: 0 20px;
+    padding: 20px;
 }
 
-.welcome h2 {
+/* Section titles */
+section h2 {
     font-family: 'Pacifico', cursive;
     font-size: 2.5em;
     margin-bottom: 20px;
-    color: #4d2c2c;
+    color: #4b2e2e;
 }
 
-/* Location Section: boxed area with light chocolate background for emphasis */
-.location {
-    background-color: #deb887;
-    margin: 40px auto;
-    padding: 30px;
-    max-width: 700px;
-    text-align: center;
-    border-radius: 15px;
-}
-
-.location a.button {
+/* ---------------- Buttons ---------------- */
+a.button {
     display: inline-block;
     margin-top: 15px;
     padding: 10px 20px;
-    background-color: #a0522d;
-    color: #fff8f0;
+    background-color: #a9746e;
+    color: #fff5e6;
     font-weight: bold;
     text-decoration: none;
     border-radius: 5px;
     transition: all 0.3s ease;
 }
 
-.location a.button:hover {
-    background-color: #d2691e;
+a.button:hover {
+    background-color: #8c5a52;
     color: #fff;
 }
 
-/* Menu grid: responsive cards for each item */
+/* ---------------- Menu Page ---------------- */
+/* Grid layout for menu items, responsive design */
 .menu-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -109,9 +100,9 @@ nav ul li a:hover {
     margin: auto;
 }
 
-/* Individual menu item styling: cute card with shadow */
+/* Individual menu card styling */
 .menu-item {
-    background-color: #fff0f5;
+    background-color: #fff0e6;
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     text-align: center;
@@ -119,5 +110,36 @@ nav ul li a:hover {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Hover effect: lift card slightly for interactivity */
 .menu-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* Images inside menu cards */
+.menu-item img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+/* Menu headings */
+.menu-item h3 {
+    font-family: 'Pacifico', cursive;
+    color: #4b2e2e;
+    margin-bottom: 10px;
+}
+
+/* Menu descriptions */
+.menu-item p {
+    font-size: 1em;
+    color: #4b2e2e;
+}
+
+/* ---------------- Footer ---------------- */
+footer {
+    background-color: #a9746e;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
+    color: #fff5e6;
+}
