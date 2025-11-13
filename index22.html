@@ -1,63 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cozy Café Aurora</title>
-    <!-- Linking Google Fonts for cozy and readable fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <!-- Linking CSS file -->
-    <link rel="stylesheet" href="style22.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chocolate & Company | Handcrafted Truffles & Gelato</title>
+
+  <!-- 
+    Google Fonts chosen:
+    - Playfair Display (for headings) → elegant, upscale, perfect for desserts.
+    - Open Sans (for body text) → clean, readable, modern complement.
+  -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Open+Sans&display=swap" rel="stylesheet">
+
+  <!-- External CSS file containing all layout, color, and styling rules -->
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-    <!-- ===============================
-         Navigation Bar
-         ===============================
-         Sticky navbar stays on top as user scrolls.
-         Flexbox ensures logo and links are spaced evenly.
-         Brown tones keep the cozy theme consistent. -->
-    <nav class="navbar">
-        <div class="logo">Cozy Café Aurora</div>
-        <ul class="nav-links">
-            <li><a href="index22.html">Home</a></li>
-            <li><a href="menu.html">Menu</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
+
+  <!-- 
+    Sticky Navigation Bar:
+    - Fixed at top using position: sticky for easy access on scroll.
+    - Warm chocolate color (#5C4033) gives rich, dessert feel to the website.
+    - Navigation links allow user to move between all pages which is something useful for the website.
+  -->
+  <header class="navbar">
+<div class="logo">🍫 Chocolate & Company</div>
+    <nav>
+      <ul>
+        <li><a href="index22.html" class="active">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Allergens</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
     </nav>
+  </header>
 
-    <!-- ===============================
-         Hero Section
-         ===============================
-         Introduces visitors to the café with welcoming text and a cozy image.
-         Image has rounded corners and shadow to appear inviting.
-         Light brown background matches the overall cozy aesthetic. -->
-    <section class="hero">
-        <h1>Welcome to Cozy Café Aurora</h1>
-        <p>Your local spot for the best coffee and baked treats in Aurora!</p>
-        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80" alt="Coffee and pastries">
-    </section>
+  <!-- 
+    Hero Section:
+    - Large background image featuring dessert theme to capture attention.
+    - Center-aligned text communicates brand message immediately.
+    - "Shop Now" button encourages user engagement with hover effect.
+  -->
+  <section class="hero">
+<div class="hero-text">
+      <h1>Handcrafted Truffles & Gelato</h1>
+      <p>Delighting Aurora one dessert at a time — made fresh onsite using only natural ingredients.</p>
+      <a href="menu.html" class="btn">Explore Our Menu</a>
+</div>
+   </section>
 
-    <!-- ===============================
-         About Section
-         ===============================
-         Explains the café's story and mission.
-         Uses centered text for readability and cozy feel.
-         Consistent fonts and colors reinforce the warm brown theme. -->
-    <section class="about" id="about">
-        <h2>About Us</h2>
-        <p>Cozy Café Aurora is a family-run small business serving freshly brewed coffee and homemade pastries since 2015. We believe in creating a warm, welcoming space for our community to relax, study, or catch up with friends. Our beans are sourced locally and baked goods are made fresh daily to ensure the highest quality and flavor.</p>
-    </section>
+   <!-- 
+    About Section:
+    - Introduces the brand’s values and focus on quality.
+    - 2-column layout with image and text using flexbox for balance.
+    - Warm, natural photo supports message of authenticity.
+  -->
+  <section class="about">
+    <img src="https://images.unsplash.com/photo-1603190287605-e6ade32fa852?auto=format&fit=crop&w=800&q=80" alt="Chocolate truffles" />
+<div class="about-text">
+      <h2>Our Story</h2>
+      <p>
+        At Chocolate & Company, we create gourmet truffles, caramels, and plant-based gelato right here in Aurora.
+        We never use artificial flavors or colors — only pure ingredients and a passion for sweetness.
+      </p>
+    </div>
+  </section>
 
-    <!-- ===============================
-         Footer Section
-         ===============================
-         Darker brown background separates footer from content.
-         Cream text maintains readability and cozy aesthetic.
-         Footer includes basic contact info and copyright notice. -->
-    <footer id="contact">
-        <p>123 Main Street, Aurora, ON | (555) 123-4567 | info@cozycafeaurora.ca</p>
-        <p>&copy; 2025 Cozy Café Aurora</p>
-    </footer>
+  <!-- 
+    Highlights Section:
+    - Features 3 signature items in card layout (truffles, caramels, gelato).
+    - Each card has image, heading, and brief description.
+    - Hover animation (scale-up) adds interactivity and polish.
+  -->
+  <section class="highlights">
+    <h2>Our Specialties</h2>
+<div class="cards">
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1606851092220-df0c9b65e8e9?auto=format&fit=crop&w=600&q=80" alt="Truffles">
+        <h3>Dessert Truffles</h3>
+        <p>Luxurious chocolate truffles in a variety of flavors.</p>
+</div>
+<div class="card">
+        <img src="https://images.unsplash.com/photo-1606755962773-0c55c4622fd9?auto=format&fit=crop&w=600&q=80" alt="Caramels">
+        <h3>Caramels</h3>
+        <p>Soft, buttery caramels made in small batches daily.</p>
+</div>
+<div class="card">
+        <img src="https://images.unsplash.com/photo-1565958011705-44e211c2c107?auto=format&fit=crop&w=600&q=80" alt="Gelato">
+        <h3>Gelato & Sorbetto</h3>
+        <p>Rich, creamy gelato and refreshing sorbet made onsite.</p>
+</div>
+</div>
+  </section>
+
+  <!-- 
+    Footer Section:
+    - Dark background ties the design together visually.
+    - Repeats business contact info and hours for convenience.
+    - Simple, centered layout ensures readability.
+  -->
+  <footer>
+    <p>Chocolate & Company | 1-14834 Yonge St, Aurora, ON | info@chocolateandcompany.ca</p>
+    <p>Open Tues–Sun | 11:00 AM – 6:00 PM</p>
+  </footer>
+
 </body>
 </html>
