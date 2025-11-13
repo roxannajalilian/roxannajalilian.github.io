@@ -1,1 +1,87 @@
 
+
+/* ===========================
+   Frogs of the Rainforest CSS
+   File: Troubleshooting.css
+   Author: Roxanna Jalilian
+   Purpose: Style the Frogs of the Rainforest webpage
+   =========================== */
+
+/* ---------- Body ---------- */
+body {
+    font-family: Verdana, sans-serif;  /* Choose a clean, sans-serif font for readability across browsers */
+    margin: 0;                          /* Remove default browser margin so the page fills the viewport */
+    background-color: #dfffe0;          /* Light green background to mimic a rainforest environment */
+    color: #083b0a;                     /* Dark green text color for contrast and readability */
+    /* These styles set the overall page look and affect all child elements unless overridden */
+}
+
+/* ---------- Topbar ---------- */
+#topbar {
+    position: fixed;                     /* Keep the topbar at the top of the viewport even when scrolling */
+    top: 0;                              
+    width: 100%;                         /* Make the topbar stretch across the entire width of the page */
+    background-color: #2e8b57;           /* Dark green background for high visibility and rainforest theme */
+    color: white;                        /* White text to contrast with dark background */
+    text-align: center;                  /* Center the headings horizontally */
+    padding: 20px 0;                     /* Add vertical space inside the topbar for better spacing of <h1> and <h2> */
+    z-index: 5;                          /* Ensures topbar stays above panels and other content */
+    /* The topbar contains <h1> and <h2> headings for page title and author */
+}
+
+/* ---------- Panels ---------- */
+.panel {
+    width: 70%;                          /* Panels take up 70% of the page width for readability and whitespace */
+    margin: 120px auto 30px auto;        /* Top margin accounts for fixed topbar; auto centers the panel horizontally */
+    background-color: #fff;              /* White background makes text easy to read */
+    border-radius: 10px;                 /* Rounded corners create softer, more visually appealing boxes */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Subtle shadow adds depth to the panels */
+    padding: 30px;                       /* Internal spacing ensures text doesn’t touch the edges */
+    position: relative;                  /* Needed so child elements with absolute positioning (like #tadpole) are positioned relative to this panel */
+    /* Panels are used for each main section: Meet the Frogs, Life Cycle, Behavior */
+}
+
+/* ---------- Pond ---------- */
+#pond {
+    position: relative;                  /* Acts as a containing block for absolute elements like the tadpole */
+    background-color: #a5f0a0;          /* Light green color to represent water in a pond */
+    padding: 25px;                       /* Inner spacing to keep content away from edges */
+    border-radius: 8px;                  /* Soft corners to match the panel style */
+    margin-top: 25px;                    /* Space between this section and previous content */
+    /* The #pond div contains text and #tadpole, demonstrating CSS positioning concepts */
+}
+
+/* ---------- Tadpole ---------- */
+#tadpole {
+    position: absolute;                  /* Positions the tadpole relative to the #pond container */
+    top: 10px;                           /* 10px from the top of the pond */
+    left: 15px;                          /* 15px from the left of the pond */
+    background-color: #6dcf78;           /* Green color to represent the tadpole */
+    color: white;                        /* White text for contrast against green background */
+    padding: 10px;                       /* Internal spacing for readability */
+    border-radius: 6px;                  /* Rounded corners to look like a smooth tadpole shape */
+    /* The tadpole demonstrates absolute positioning inside a relative parent (#pond) */
+}
+
+/* ---------- Fun Fact Box ---------- */
+#fun-fact {
+    background-color: #c7f7b5;           /* Light green highlight to draw attention */
+    border-left: 6px solid #2e8b57;     /* Dark green left border creates visual emphasis */
+    padding: 12px;                        /* Spacing inside the box */
+    margin-top: 20px;                     /* Separate the fun fact from above text */
+   
+   /* This box highlights interesting information and adds visual hierarchy */
+}
+
+/* ---------- Footer ---------- */
+
+#footer {
+    text-align: center;                  /* Center the footer text horizontally */
+    padding: 20px;                       /* Inner spacing to prevent text from touching edges */
+    background-color: #2e8b57;           /* Dark green background matches the topbar for the consistent theme */
+    color: white;                        /* White text for readability */
+    margin-top: 60px;                     /* Space between last panel and footer */
+   
+   /* The footer contains copyright or closing information for the page */
+}
+
