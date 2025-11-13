@@ -1,45 +1,101 @@
-/* Body background: creamy light beige to contrast chocolate */
+/* ===================================================================
+   Global Styles
+   =================================================================== */
+
+/* Reset default margins/padding and apply box-sizing for easier layout control.
+   Using a consistent font across all elements ensures readability and
+   a cohesive aesthetic. */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Body: soft beige background with dark chocolate text for a warm, inviting
+   aesthetic suitable for a dessert website. Line-height improves readability. */
 body {
-    background-color: #F5EFE6;
-    color: #3b2f2f;
+    background-color: #f3e6d4; /* light beige */
+    color: #4d2c2c; /* dark chocolate */
     line-height: 1.6;
 }
 
-/* Header: rich dark chocolate with white/cream text */
+/* ===================================================================
+   Header Styles
+   =================================================================== */
+
+/* Header: darker brown for strong visual anchor, sticky so it remains
+   visible while scrolling. Padding gives space around text. */
 header {
-    background-color: #6B4226;
+    background-color: #8b5e3c; /* dark chocolate */
     padding: 20px 0;
     text-align: center;
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 1000; /* ensures header stays above other elements */
 }
 
+/* Main title: cursive font for fun, playful feel; color contrasts header
+   for readability and style. */
 header h1 {
     font-family: 'Pacifico', cursive;
-    color: #FFF5E6;
+    color: #f3e6d4; /* light beige for contrast */
     font-size: 3em;
     margin-bottom: 10px;
 }
 
-/* Navigation links */
+/* Navigation bar: horizontal menu with spacing and clear hover effect for
+   user experience. */
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
 nav ul li a {
     text-decoration: none;
-    color: #FFF5E6;
+    color: #f3e6d4; /* beige text for contrast */
     font-weight: bold;
     padding: 5px 10px;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease; /* smooth hover animations */
 }
 
 nav ul li a:hover {
-    background-color: #A45C38;
+    background-color: #d2a679; /* lighter chocolate hover */
     border-radius: 5px;
-    color: #fff;
+    color: #4d2c2c; /* dark text on hover for readability */
 }
 
-/* Location card */
+/* ===================================================================
+   Welcome Section
+   =================================================================== */
+
+/* Centralized welcome section: sets maximum width for readability and adds
+   padding for breathing space. */
+.welcome {
+    max-width: 900px;
+    margin: 40px auto;
+    text-align: center;
+    padding: 0 20px;
+}
+
+/* Welcome heading: playful cursive font matches brand personality. */
+.welcome h2 {
+    font-family: 'Pacifico', cursive;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #8b5e3c; /* dark chocolate to connect with header */
+}
+
+/* ===================================================================
+   Location & Hours Section
+   =================================================================== */
+
+/* Boxed section to separate location info visually, rounded edges for cute look,
+   background is soft brown to match theme. */
 .location {
-    background-color: #D9BFA2;
+    background-color: #c79b7e; /* soft chocolate */
     margin: 40px auto;
     padding: 30px;
     max-width: 700px;
@@ -47,27 +103,85 @@ nav ul li a:hover {
     border-radius: 15px;
 }
 
+/* Button styling: links styled like buttons for user interaction,
+   hover effect makes them feel clickable. */
 .location a.button {
     display: inline-block;
     margin-top: 15px;
     padding: 10px 20px;
-    background-color: #6B4226;
-    color: #FFF5E6;
+    background-color: #8b5e3c; /* dark chocolate */
+    color: #f3e6d4; /* light beige text */
     font-weight: bold;
     text-decoration: none;
     border-radius: 5px;
+    transition: all 0.3s ease;
 }
 
 .location a.button:hover {
-    background-color: #A45C38;
-    color: #fff;
+    background-color: #d2a679; /* lighter chocolate on hover */
+    color: #4d2c2c; /* dark chocolate text */
 }
 
-/* Footer */
+/* ===================================================================
+   Menu Section
+   =================================================================== */
+
+/* Grid layout: responsive, adjusts number of columns depending on screen size.
+   Gap creates space between menu cards. */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    padding: 40px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* Individual menu item card: background color, rounded corners, and shadow create
+   cute “card” effect. Hover lifts card slightly for interactivity. */
+.menu-item {
+    background-color: #d6b89c; /* light chocolate card */
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    padding: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.menu-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* Menu images: rounded corners to match card aesthetic, responsive width. */
+.menu-item img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+/* Menu headings: cursive font emphasizes product name in playful, cute style. */
+.menu-item h3 {
+    font-family: 'Pacifico', cursive;
+    color: #4d2c2c;
+    margin-bottom: 10px;
+}
+
+/* Menu description: standard readable font for explanation of each item. */
+.menu-item p {
+    font-size: 1em;
+    color: #4d2c2c;
+}
+
+/* ===================================================================
+   Footer Section
+   =================================================================== */
+
+/* Footer: matches header color for symmetry, centered text. */
 footer {
-    background-color: #6B4226;
+    background-color: #8b5e3c; /* dark chocolate */
     text-align: center;
     padding: 15px;
     margin-top: 40px;
-    color: #FFF5E6;
+    color: #f3e6d4; /* light beige for contrast */
 }
