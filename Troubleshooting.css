@@ -1,13 +1,3 @@
-{
-    box-sizing: border-box;  
-    /* Fixed: Added box-sizing to ensure padding and borders are included in element width/height calculations.
-       Without this, elements could overflow their containers unexpectedly. */
-    margin: 0;               
-    /* Fixed: Reset default browser margin. Original layout had inconsistent spacing because browsers add default margins. */
-    padding: 0;              
-    /* Fixed: Reset default padding. Prevents unexpected spacing inside elements like paragraphs and divs. */
-}
-
 /* ==========================
    BODY STYLING
    ========================== */
