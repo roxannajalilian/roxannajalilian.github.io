@@ -1,20 +1,16 @@
-
 /* GLOBAL RESET */
 * {
     box-sizing: border-box;
-    /* Makes padding and borders behave consistently.
-       This prevents elements from stretching larger than intended. */
+    margin: 0;
+    padding: 0;
 }
 
+/* BODY STYLING */
 body {
     font-family: Verdana, sans-serif;
-    margin: 0;
-    padding-top: 120px;
-    /* Required because your top bar is fixed.
-       Without this, the first white panel hides underneath the green bar. */
-
-    background-color: #dfffe0;
-    color: #083b0a;
+    background-color: #dfffe0; /* light green background */
+    color: #083b0a;            /* dark green text */
+    padding-top: 120px;        /* space for fixed top bar */
 }
 
 /* TOP BAR */
@@ -22,36 +18,31 @@ body {
     position: fixed;
     top: 0;
     width: 100%;
-    background-color: #2e8b57;
+    background-color: #2e8b57; /* dark green */
     color: white;
     text-align: center;
     padding: 20px 0;
     z-index: 5;
-    /* Keeps top bar above all content. */
 }
 
 /* PANELS */
 .panel {
     width: 70%;
     margin: 40px auto;
-    /* Centers white panels like your screenshot. */
-
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     padding: 30px;
     position: relative;
-    /* Allows absolute elements inside to position correctly. */
 }
 
 /* POND BOX */
 #pond {
     position: relative;
-    background-color: #a5f0a0;
+    background-color: #a5f0a0; /* light green pond */
     padding: 25px;
     border-radius: 8px;
     margin-top: 25px;
-    /* Matches your example’s light-green pond shape. */
 }
 
 /* TADPOLE BOX */
@@ -59,20 +50,18 @@ body {
     position: absolute;
     top: 10px;
     left: 15px;
-    background-color: #6dcf78;
+    background-color: #6dcf78; /* darker green */
     color: white;
     padding: 10px;
     border-radius: 6px;
-    /* This creates the floating tadpole box inside the pond. */
 }
 
 /* FUN FACT BOX */
 #fun-fact {
-    background-color: #c7fbb5; /* fixed invalid hex from screenshot version */
+    background-color: #c7fbb5; /* pale green */
     border-left: 6px solid #2e8b57;
     padding: 12px;
     margin-top: 20px;
-    /* Creates the correct green fun-fact highlight box. */
 }
 
 /* FOOTER */
@@ -82,11 +71,7 @@ body {
     background-color: #2e8b57;
     color: white;
     margin-top: 60px;
-    /* Creates the exact bottom green bar shown in your example website. */
 }
-
-
-
 
 
 
