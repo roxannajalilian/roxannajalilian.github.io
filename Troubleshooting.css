@@ -1,88 +1,170 @@
-/* GLOBAL RESET */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-/* BODY STYLING */
 body {
-    font-family: Verdana, sans-serif;
-    background-color: #dfffe0; /* light green background */
-    color: #083b0a;            /* dark green text */
-    padding-top: 120px;        /* space for fixed top bar */
+    font-family: Verdana, sans-serif; 
+    /* Sets the page font to Verdana. 
+       Original code was correct. Ensures text is readable and consistent. */
+
+    margin: 0;                        
+    /* Removes default browser margin. 
+       Original code had this correct, prevents extra white space around page edges. */
+
+    /* FIXED: Original 'background-color: #dfffe0' missing semicolon. 
+       Without semicolon, the next property (color) may be ignored, breaking text color styling. */
+    background-color: #dfffe0;        
+    /* Sets light green background for the entire page. 
+       Provides a calm visual theme and contrasts well with dark text. */
+
+    /* FIXED: Original code used 'colour', which is invalid in CSS. Correct property is 'color'. 
+       Using wrong spelling causes browser to ignore the style, leaving default black text. */
+    color: #083b0a;                   
+    /* Dark green text for readability. Complements background color for accessibility. */
+
+    padding-top: 120px;               
+    /* Adds space at the top to prevent content from being hidden behind fixed topbar. 
+       Original code did not include this spacing. */
 }
 
-/* TOP BAR */
+/* ==========================
+   TOP BAR
+   ========================== */
 #topbar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background-color: #2e8b57; /* dark green */
-    color: white;
-    text-align: center;
-    padding: 20px 0;
-    z-index: 5;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    position: fixed;                  
+    /* Fix: keeps topbar in place when scrolling. 
+       Original code mostly correct, but top property was invalid. */
+
+    /* FIXED: Original 'top 0' had no colon, invalid syntax. Browser ignores it. 
+       Adding 'top: 0;' correctly positions bar at the top of the page. */
+    top: 0;                           
+
+    width: 100%;                      
+    /* Full width ensures bar spans across entire screen. 
+       Original code correct, but important to keep consistent with fixed positioning. */
+
+    background-color: #2e8b57;        
+    /* Dark green background for topbar. Original correct. 
+       Provides contrast with white text. */
+
+    /* FIXED: Original 'colour: white;' used incorrect spelling. 
+       Browsers ignore invalid property, so text would remain default color. */
+    color: white;                     
+    /* Text is now white to show clearly on dark background. */
+
+    text-align: center;               
+    /* Centers text horizontally. Original correct. */
+
+    padding: 20px 0;                  
+    /* Adds vertical spacing inside the bar for better readability. */
+
+    z-index: 5;                       
+    /* Ensures topbar stays above panels and other content. 
+       Without z-index, overlapping content may cover bar. */
 }
 
-#topbar h1 {
-    font-size: 2em;
-}
-
-#topbar h2 {
-    font-size: 1.2em;
-    font-weight: normal;
-}
-
-/* PANELS */
+/* ==========================
+   PANELS
+   ========================== */
 .panel {
-    width: 70%;
-    margin: 40px auto;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    padding: 30px;
-    position: relative;
+    /* FIXED: Original CSS used '.panels', which did not match HTML class '.panel'. 
+       CSS class names must match exactly for styles to apply. */
+    width: 70%;                        
+    /* Sets panel width. Original correct. Ensures panels are not too wide or narrow. */
+
+    margin: 40px auto;                  
+    /* Centers panel horizontally and adds vertical spacing. 
+       Original code had 'margin: 120px auto;' which added too much spacing. Adjusted for better design. */
+
+    background-color: white;            
+    /* Panel background is white to contrast with light green page background. */
+
+    border-radius: 10px;                
+    /* Rounded corners improve visual appearance. Original correct. */
+
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3); 
+    /* Adds subtle shadow for depth. Original correct. */
+
+    /* FIXED: Original 'pudding: 30px;' typo. 'pudding' is invalid CSS, so padding did not apply. 
+       Padding is necessary so text does not touch panel edges. */
+    padding: 30px;                      
+    position: relative;                 
+    /* Needed for absolute positioning inside (like #tadpole). 
+       Original code correct but important for layout hierarchy. */
 }
 
-/* POND BOX */
+/* ==========================
+   POND BOX
+   ========================== */
 #pond {
-    position: relative;
-    background-color: #a5f0a0; /* light green pond */
-    padding: 25px;
-    border-radius: 8px;
-    margin-top: 25px;
+    position: relative;                 
+    /* Parent container for absolute-positioned child (#tadpole). 
+       Without relative positioning, child absolute positions would be relative to entire page. */
+
+    /* FIXED: Original 'background-color: a5f0a0;' missing '#' character. 
+       Browser ignored it, so pond had no color. */
+    background-color: #a5f0a0;         
+
+    /* FIXED: Original 'padding: 25pz;' used invalid unit 'pz'. Browser ignores invalid unit. 
+       Corrected to 'px' for proper spacing inside pond box. */
+    padding: 25px;                      
+
+    border-radius: 8px;                 
+    /* Rounds corners of pond box for a softer visual. Original correct. */
+
+    margin-top: 25px;                   
+    /* Adds spacing above pond to separate from previous content. */
 }
 
-/* TADPOLE BOX */
+/* ==========================
+   TADPOLE BOX
+   ========================== */
 #tadpole {
-    position: absolute;
-    top: 10px;
-    left: 15px;
-    background-color: #6dcf78; /* darker green */
-    color: white;
-    padding: 10px;
-    border-radius: 6px;
-    width: 180px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    /* FIXED: Original 'position: absolutely;' is invalid. 
+       Must be 'absolute'. Without this, tadpole div won't be positioned inside pond correctly. */
+    position: absolute;                 
+    top: 10px;                          
+    left: 15px;                         
+
+    background-color: #6dcf78;          
+    /* Darker green to stand out inside pond. Original correct. */
+
+    color: white;                       
+    /* White text for contrast. Original correct. */
+
+    padding: 10px;                       
+    border-radius: 6px;                 
+    /* Rounded corners for tadpole box. Original correct. */
 }
 
-/* FUN FACT BOX */
+/* ==========================
+   FUN FACT BOX
+   ========================== */
 #fun-fact {
-    background-color: #c7fbb5; /* pale green */
-    border-left: 6px solid #2e8b57;
-    padding: 12px;
-    margin-top: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background-color: #c7fbb5;          
+    /* Original typo '#c7f7b5' may have been different. Light green for visual distinction. */
+
+    border-left: 6px solid #2e8b57;     
+    /* Adds decorative left border. Original correct. */
+
+    padding: 12px;                      
+    margin-top: 20px;                   
+    /* Spacing above box to separate from panel content. Original correct. */
 }
 
-/* FOOTER */
+/* ==========================
+   FOOTER
+   ========================== */
 #footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #2e8b57;
-    color: white;
-    margin-top: 60px;
+    /* FIXED: Original missing braces and colon syntax. Without braces, CSS rules ignored. */
+    text-align: center;                 
+    /* Center footer text. */
+
+    padding: 20px;                      
+    /* Adds spacing inside footer box. */
+
+    background-color: #2e8b57;          
+    /* Matches topbar color for design consistency. */
+
+    color: white;                       
+    /* Text color to contrast with background. */
+
+    margin-top: 60px;                   
+    /* Adds spacing above footer to separate from panels. */
 }
