@@ -1,17 +1,24 @@
+
+/* GLOBAL RESET */
+* {
+    box-sizing: border-box;
+    /* Makes padding and borders behave consistently.
+       This prevents elements from stretching larger than intended. */
+}
+
 body {
-    /* FIXED: Missing semicolon after background-color in original.
-       Added color property and reset margin to make layout match example.
-       Using Verdana keeps text readable and professional like the screenshot. */
     font-family: Verdana, sans-serif;
     margin: 0;
+    padding-top: 120px;
+    /* Required because your top bar is fixed.
+       Without this, the first white panel hides underneath the green bar. */
+
     background-color: #dfffe0;
     color: #083b0a;
 }
 
+/* TOP BAR */
 #topbar {
-    /* FIXED: Original used "colour" which is NOT valid CSS in American English.
-       Added proper spelling "color" so the text displays in white.
-       Also added fixed positioning so the bar stays at top like the sample page. */
     position: fixed;
     top: 0;
     width: 100%;
@@ -20,36 +27,35 @@ body {
     text-align: center;
     padding: 20px 0;
     z-index: 5;
+    /* Keeps top bar above all content. */
 }
 
+/* PANELS */
 .panel {
-    /* FIXED: Original wrote "panels (" which is not valid CSS.
-       Correct class name and added padding, shadow, and rounded corners.
-       This matches the white card design used in your screenshot. */
     width: 70%;
-    margin: 120px auto;
+    margin: 40px auto;
+    /* Centers white panels like your screenshot. */
+
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     padding: 30px;
     position: relative;
+    /* Allows absolute elements inside to position correctly. */
 }
 
+/* POND BOX */
 #pond {
-    /* FIXED: Original had "background-color: a5f0a0" missing #.
-       Added green style and rounded corners to match sample.
-       This creates the light green parent container for the tadpole. */
     position: relative;
     background-color: #a5f0a0;
     padding: 25px;
     border-radius: 8px;
     margin-top: 25px;
+    /* Matches your example’s light-green pond shape. */
 }
 
+/* TADPOLE BOX */
 #tadpole {
-    /* FIXED: Original wrote "position: absolutely" which is WRONG.
-       Correct property is "position: absolute;" so the tadpole floats inside the pond.
-       Added left and top to match placement in screenshot. */
     position: absolute;
     top: 10px;
     left: 15px;
@@ -57,25 +63,30 @@ body {
     color: white;
     padding: 10px;
     border-radius: 6px;
+    /* This creates the floating tadpole box inside the pond. */
 }
 
+/* FUN FACT BOX */
 #fun-fact {
-    /* FIXED: Original had "background-color: #c7f/b5" which is invalid.
-       The slash breaks the color. Replaced with #c7fbb5.
-       Also repaired border-left so the accent matches screenshot. */
-    background-color: #c7fbb5;
+    background-color: #c7fbb5; /* fixed invalid hex from screenshot version */
     border-left: 6px solid #2e8b57;
     padding: 12px;
     margin-top: 20px;
+    /* Creates the correct green fun-fact highlight box. */
 }
 
+/* FOOTER */
 #footer {
-    /* FIXED: Original footer CSS wasn't closed and was missing opening brace.
-       Added proper styling to match green bottom bar seen in example.
-       Ensures footer stays at bottom with proper spacing. */
     text-align: center;
     padding: 20px;
     background-color: #2e8b57;
     color: white;
     margin-top: 60px;
+    /* Creates the exact bottom green bar shown in your example website. */
 }
+
+
+
+
+
+
