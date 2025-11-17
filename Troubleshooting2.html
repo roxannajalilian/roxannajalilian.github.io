@@ -4,49 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Frogs of the Rainforest</title>
-    <!-- FIXED: Original link had 'frogscss' without .css. This is a problem because the browser cannot find the CSS file, so styles would not apply. -->
-    <!-- CSS must have the correct file extension and spelling to link correctly. -->
-    <!-- FIXED: Now linked correctly to 'Troubleshooting.css', ensuring all styles apply to this HTML. -->
+    
+    <!-- Fixed: Corrected CSS file link. Original "frogscss" had no .css and typo, so styles wouldn't apply. -->
     <link rel="stylesheet" href="Troubleshooting.css">
 </head>
 <body>
 
-    <!-- FIXED: id=topbar had no quotes and h1 tag was not closed. Missing quotes can cause HTML parsing errors. -->
-    <!-- FIXED: Unclosed h1 tag can make the browser misinterpret subsequent content, causing layout issues. -->
-    <!-- FIXED: Added quotes and closed h1 properly, ensuring the top bar displays correctly. -->
-<div id="topbar">
+    <!-- ==========================
+         TOP BAR
+         ========================== -->
+    <div id="topbar">
+        <!-- Fixed: Closed <h1> tag properly. Original <h1> didn't close, breaking layout. -->
         <h1>🐸 Frogs of the Rainforest</h1>
-        <h2>Roxanna jalilian</h2> <!-- FIXED: Added proper closing tag for h2; original HTML had issues which can break DOM structure -->
-</div>
+        <!-- Fixed: Added correct spacing for name and closed <h2> properly. Original may have caused nesting issues. -->
+        <h2>Roxanna Jalilian</h2>
+    </div>
 
-    <!-- FIXED: <h2>Meet the Frogs<h2> had incorrect closing tag. Unmatched tags break HTML hierarchy and may prevent CSS styling from applying. -->
-    <!-- FIXED: Corrected to <h2>Meet the Frogs</h2> to properly define heading. -->
-    <!-- FIXED: This ensures the panel heading renders correctly and is selectable by CSS. -->
-<div class="panel">
-         <h2>Meet the Frogs</h2>
-    <p>Frogs are incredible amphibians that live on every continent except Antarctica.
-    Their smooth, moist skin helps them breathe through it.</p>
-</div>
+    <!-- ==========================
+         PANEL 1: MEET THE FROGS
+         ========================== -->
+    <div class="panel">
+        <!-- Fixed: Closed <h2> tag properly. Original had <h2> without closing tag causing parsing issues. -->
+        <h2>Meet the Frogs</h2>
+        <p>
+            Frogs are incredible amphibians that live on every continent except Antarctica.
+            <!-- Fixed: Original line breaks may have caused formatting issues. Proper spacing added. -->
+            Their smooth, moist skin helps them breathe through it.
+        </p>
+    </div>
 
-    <!-- FIXED: class="floss" → class="panel". This was a typo; class name must match CSS selector to apply styles. -->
-    <!-- FIXED: If class names don’t match, the panel’s white background, border radius, and shadow will not appear. -->
-    <!-- FIXED: Now corrected to match the CSS '.panel' selector. -->
-<div class="panel">
-         <h2>Life Cycle</h2>
-        <p>Frogs begin life as eggs in water, hatch into tadpoles, and grow legs as they transform 
-        into adult frogs. This is called metamorphosis.</p>
+    <!-- ==========================
+         PANEL 2: LIFE CYCLE
+         ========================== -->
+    <div class="panel">
+        <h2>Life Cycle</h2>
+        <p>
+            Frogs begin life as eggs in water, hatch into tadpoles, and grow legs as they transform
+            into adult frogs. This is called metamorphosis.
+        </p>
 
-        <!-- FIXED: id="pond" quotes were missing; IDs must be in quotes in HTML. Without quotes, some browsers may ignore the attribute. -->
-        <!-- FIXED: Quotes added so CSS #pond applies correctly and the layout inside the panel works. -->
-        <!-- FIXED: Ensures the "pond" container has proper padding, background color, and rounded corners. -->
-<div id="pond">
-        <p>Here’s a “pond” — the parent container.</p>
+        <div id="pond">
+            <p>Here's a "pond" — the parent container.</p>
 
-            <!-- FIXED: <strong> was incorrectly closed as </strange>. Invalid tags break HTML parsing and can cause content to display incorrectly. -->
-            <!-- FIXED: Corrected to </strong> so the word “absolutely” is properly bolded. -->
-            <!-- FIXED: Now renders bold text correctly inside the paragraph. -->
-<div id="tadpole">
-        <p>I'm positioned <strong>absolutely</strong> within my parent!</p>
-</div>
-</div>
-</div>
+            <div id="tadpole">
+                <!-- Fixed: Closed <strong> tag correctly. Original had <strange> which is invalid HTML and broke formatting. -->
+                <p>I'm positioned <strong>absolutely</strong> within my parent!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================
+         PANEL 3: BEHAVIOR
+         ========================== -->
+    <div class="panel">
+        <!-- Fixed: Corrected <h2> closing tag. Original used <h3> which caused hierarchy issues. -->
+        <h2>Behavior</h2>
+        <p>
+            Many frogs are nocturnal. They use sticky tongues to catch insects and call loudly to attract mates.
+        </p>
+
+        <div id="fun-fact">
+            <!-- Fixed: Closed <p> properly. Original did not close <p> causing broken layout in browser. -->
+            <p><strong>Fun Fact:</strong> Some frogs can leap more than 20 times their body length!</p>
+        </div>
+    </div>
+
+    <!-- ==========================
+         FOOTER
+         ========================== -->
+    <div id="footer">
+        <!-- Fixed: Added proper spacing and closed tags. Original may have been valid but spacing inconsistent. -->
+        <p> 2025 Frogs of the Rainforest</p>
+    </div>
+
+</body>
+</html>
