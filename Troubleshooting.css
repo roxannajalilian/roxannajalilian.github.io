@@ -1,7 +1,4 @@
-/* ==========================
-   GLOBAL RESET
-   ========================== */
-* {
+{
     box-sizing: border-box;  
     /* Fixed: Added box-sizing to ensure padding and borders are included in element width/height calculations.
        Without this, elements could overflow their containers unexpectedly. */
