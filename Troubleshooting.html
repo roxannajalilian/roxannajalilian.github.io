@@ -1,113 +1,75 @@
 <!DOCTYPE html>
-<!-- FIXED: The original said < DOCTYPE himl> which is incorrect spelling and spacing.
-     The correct format must be EXACTLY <!DOCTYPE html> so the browser knows this
-     document uses modern HTML5 and renders it correctly. -->
+<!-- Corrected spelling: HTML5 requires <!DOCTYPE html> exactly.
+     This tells the browser to render the page in modern standards mode.
+     Without this, some layout features may not display correctly. -->
 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- FIXED: This ensures the site displays special characters correctly.
-         Without this, quotation marks, accents, and emojis may break or show incorrectly.
-         The original line was fine but must always stay at the top for proper encoding. -->
+    <!-- Ensures the browser reads text correctly, including symbols and emojis.
+         This prevents broken characters or weird question-mark symbols from appearing. -->
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- FIXED: The original had a weird character "‹" before meta.
-         This line tells mobile browsers to scale the page correctly so the layout
-         matches the example on phones, tablets, and computers. -->
+    <!-- Makes the layout scale properly on phones, tablets, and laptops.
+         Without this, the panels and top bar may look stretched or zoomed in. -->
 
     <title>Frogs of the Rainforest</title>
-    <!-- FIXED: Missing closing tag in original version.
-         The title is important because it appears in the browser tab
-         and helps users know what page they're on. -->
+    <!-- Title shows in the browser tab and helps identify the page. -->
 
-    <link rel="stylesheet" href="frogs.css">
-    <!-- FIXED: The original had href="frogscss" with no dot and no file extension.
-         The browser could not find the stylesheet. Now it properly links to frogs.css. -->
+    <link rel="stylesheet" href="Troubleshooting.css">
+    <!-- This was the most important fix.
+         You MUST link to the exact CSS filename or the page will look plain.
+         Your CSS is named “Troubleshooting.css”, so this connects the two files. -->
 </head>
 
 <body>
 
     <div id="topbar">
-        <!-- FIXED: Missing quotes around id, and missing closing tags.
-             IDs must always use quotes, otherwise the HTML validator reads them incorrectly.
-             This top bar is fixed so it stays at the top like your screenshot. -->
-
+        <!-- Fixed ID formatting and added correct heading structure.
+             This bar is fixed to the top and appears exactly like your example screenshot. -->
         <h1>🐸 Frogs of the Rainforest</h1>
-        <!-- ADDED: Frog emoji because your screenshot shows one.
-             This improves visual accuracy so your final product matches the assignment example. -->
-
         <h2>Name</h2>
-        <!-- FIXED: Missing closing </h2> in original.
-             Without closing tags, the browser gets confused and layout breaks. -->
     </div>
 
     <div class="panel">
-        <!-- FIXED: Original wrote <div floss="panel"> which is incorrect spelling.
-             "floss" is not a valid attribute, so CSS would not apply.
-             Changed to class="panel" to correctly style your content boxes. -->
-
+        <!-- Fixed spelling of class, closing tags, and formatting.
+             Panels are the white rounded boxes in your example. -->
         <h2>Meet the Frogs</h2>
-        <!-- FIXED: Original had <h2>Meet the Frogs<h2> (missing slash).
-             All headings require proper closing tags to maintain correct hierarchy. -->
-
         <p>Frogs are incredible amphibians that live on every continent except Antarctica. 
         Their smooth, moist skin helps them breathe through it.</p>
-        <!-- FIXED: No changes needed here, but this paragraph was wrapped properly for readability. -->
     </div>
 
     <div class="panel">
         <h2>Life Cycle</h2>
-
         <p>Frogs begin life as eggs in water, hatch into tadpoles, and grow legs as they transform 
         into adult frogs. This is called metamorphosis.</p>
-        <!-- FIXED: Original said "metamorphosis." correctly but had no spacing.
-             Also repaired multiple broken or missing closing tags for structure. -->
 
         <div id="pond">
-            <!-- FIXED: Properly formatted opening tag.
-                 Added indentation to improve readability and show nesting clearly. -->
-
+            <!-- Pond container must be position: relative for tadpole to sit correctly inside. -->
             <p>Here's a "pond" — the parent container.</p>
 
             <div id="tadpole">
-                <!-- FIXED: The original said position: absolutely which is invalid CSS.
-                     Correct version uses position: absolute; in CSS, but structure here was fixed.
-                     This tag also originally had broken <strong> and <strange> tags. -->
-
+                <!-- Tadpole is position: absolute to float inside the pond. -->
                 <p>I'm positioned <strong>absolutely</strong> within my parent!</p>
-                <!-- FIXED: Original used </strange> which is *not* an HTML tag.
-                     Replaced with correct </strong> so the bold formatting works. -->
             </div>
         </div>
     </div>
 
     <div class="panel">
         <h2>Behavior</h2>
-        <!-- FIXED: Original used <h2> Behavior</h3> which mixes heading levels.
-             H2 must always close with </h2>. -->
-
-        <p>Many frogs are nocturnal. They use sticky tongues to catch insects 
-        and call loudly to attract mates.</p>
-        <!-- FIXED: Spelling error: "noctural" changed to "nocturnal" to match correct English.
-             Proper spelling improves clarity, professionalism, and grading quality. -->
+        <p>Many frogs are nocturnal. They use sticky tongues to catch insects and call loudly to attract mates.</p>
 
         <div id="fun-fact">
-            <!-- FIXED: The original id had quotes broken: id="fun-fact*>
-                 That breaks all styling. Now fixed with correct quotes. -->
-
+            <!-- Fixed broken quotes and invalid ID formatting.
+                 This green fact box now matches your screenshot. -->
             <p><strong>Fun Fact:</strong> Some frogs can leap more than 20 times their body length!</p>
-            <!-- FIXED: Added closing </strong> and fixed missing tag closings
-                 so the bold title displays properly. -->
         </div>
     </div>
 
     <div id="footer">
+        <!-- Styled to match the bottom green bar in the example. -->
         <p>© 2025 Frogs of the Rainforest</p>
-        <!-- FIXED: Footer styled to match screenshot.
-             Added margin spacing so it does not overlap content,
-             and fixed missing structure from original. -->
     </div>
 
 </body>
 </html>
-
