@@ -1,4 +1,4 @@
-/* Global Styles */
+/* ---------------- Global Styles ---------------- */
 * {
     margin: 0;
     padding: 0;
@@ -7,13 +7,13 @@
 }
 
 body {
-    background-color: #f5efe6;
-    color: #4b2e2e;
+    background-color: #f5efe6; /* Creamy chocolate feel */
+    color: #4b2e2e; /* Chocolate brown text */
     line-height: 1.6;
     padding-bottom: 60px;
 }
 
-/* Header */
+/* ---------------- Header ---------------- */
 header {
     background-color: #a9746e;
     padding: 20px 0;
@@ -30,6 +30,7 @@ header h1 {
     margin-bottom: 10px;
 }
 
+/* ---------------- Navigation ---------------- */
 nav ul {
     list-style: none;
     display: flex;
@@ -45,17 +46,19 @@ nav ul li a {
     transition: all 0.3s ease;
 }
 
-nav ul li a:hover {
-    background-color: #8c5a52;
+nav ul li a:hover,
+nav ul li a.active {
+    background-color: #8c5a52; /* Darker brown hover */
     border-radius: 5px;
     color: #fff;
 }
 
-/* Sections */
+/* ---------------- Sections ---------------- */
 section {
     max-width: 1200px;
     margin: 40px auto;
     padding: 20px;
+    text-align: center;
 }
 
 section h2 {
@@ -65,10 +68,10 @@ section h2 {
     color: #4b2e2e;
 }
 
-/* Buttons */
+/* ---------------- Buttons ---------------- */
 a.button {
     display: inline-block;
-    margin-top: 10px;
+    margin-top: 15px;
     padding: 10px 20px;
     background-color: #a9746e;
     color: #fff5e6;
@@ -83,7 +86,7 @@ a.button:hover {
     color: #fff;
 }
 
-/* Menu Grid */
+/* ---------------- Menu Grid ---------------- */
 .menu-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -92,7 +95,6 @@ a.button:hover {
     margin: auto;
 }
 
-/* Menu Items */
 .menu-item {
     background-color: #fff0e6;
     border-radius: 15px;
@@ -130,7 +132,7 @@ a.button:hover {
     padding: 0 10px;
 }
 
-/* Footer */
+/* ---------------- Footer ---------------- */
 footer {
     background-color: #a9746e;
     text-align: center;
@@ -151,7 +153,7 @@ footer a:hover {
     color: #8c5a52;
 }
 
-/* Responsive */
+/* ---------------- Responsive ---------------- */
 @media (max-width: 500px) {
     nav ul {
         flex-direction: column;
