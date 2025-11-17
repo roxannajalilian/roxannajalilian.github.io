@@ -1,25 +1,21 @@
-/* ---------------- Global Styles ---------------- */
-/* Reset default margin/padding and apply box-sizing for easier layout control */
+/* Global Styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Roboto', sans-serif; /* Clean, readable font for body */
+    font-family: 'Roboto', sans-serif;
 }
 
-/* Body background and default text color */
-/* Soft creamy brown background for warm chocolate feel */
 body {
     background-color: #f5efe6;
-    color: #4b2e2e; /* Rich chocolate brown for text */
+    color: #4b2e2e;
     line-height: 1.6;
-    padding-bottom: 60px; /* extra space for footer */
+    padding-bottom: 60px;
 }
 
-/* ---------------- Header ---------------- */
-/* Sticky header for easy navigation, always visible on scroll */
+/* Header */
 header {
-    background-color: #a9746e; /* Warm brown for header */
+    background-color: #a9746e;
     padding: 20px 0;
     text-align: center;
     position: sticky;
@@ -27,15 +23,13 @@ header {
     z-index: 1000;
 }
 
-/* Main site title */
 header h1 {
-    font-family: 'Pacifico', cursive; /* Cute, inviting font */
-    color: #fff5e6; /* Light contrast for text */
+    font-family: 'Pacifico', cursive;
+    color: #fff5e6;
     font-size: 3em;
     margin-bottom: 10px;
 }
 
-/* Navigation menu styling */
 nav ul {
     list-style: none;
     display: flex;
@@ -52,19 +46,18 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    background-color: #8c5a52; /* Darker brown on hover */
+    background-color: #8c5a52;
     border-radius: 5px;
     color: #fff;
 }
 
-/* ---------------- Sections ---------------- */
+/* Sections */
 section {
     max-width: 1200px;
     margin: 40px auto;
     padding: 20px;
 }
 
-/* Section titles */
 section h2 {
     font-family: 'Pacifico', cursive;
     font-size: 2.5em;
@@ -72,7 +65,7 @@ section h2 {
     color: #4b2e2e;
 }
 
-/* ---------------- Buttons ---------------- */
+/* Buttons */
 a.button {
     display: inline-block;
     margin-top: 10px;
@@ -90,8 +83,7 @@ a.button:hover {
     color: #fff;
 }
 
-/* ---------------- Menu Page ---------------- */
-/* Grid layout for menu items, responsive design */
+/* Menu Grid */
 .menu-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -100,7 +92,7 @@ a.button:hover {
     margin: auto;
 }
 
-/* Individual menu card styling */
+/* Menu Items */
 .menu-item {
     background-color: #fff0e6;
     border-radius: 15px;
@@ -118,30 +110,27 @@ a.button:hover {
     box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
 
-/* Images inside menu cards */
 .menu-item img {
     width: 100%;
     height: 180px;
-    object-fit: cover; /* ensures all images same height and crop nicely */
+    object-fit: cover;
     border-radius: 10px;
     margin-bottom: 15px;
 }
 
-/* Menu headings */
 .menu-item h3 {
     font-family: 'Pacifico', cursive;
     color: #4b2e2e;
     margin-bottom: 10px;
 }
 
-/* Menu descriptions */
 .menu-item p {
     font-size: 1em;
     color: #4b2e2e;
-    padding: 0 10px; /* padding inside cards for readability */
+    padding: 0 10px;
 }
 
-/* ---------------- Footer ---------------- */
+/* Footer */
 footer {
     background-color: #a9746e;
     text-align: center;
@@ -149,10 +138,8 @@ footer {
     margin-top: 40px;
     color: #fff5e6;
     font-size: 0.9em;
-    position: relative;
 }
 
-/* Footer links (optional social icons) */
 footer a {
     color: #fff5e6;
     margin: 0 10px;
@@ -164,7 +151,7 @@ footer a:hover {
     color: #8c5a52;
 }
 
-/* ---------------- Responsive ---------------- */
+/* Responsive */
 @media (max-width: 500px) {
     nav ul {
         flex-direction: column;
