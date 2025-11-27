@@ -1,123 +1,62 @@
-/* ==========================
-   BODY STYLING
-   ========================== */
+
 body {
-    font-family: Verdana, sans-serif;  
-    /* Fixed: Ensures consistent, readable font across browsers. Original CSS would inherit inconsistent default fonts. */
-    background-color: #dfffe0;         
-    /* Fixed: Added missing semicolon in original CSS. This prevented the color from being applied. */
-    color: #083b0a;                    
-    /* Fixed: Added missing semicolon and corrected typo. Original CSS may have caused parsing errors. */
-    padding-top: 120px;                
-    /* Fixed: Adds space at top so content is not hidden behind the fixed topbar. Original layout overlapped topbar. */
+    font-family: Verdana, sans-serif;
+    margin: 0;
+    background-color: #dfffe0; /* Fixed: Missing semicolon in original CSS. Without it, the browser could ignore this declaration or misinterpret subsequent properties. Ensures the background color is correctly applied to the <body>. */
+    color: #083b0a;  /* Fixed: Original CSS missing semicolon and had a typo. This ensures text color is rendered consistently across all elements inside <body>. */
 }
 
-/* ==========================
-   TOP BAR
-   ========================== */
-#topbar {
-    position: fixed;                    
-    /* Fixed: Set to fixed so the topbar stays visible when scrolling. Original CSS might not have had positioning or used wrong selector. */
-    top: 0;                             
-    /* Fixed: Corrected syntax. Original CSS had missing colon, so position didn’t apply. */
-    width: 100%;                        
-    /* Fixed: Ensures the topbar spans the full width of the page. Original may have rendered incorrectly. */
-    background-color: #2e8b57;          
-    /* Fixed: Color typo corrected ("colour" → "color"). Original CSS didn’t apply background color. */
-    color: white;                       
-    /* Fixed: Corrected color syntax for text. */
-    text-align: center;                 
-    /* Fixed: Centers content horizontally. Original CSS may have missed this, causing misalignment. */
-    padding: 20px 0;                    
-    /* Fixed: Adds vertical padding. Original CSS may have had missing values or typos. */
-    z-index: 5;                         
-    /* Fixed: Ensures topbar stays on top of other content. Original CSS lacked z-index. */
+.topbar {
+    position: fixed;
+    top: 0;    /* Fixed: Original CSS missing colon after 'top'. Invalid syntax caused browser to ignore this property, so the topbar wouldn't stick to the top. */
+    width: 100%;
+    background-color: #2e8b57;
+    color: white;  /* Fixed: Original used 'colour', which is not recognized by CSS parsers. Correct property is 'color'. Ensures text is visible on dark background. */
+    text-align: center;
+    padding: 20px 0;
+    z-index: 5;   /* Fixed: Original missing z-index. Without it, topbar could be overlapped by other content with higher stacking context. */
 }
 
-/* ==========================
-   PANELS
-   ========================== */
-.panel {
-    width: 70%;                         
-    /* Fixed: Original may have been misnamed as .panels or had wrong selector. Sets panel width. */
-    margin: 40px auto;                  
-    /* Fixed: Centers panel and adds spacing between sections. Original CSS used 120px margin incorrectly or on wrong selector. */
-    background-color: white;            
-    /* Fixed: Ensures panels are readable with clear background. Original CSS may not have applied background. */
-    border-radius: 10px;                
-    /* Fixed: Rounded corners for style. Original may have been missing. */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3); 
-    /* Fixed: Adds subtle shadow. Original CSS may have been missing or invalid. */
-    padding: 30px;                      
-    /* Fixed: Original CSS typo “pudding” → corrected to “padding”. Provides inner spacing. */
-    position: relative;                 
-    /* Fixed: Allows child elements (like tadpole) to be positioned absolutely within. Original missing relative positioning caused tadpole to float incorrectly. */
+.panels {
+    width: 70%;
+    margin: 120px auto;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    padding: 30px;    /* Fixed: Original had 'pudding', which is invalid CSS. Corrected to 'padding' so spacing inside the panel is applied properly. */
+    position: relative;   /* Fixed: Added relative positioning to enable absolutely positioned child elements (e.g., #tadpole) to be positioned relative to this container. */
 }
 
-/* ==========================
-   POND BOX
-   ========================== */
 #pond {
-    position: relative;                 
-    /* Fixed: Original CSS may have been missing or incorrectly applied. Needed so absolute elements inside (tadpole) are positioned relative to pond. */
-    background-color: #a5f0a0;          
-    /* Fixed: Added '#' to hex color. Original “a5f0a0” without '#' is invalid and ignored by browser. */
-    padding: 25px;                      
-    /* Fixed: Original CSS typo “25pz” → corrected to “25px”. Padding ensures space inside pond. */
-    border-radius: 8px;                 
-    /* Fixed: Original missing; adds rounded corners to match panel style. */
-    margin-top: 25px;                   
-    /* Fixed: Adds spacing above pond. Original may have been missing, causing crowding. */
+    position: relative;
+    background-color: #a5f0a0;  /* Fixed: Original hex code missing '#'. CSS ignores invalid color values, so background would not appear. */
+    padding: 25px;   /* Fixed: Original '25pz' typo. Invalid units are ignored by browsers, so spacing inside the pond was broken. Correct 'px' ensures proper padding. */
+    border-radius: 8px;
+    margin-top: 25px;
 }
 
-/* ==========================
-   TADPOLE BOX
-   ========================== */
 #tadpole {
-    position: absolute;                 
-    /* Fixed: Original had typo “absolutely”. Correct syntax fixes positioning within pond. */
-    top: 10px;                          
-    /* Fixed: Specifies vertical offset from top of pond. Original missing or ignored. */
-    left: 15px;                         
-    /* Fixed: Specifies horizontal offset from left of pond. */
-    background-color: #6dcf78;          
-    /* Fixed: Original CSS may have had color typo or was missing. */
-    color: white;                       
-    /* Fixed: Ensures text contrast on green background. Original missing. */
-    padding: 10px;                      
-    /* Fixed: Inner spacing so text doesn’t touch edges. Original may have been ignored. */
-    border-radius: 6px;                 
-    /* Fixed: Adds rounded corners for style. Original missing. */
+    position: absolute;  /* Fixed: Original 'absolutely' is invalid syntax. Correct 'absolute' allows proper positioning inside the parent (#pond). */
+    top: 10px;
+    left: 15px;
+    background-color: #6dcf78;
+    color: white; /* Fixed: Added to ensure readable text contrast on green background. */
+    padding: 10px;
+    border-radius: 6px;
 }
 
-/* ==========================
-   FUN FACT BOX
-   ========================== */
 #fun-fact {
-    background-color: #c7fbb5;          
-    /* Fixed: Original typo in hex or CSS ignored, now corrected. */
-    border-left: 6px solid #2e8b57;     
-    /* Fixed: Adds decorative left border. Original may have had invalid syntax. */
-    padding: 12px;                       
-    /* Fixed: Space inside box. Original may have been missing or broken. */
-    margin-top: 20px;                    
-    /* Fixed: Adds space above fun fact box. Original may have been missing. */
-    border-radius: 6px;                  
-    /* Fixed: Matches other rounded elements. Original missing. */
+    background-color: #c7fbb5; /* Fixed: Original had invalid hex or typo. Corrected to valid CSS hex color. */
+    border-left: 6px solid #2e8b57;
+    padding: 12px;
+    margin-top: 20px;
+    border-radius: 6px;
 }
 
-/* ==========================
-   FOOTER
-   ========================== */
 #footer {
-    text-align: center;                  
-    /* Fixed: Original may have been missing, causing footer text to be left-aligned. */
-    padding: 20px;                       
-    /* Fixed: Adds space inside footer so text isn’t cramped. */
-    background-color: #2e8b57;           
-    /* Fixed: Matches topbar color. Original may have been ignored due to syntax error. */
-    color: white;                         
-    /* Fixed: Ensures footer text is readable on dark background. Original missing. */
-    margin-top: 60px;                     
-    /* Fixed: Adds space above footer. Original missing, causing it to be too close to previous panel. */
+    text-align: center;
+    padding: 20px;
+    background-color: #2e8b57;
+    color: white;
+    margin-top: 60px;
 }
