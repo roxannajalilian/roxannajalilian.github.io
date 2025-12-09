@@ -1,1 +1,68 @@
+// app.js - Delulu Detector logic
 
+const verifyBtn = document.getElementById('verify-age');
+const ageInput = document.getElementById('age-input');
+const container = document.querySelector('.container');
+const ageError = document.getElementById('age-error');
+
+const minorQuestions = [
+    'Did you get anxious after a text?',
+    'Do you replay the conversation in your head?',
+    'Do you check their social media often?',
+    'Do you worry about their response time?',
+    'Do you imagine scenarios that may never happen?',
+    'Do you read too much into emojis?',
+    'Do you feel ignored when they take long to reply?',
+    'Do you ask friends if you are overthinking?',
+    'Do you overanalyze simple messages?',
+    'Do you feel sad if they don’t respond immediately?'
+];
+
+verifyBtn.addEventListener('click', () => {
+    const age = parseInt(ageInput.value);
+    if (!age || age < 0) {
+        ageError.style.display = 'block';
+        return;
+    }
+    ageError.style.display = 'none';
+
+    container.innerHTML = `<h1>Delulu Detector Quiz</h1>`;
+
+    const questions = age < 18 ? minorQuestions : minorQuestions; // placeholder for adult
+
+    questions.forEach((q, i) => {
+        const div = document.createElement('div');
+        div.classList.add('question');
+        div.innerHTML = `<p>${i+1}. ${q}</p>`;
+        const optionsDiv = document.createElement('div');
+        optionsDiv.classList.add('options');
+        optionsDiv.innerHTML = `
+            <label><input type='radio' name='q${i}' value='1'> Yes</label>
+            <label><input type='radio' name='q${i}' value='0'> No</label>
+        `;
+        div.appendChild(optionsDiv);
+        container.appendChild(div);
+    });
+
+    const submitBtn = document.createElement('button');
+    submitBtn.textContent = 'Submit';
+    container.appendChild(submitBtn);
+
+    const resultDiv = document.createElement('div');
+    resultDiv.classList.add('result');
+    container.appendChild(resultDiv);
+
+    submitBtn.addEventListener('click', () => {
+        let score = 0;
+        questions.forEach((_, i) => {
+            const selected = document.querySelector(`input[name='q${i}']:checked`);
+            if (selected) score += parseInt(selected.value);
+        });
+        let percentage = Math.round((score / questions.length) * 100);
+        resultDiv.textContent = `Delulu Score: ${percentage}%`;
+
+        if (percentage < 30) resultDiv.textContent += ' - Calm, not overthinking';
+        else if (percentage < 70) resultDiv.textContent += ' - Moderate, watch your thoughts';
+        else resultDiv.textContent += ' - High, delulu alert!';
+    });
+});
