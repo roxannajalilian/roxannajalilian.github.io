@@ -1,4 +1,90 @@
-<!-- ====== PRIVACY & TERMS PAGE ====== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delulu Detector</title>
+    <link rel="stylesheet" href="style33.css">
+</head>
+<body>
+
+<!-- ================= HOME PAGE ================= -->
+<div id="home-page" class="page">
+    <h1>Delulu Detector</h1>
+    <p>Detect overthinking in your conversations.</p>
+    
+    <div class="home-buttons">
+        <button onclick="showAgeVerification()">Start</button>
+        <button onclick="goToPrivacy()">Privacy & Terms</button>
+    </div>
+</div>
+
+<!-- ================= AGE VERIFICATION ================= -->
+<div id="age-verification-page" class="page hidden">
+    <h2>Age Verification</h2>
+    <label for="dob">Enter your birth year:</label>
+    <input type="number" id="dob" placeholder="YYYY">
+    <button onclick="verifyAge()">Submit</button>
+    <p id="age-error" class="error"></p>
+</div>
+
+<!-- ================= MINORS QUIZ ================= -->
+<div id="minor-quiz-page" class="page hidden">
+    <h2>Delulu Quiz — Safe Mode</h2>
+    <p>Answer honestly to see if you're overthinking messages.</p>
+
+    <form id="minor-quiz-form">
+        <div class="quiz-question">
+            <label>1. Do you check texts repeatedly?</label><br>
+            <select name="q1" required>
+                <option value="">Select</option>
+                <option value="0">No</option>
+                <option value="1">Sometimes</option>
+                <option value="2">Yes</option>
+            </select>
+        </div>
+
+        <div class="quiz-question">
+            <label>2. Do you overanalyze what someone said?</label><br>
+            <select name="q2" required>
+                <option value="">Select</option>
+                <option value="0">No</option>
+                <option value="1">Sometimes</option>
+                <option value="2">Yes</option>
+            </select>
+        </div>
+
+        <div class="quiz-question">
+            <label>3. Do you feel anxious waiting for replies?</label><br>
+            <select name="q3" required>
+                <option value="">Select</option>
+                <option value="0">No</option>
+                <option value="1">Sometimes</option>
+                <option value="2">Yes</option>
+            </select>
+        </div>
+
+        <!-- Add up to 10-15 questions -->
+        <button type="button" onclick="submitMinorQuiz()">Submit</button>
+    </form>
+    <p id="minor-result" class="result"></p>
+</div>
+
+<!-- ================= ADULT FEATURES ================= -->
+<div id="adult-page" class="page hidden">
+    <h2>Delulu Detector — Full Mode</h2>
+    <p>Use these tools to analyze your chats and detect delulu moments.</p>
+    
+    <div class="adult-tools">
+        <button onclick="alert('Message Analyzer coming soon!')">Message Analyzer</button>
+        <button onclick="alert('Screen Share Analyzer coming soon!')">Screen Share</button>
+        <button onclick="alert('Voice Input Analyzer coming soon!')">Voice Input</button>
+        <button onclick="alert('Brutal Best Friend Mode coming soon!')">Brutal Mode</button>
+        <button onclick="alert('Reality Check Meter coming soon!')">Reality Check Meter</button>
+    </div>
+</div>
+
+<!-- ================= PRIVACY & TERMS ================= -->
 <div id="privacy-page" class="page hidden">
     <h2>Privacy & Terms of Use</h2>
     
@@ -23,8 +109,12 @@
         <li>By using this app, you agree to provide accurate information.</li>
         <li>Violation of terms may result in temporary or permanent lockout.</li>
         <li>Appeals can be submitted if you feel locked out by mistake.</li>
-        <li>All content is for educational/entertainment purposes and not professional advice.</li>
+        <li>All content is for entertainment purposes and not professional advice.</li>
     </ul>
 
     <button onclick="showPage('home-page')">Back to Home</button>
 </div>
+
+<script src="script.javascript"></script>
+</body>
+</html>
