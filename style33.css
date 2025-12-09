@@ -1,28 +1,20 @@
-body {
-font-family: Verdana, sans-serif;
-margin: 0;
-background-color: #dfffe0;
-color: #083b0a;
-padding-top: 50px;
+/* Privacy & Terms styling */
+#privacy-page ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-bottom: 15px;
 }
-.container {
-width: 70%;
-margin: 0 auto;
-background-color: white;
-padding: 20px;
-border-radius: 10px;
-box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+
+#privacy-page h3 {
+    margin-top: 15px;
+    color: #2e8b57;
 }
-h1 {
-text-align: center;
-color: #2e8b57;
+
+#privacy-page button {
+    display: block;
+    margin: 20px auto 0 auto;
 }
-.question {
-margin-bottom: 15px;
-}
-.options label {
-margin-right: 10px;
-}
+
 button {
 background-color: #2e8b57;
 color: white;
