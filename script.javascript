@@ -1,49 +1,77 @@
-const verifyBtn = document.getElementById('verify-age');
-verifyBtn.addEventListener('click', () => {
-const age = parseInt(ageInput.value);
-if (!age || age < 0) {
-ageError.style.display = 'block';
-return;
+// ====== NAVIGATION ======
+function showPage(pageId) {
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(page => page.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
 }
-ageError.style.display = 'none';
 
-container.innerHTML = `<h1>Delulu Detector Quiz</h1>`;
+function showAgeVerification() {
+    showPage('age-verification-page');
+}
 
-const questions = age < 18 ? minorQuestions : minorQuestions; // placeholder for adult
+function goToPrivacy() {
+    showPage('privacy-page');
+}
 
-questions.forEach((q, i) => {
-const div = document.createElement('div');
-div.classList.add('question');
-div.innerHTML = `<p>${i+1}. ${q}</p>`;
-const optionsDiv = document.createElement('div');
-optionsDiv.classList.add('options');
-optionsDiv.innerHTML = `
-<label><input type='radio' name='q${i}' value='1'> Yes</label>
-<label><input type='radio' name='q${i}' value='0'> No</label>
-`;
-div.appendChild(optionsDiv);
-container.appendChild(div);
-});
+// ====== AGE VERIFICATION ======
+let minorLockout = false;
+let minorContradictions = 0;
+let adultLockout = false;
 
-const submitBtn = document.createElement('button');
-submitBtn.textContent = 'Submit';
-container.appendChild(submitBtn);
+function verifyAge() {
+    const dob = document.getElementById('dob').value;
+    const age = new Date().getFullYear() - dob;
 
-const resultDiv = document.createElement('div');
-resultDiv.classList.add('result');
-container.appendChild(resultDiv);
+    if (!dob || age < 0) {
+        document.getElementById('age-error').innerText = "Please enter a valid year.";
+        return;
+    }
 
-submitBtn.addEventListener('click', () => {
-let score = 0;
-questions.forEach((_, i) => {
-const selected = document.querySelector(`input[name='q${i}']:checked`);
-if (selected) score += parseInt(selected.value);
-});
-let percentage = Math.round((score / questions.length) * 100);
-resultDiv.textContent = `Delulu Score: ${percentage}%`;
+    if (age >= 14 && age <= 17) {
+        if (minorLockout) {
+            alert("You are temporarily locked out due to previous inconsistencies.");
+            return;
+        }
+        showPage('minor-quiz-page');
+    } else if (age >= 18) {
+        showPage('adult-page');
+    } else {
+        document.getElementById('age-error').innerText = "Sorry, this app is for ages 14+.";
+    }
+}
 
-if (percentage < 30) resultDiv.textContent += ' - Calm, not overthinking';
-else if (percentage < 70) resultDiv.textContent += ' - Moderate, watch your thoughts';
-else resultDiv.textContent += ' - High, delulu alert!';
-});
-});
+// ====== MINOR QUIZ SCORING ======
+function submitMinorQuiz() {
+    const form = document.getElementById('minor-quiz-form');
+    const formData = new FormData(form);
+    let score = 0;
+    let contradictionDetected = false;
+
+    formData.forEach(value => {
+        const val = parseInt(value);
+        score += val;
+        if (val === 2) contradictionDetected = true;
+    });
+
+    // Lockout logic
+    if (contradictionDetected) {
+        minorContradictions++;
+        if (minorContradictions === 1) {
+            minorLockout = true;
+            alert("We noticed inconsistent answers. Locked for 30 minutes.");
+            setTimeout(() => minorLockout = false, 1800000); // 30 mins
+        } else if (minorContradictions >= 2) {
+            minorLockout = true;
+            alert("Multiple inconsistencies detected. Locked permanently. Appeal via support.");
+        }
+    }
+
+    // Show result
+    let percent = Math.min(Math.floor((score / (formData.length*2)) * 100), 100);
+    let resultText = "";
+    if (percent <= 30) resultText = "Low delulu risk!";
+    else if (percent <= 70) resultText = "Moderate delulu risk!";
+    else resultText = "High delulu risk!";
+    document.getElementById('minor-result').innerText = `Score: ${percent}% - ${resultText}`;
+}
+
