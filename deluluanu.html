@@ -3,186 +3,169 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector — Dark Mode</title>
+  <title>Delulu Detector — iOS Style</title>
   <link rel="stylesheet" href="style33.css">
 </head>
 <body>
-  <!-- PRIVACY / TERMS (first screen) -->
+  <!-- PRIVACY / TERMS (FIRST) -->
   <main id="privacy-page" class="page active">
-    <div class="card">
+    <section class="card">
       <h1>Delulu Detector</h1>
-      <p class="muted">
-        This app offers a PG, fun quiz for minors (14–17) — <strong>no AI scanning</strong> of messages.
-        Adults (18+) may use AI-assisted analysis (text/voice) and advanced tools.
-      </p>
-
-      <p class="muted-small">
-        By clicking <strong>Accept</strong> you confirm you read the privacy note. Adults will be asked to consent before analysis.
-      </p>
+      <p class="muted">Quick note: <strong>Minors (14–17)</strong> get a short PG quiz only — no message scanning. Adults (18+) may use advanced analysis features (text & voice).</p>
+      <p class="muted-small">By clicking Accept you agree to the terms and confirm you will use the app responsibly. Appeals available if locked out by mistake.</p>
 
       <div class="row">
         <button id="accept-btn">Accept & Continue</button>
-        <button id="read-more-btn">Read Privacy</button>
+        <button id="privacy-detail-btn" class="outline">Privacy & Details</button>
       </div>
-    </div>
+    </section>
   </main>
 
-  <!-- READ PRIVACY DETAILS -->
+  <!-- PRIVACY DETAILS -->
   <section id="privacy-detail-page" class="page">
-    <div class="card">
+    <section class="card">
       <h2>Privacy & Terms</h2>
-      <div class="content-col">
-        <h3>Minors (14–17)</h3>
-        <ul>
-          <li>Only PG quiz. No screenshots, no message scanning, no voice processing.</li>
-          <li>Answers are kept locally (not sent anywhere).</li>
-        </ul>
-
-        <h3>Adults (18+)</h3>
-        <ul>
-          <li>Advanced features (text/voice) are processed locally in-browser where possible.</li>
-          <li>If back-end is later connected, screenshots/voice would be encrypted and auto-deleted after analysis (opt-in).</li>
-        </ul>
-
-        <h3>General</h3>
-        <ul>
-          <li>Rules: honest DOB; suspicious/contradictory inputs may trigger temporary or permanent lockout for safety.</li>
-          <li>Appeals may be submitted from the Appeal page.</li>
-        </ul>
-      </div>
-
+      <h3>Minors (14–17)</h3>
+      <ul>
+        <li>No message scanning, no screenshots required.</li>
+        <li>Quiz answers stay local to your browser (unless you choose to share).</li>
+      </ul>
+      <h3>Adults (18+)</h3>
+      <ul>
+        <li>Text and voice analysis run client-side (browser) — optional back-end later.</li>
+        <li>All data deletion and opt-out explained in-app.</li>
+      </ul>
       <div class="row">
-        <button onclick="showPage('privacy-page')">Back</button>
+        <button onclick="showPage('privacy-page')" class="outline">Back</button>
         <button id="agree-privacy-detail">I Agree</button>
       </div>
-    </div>
+    </section>
   </section>
 
   <!-- AGE VERIFICATION -->
   <section id="age-page" class="page">
-    <div class="card">
+    <section class="card">
       <h2>Age Verification</h2>
-      <p class="muted">Enter your birth year (we’ll route you to the right mode).</p>
+      <label class="label">Enter your birth year</label>
       <input id="birth-year" type="number" placeholder="e.g. 2007" min="1900" max="2100" />
+      <p id="age-message" class="error" aria-live="polite"></p>
 
       <div class="row">
         <button id="verify-age-btn">Continue</button>
-        <button onclick="showPage('privacy-page')">Cancel</button>
+        <button onclick="showPage('privacy-page')" class="outline">Cancel</button>
       </div>
-
-      <p id="age-message" class="error" aria-live="polite"></p>
-    </div>
+    </section>
   </section>
 
-  <!-- HOME (after age pass) -->
+  <!-- HOME PAGE -->
   <section id="home-page" class="page">
-    <div class="card">
+    <section class="card">
       <h2 id="welcome-title">Welcome</h2>
-      <p id="welcome-sub" class="muted">Choose a tool — minors get a safe quiz, adults get full tools.</p>
+      <p class="muted" id="welcome-sub">Pick a tool below — minors get a safe quiz; adults get full features.</p>
 
-      <div id="home-tools" class="grid">
+      <div class="grid">
         <button id="start-quiz-btn">Take Quiz</button>
-        <button id="adult-tools-btn" class="hidden">Adult Tools</button>
-        <button id="appeal-btn">Appeal Lockout</button>
+        <button id="adult-tools-btn" class="secondary hidden">Adult Tools</button>
+        <button id="appeal-btn" class="outline">Appeal Lockout</button>
       </div>
 
       <div class="row small">
-        <button onclick="showPage('privacy-page')">Privacy</button>
-        <button onclick="restart()">Restart</button>
+        <button onclick="showPage('privacy-page')" class="outline">Privacy</button>
+        <button onclick="restart()" class="outline">Restart</button>
       </div>
-    </div>
+    </section>
   </section>
 
-  <!-- MINOR QUIZ (10 questions) -->
+  <!-- MINOR QUIZ PAGE -->
   <section id="minor-page" class="page">
-    <div class="card large">
-      <h2>Delulu Quiz — Quick Check (PG)</h2>
-      <p class="muted">Answer honestly. Options: <em>Yes / Sometimes / No</em></p>
+    <section class="card large">
+      <h2>Delulu Quiz — Quick Check</h2>
+      <p class="muted">10 short questions. Answer honestly — options: <strong>Yes / Sometimes / No</strong>.</p>
 
       <form id="minor-quiz-form" class="quiz-form" autocomplete="off">
-        <!-- Questions injected by JS -->
+        <!-- questions injected by script.js -->
       </form>
 
       <div class="row">
         <button id="minor-submit-btn">Submit</button>
-        <button onclick="showPage('home-page')">Back</button>
+        <button onclick="showPage('home-page')" class="outline">Back</button>
       </div>
 
       <div id="minor-result" class="result" aria-live="polite"></div>
-    </div>
+    </section>
   </section>
 
-  <!-- ADULT TOOLS -->
+  <!-- ADULT TOOLS PAGE -->
   <section id="adult-page" class="page">
-    <div class="card large">
-      <h2>Adult Tools — Full Mode</h2>
-      <p class="muted">Consent is required before using analysis tools. Use responsibly.</p>
+    <section class="card large">
+      <h2>Adult Tools</h2>
+      <p class="muted">Consent is required when using analysis tools — we show you what we use and delete data on request.</p>
 
       <div class="tool-grid">
-        <!-- Message analyzer -->
-        <div class="tool card-tool">
+        <!-- Message Analyzer -->
+        <div class="card-tool">
           <h3>Message Analyzer</h3>
-          <textarea id="chat-input" rows="6" placeholder="Paste chat text here (or paste screenshot text)"></textarea>
+          <textarea id="chat-input" placeholder="Paste chat text here..." rows="6"></textarea>
           <div class="row">
             <button id="analyze-btn">Analyze Chat</button>
-            <button id="clear-chat-btn">Clear</button>
+            <button id="clear-chat-btn" class="outline">Clear</button>
           </div>
         </div>
 
-        <!-- Voice input -->
-        <div class="tool card-tool">
-          <h3>Voice Input (browser)</h3>
-          <p class="muted">Tap to speak — the browser will transcribe and analyze tone.</p>
+        <!-- Voice Input -->
+        <div class="card-tool">
+          <h3>Voice Input</h3>
+          <p class="muted-small">Use your voice — the browser transcribes and we analyze the text.</p>
           <div class="row">
             <button id="voice-start-btn">Start Recording</button>
-            <button id="voice-stop-btn" disabled>Stop</button>
+            <button id="voice-stop-btn" disabled class="outline">Stop</button>
           </div>
           <div id="voice-transcript" class="muted-small"></div>
         </div>
 
-        <!-- Brutal Mode & Reality Check -->
-        <div class="tool card-tool">
+        <!-- Brutal Mode + Reality Meter -->
+        <div class="card-tool">
           <h3>Brutal Best-Friend</h3>
-          <p class="muted">Toggle for blunt, humorous feedback.</p>
+          <p class="muted-small">Toggle for blunt, funny feedback.</p>
           <div class="row">
             <button id="brutal-toggle-btn">Toggle Brutal Mode</button>
           </div>
 
           <h4>Reality Check Meter</h4>
-          <div id="reality-meter" class="meter">
+          <div class="meter">
             <div id="reality-fill" class="meter-fill"></div>
           </div>
         </div>
 
-        <!-- Red Flag & Mood -->
-        <div class="tool card-tool">
+        <!-- Red Flags / Mood -->
+        <div class="card-tool">
           <h3>Red Flags & Mood</h3>
-          <div id="red-flag-output" class="muted-small"></div>
+          <div id="red-flag-output" class="muted-small">No analysis yet.</div>
           <div id="mood-output" class="muted-small"></div>
         </div>
       </div>
 
       <div class="row">
-        <button onclick="showPage('home-page')">Back</button>
-        <button id="download-report-btn">Download Report (JSON)</button>
+        <button onclick="showPage('home-page')" class="outline">Back</button>
+        <button id="download-report-btn" class="outline">Download Report (JSON)</button>
       </div>
 
       <div id="adult-feedback" class="result" aria-live="polite"></div>
-    </div>
+    </section>
   </section>
 
   <!-- APPEAL PAGE -->
   <section id="appeal-page" class="page">
-    <div class="card">
+    <section class="card">
       <h2>Appeal Lockout</h2>
-      <p class="muted">If you were locked out and think it was a mistake, write a short explanation.</p>
-      <textarea id="appeal-text" rows="5" placeholder="Explain briefly..."></textarea>
+      <p class="muted-small">If you were locked out and think it was a mistake, explain briefly below.</p>
+      <textarea id="appeal-text" rows="4" placeholder="Why should we unlock you?"></textarea>
       <div class="row">
         <button id="send-appeal-btn">Send Appeal</button>
-        <button onclick="showPage('home-page')">Back</button>
+        <button onclick="showPage('home-page')" class="outline">Back</button>
       </div>
       <div id="appeal-status" class="muted-small"></div>
-    </div>
+    </section>
   </section>
 
   <script src="script.js"></script>
