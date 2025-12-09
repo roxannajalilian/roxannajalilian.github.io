@@ -1,115 +1,82 @@
-/* Dark Mode Elegant — style33.css
-   Clean, elegant, purple-accented UI for Delulu Detector.
-*/
+/* style33.css — Minimal iOS-style theme for Delulu Detector */
 
-/* Base */
+/* Variables */
 :root{
-  --bg: #0f0f13;
-  --panel: #15151a;
-  --muted: #9aa0b0;
-  --accent: #8a5ef7;
-  --accent-2: #6b3fe8;
-  --glass: rgba(255,255,255,0.03);
-  --success: #3ad29f;
-  --danger: #ff6b6b;
-  --card-radius: 12px;
-  --gap: 14px;
+  --bg:#fbfbfd;            /* page background */
+  --card:#ffffff;          /* card color */
+  --muted:#6b7280;         /* muted text */
+  --accent:#0b6cff;        /* primary accent */
+  --accent-2:#7a3cf5;      /* secondary accent */
+  --danger:#ff4d6d;
+  --success:#10b981;
+  --glass:rgba(11,108,255,0.06);
+  --radius:14px;
+  --shadow: 0 10px 30px rgba(20,20,40,0.06);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 
+/* Base */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0;
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: linear-gradient(180deg, #09090b 0%, #0f0f13 100%);
-  color:#e6e9ef;
+  font-family:var(--font-sans);
+  background:linear-gradient(180deg,#f7f8fb 0%,var(--bg) 100%);
+  color:#0b1220;
   -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
   padding:28px;
 }
 
-/* Page container */
-.page {
-  display:none;
-  max-width:1000px;
-  margin: 14px auto;
-  padding: 22px;
-}
+/* Page wrapper */
+.page{display:none;max-width:980px;margin:18px auto;padding:8px}
 .page.active{display:block}
 
-/* Cards */
-.card {
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border-radius: var(--card-radius);
-  padding: 24px;
-  box-shadow: 0 6px 30px rgba(8,6,20,0.6);
-  border: 1px solid rgba(255,255,255,0.03);
-}
+/* Card */
+.card{background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);border:1px solid rgba(9,18,35,0.04)}
+.card.large{padding:22px}
 
-/* Headings */
-h1,h2,h3{margin:0 0 12px 0}
-h1{font-size:28px;color:var(--accent);letter-spacing:0.4px}
-h2{font-size:20px;color:#eef0ff}
+/* Headings & text */
+h1,h2,h3{margin:0 0 10px 0}
+h1{color:var(--accent);font-size:24px}
+h2{font-size:20px;color:#0b1220}
+.muted{color:var(--muted);margin-bottom:8px}
+.muted-small{color:#9aa0ad;font-size:13px}
 
-/* muted text */
-.muted{color:var(--muted);margin-bottom:10px}
-.muted-small{color:#aeb6d7;font-size:13px}
-
-/* rows and grid */
+/* Grid & rows */
 .row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:12px}
-.row.small{justify-content:space-between;align-items:center}
-.grid{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:12px}
+.row.small{justify-content:space-between}
+.grid{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:12px}
 
 /* Buttons */
 button{
   background:linear-gradient(180deg,var(--accent),var(--accent-2));
-  color:white;
-  border:0;
-  padding:10px 14px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:600;
-  box-shadow:0 6px 18px rgba(107,63,232,0.12);
-  transition: transform .12s ease, box-shadow .12s ease;
+  color:white;border:0;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600;
+  box-shadow:0 8px 20px rgba(11,108,255,0.08);
 }
-button:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(107,63,232,0.18)}
-button:active{transform:translateY(-1px);}
+button.outline{background:transparent;color:var(--accent);border:1px solid rgba(11,108,255,0.12);box-shadow:none}
+button.secondary{background:linear-gradient(180deg,#6b7280,#9ca3af)}
+button:hover{transform:translateY(-3px);transition:transform .12s ease}
 
-/* inputs & textarea */
+/* Inputs & textarea */
 input[type="number"], textarea, select {
-  width:100%;
-  padding:10px 12px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.04);
-  background:var(--panel);
-  color:#e9eef8;
-  font-size:15px;
-  outline:none;
-  resize:vertical;
+  width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(9,18,35,0.06);
+  background:linear-gradient(180deg,#fff,#fbfbfd);font-size:15px;color:#0b1220;
 }
-textarea{min-height:110px}
 
-/* quiz styling */
-.quiz-form{display:flex;flex-direction:column;gap:12px;max-width:720px;margin:16px auto}
-.quiz-question{background:var(--glass);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
-.quiz-question p{margin:0 0 8px 0;font-weight:600;color:#f3f5ff}
-.quiz-option{display:flex;gap:10px;align-items:center;margin:6px 0}
-.quiz-option input{accent-color:var(--accent)}
+/* Quiz */
+.quiz-form{display:flex;flex-direction:column;gap:12px;max-width:720px;margin:12px auto}
+.quiz-question{background:var(--glass);padding:12px;border-radius:10px;border:1px solid rgba(11,108,255,0.03)}
+.quiz-question p{margin:0 0 8px 0;font-weight:600}
+.quiz-option{display:flex;align-items:center;gap:10px;margin:6px 0}
 
-/* result */
-.result{margin-top:14px;padding:12px;border-radius:8px;background:rgba(255,255,255,0.02);color:#f1f6ff;font-weight:700;text-align:center}
-
-/* meter */
-.meter{background:rgba(255,255,255,0.03);height:14px;border-radius:999px;overflow:hidden}
+/* Result & meter */
+.result{margin-top:14px;padding:12px;border-radius:10px;background:linear-gradient(180deg,#f3f7ff,#ffffff);text-align:center}
+.meter{background:rgba(11,108,255,0.06);height:12px;border-radius:999px;overflow:hidden;margin-top:8px}
 .meter-fill{height:100%;background:linear-gradient(90deg,var(--accent),#ff7bd3);width:0%}
 
-/* tool card */
-.card-tool{padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02)}
-.card.large{padding:18px}
-
-/* small text */
-.muted-small{font-size:13px;color:#a9b1d6;margin-top:8px}
-
-/* error */
+/* small helpers */
+.label{font-size:14px;color:var(--muted);display:block;margin-bottom:6px}
 .error{color:var(--danger);font-weight:700;margin-top:10px}
+.card-tool{padding:12px;border-radius:10px;border:1px solid rgba(9,18,35,0.03);background:linear-gradient(180deg,#fff,#fbfbfd)}
+.muted-small{color:#6b7280;font-size:13px;margin-top:8px}
