@@ -4,59 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delulu Detector</title>
-    <link rel="stylesheet" href="style33.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- HOME PAGE -->
-    <div id="home-page" class="page active">
+
+    <header id="topbar">
         <h1>Delulu Detector</h1>
-        <p>Find out if you're overthinking texts or seeing reality!</p>
-        <button onclick="showPage('age-verification-page')">Start</button>
-        <button onclick="showPage('privacy-page')">Privacy & Terms</button>
-    </div>
+        <p>Find out if you’re overthinking it!</p>
+    </header>
 
-    <!-- PRIVACY PAGE -->
-    <div id="privacy-page" class="page">
-        <h2>Privacy & Terms</h2>
-        <p>
-            Your data is safe. Minor users won't have any AI scanning.<br>
-            Adults: Screenshots/voice are processed temporarily and auto-deleted.<br>
-            Must accept terms to continue.
-        </p>
-        <button onclick="showPage('home-page')">Back</button>
-    </div>
+    <!-- Age Verification -->
+    <section id="age-verification">
+        <h2>Enter Your Date of Birth</h2>
+        <input type="date" id="dob">
+        <button onclick="verifyAge()">Verify Age</button>
+        <p id="age-error"></p>
+    </section>
 
-    <!-- AGE VERIFICATION PAGE -->
-    <div id="age-verification-page" class="page">
-        <h2>Age Verification</h2>
-        <input type="number" id="ageInput" placeholder="Enter your age (14+)" min="14">
-        <button onclick="verifyAge()">Submit</button>
-        <p id="lockMessage" class="hidden"></p>
-    </div>
+    <!-- Minors Quiz (13-17) -->
+    <section id="minors-quiz" class="hidden">
+        <h2>Delulu Quiz</h2>
+        <p>Answer these questions to see if you’re overthinking!</p>
+        <div id="quiz-questions">
+           
+        </div>
+        <button onclick="submitQuiz()">Submit Quiz</button>
+        <p id="quiz-result"></p>
+    </section>
 
-    <!-- MINOR QUIZ PAGE -->
-    <div id="minor-quiz-page" class="page">
-        <h2>Minor Quiz 📝</h2>
-        <div id="minor-quiz-container"></div>
-        <button onclick="submitMinorQuiz()">Submit Quiz</button>
-        <p id="minor-quiz-result"></p>
-        <button onclick="showPage('home-page')">Home</button>
-    </div>
+    <!-- Adults Full Features (18+) -->
+    <section id="adult-features" class="hidden">
+        <h2>Adult Mode</h2>
+        <p>Use AI-assisted tools to detect delulu moments!</p>
+        <div id="input-methods">
+            <button onclick="openMessageAnalyzer()">Message Analyzer</button>
+            <button onclick="openScreenShare()">Screen Share</button>
+            <button onclick="openVoiceInput()">Voice Input</button>
+        </div>
 
-    <!-- ADULT PAGE -->
-    <div id="adult-page" class="page">
-        <h2>Adult Mode 🔥</h2>
-        <p>Full AI-assisted relationship analysis.</p>
-        <ul>
-            <li>Message Analyzer (Placeholder)</li>
-            <li>Voice Input Analysis (Placeholder)</li>
-            <li>Brutal Best Friend Energy Mode</li>
-            <li>Red Flag Translator</li>
-            <li>Mood & Tone Detector</li>
-            <li>Reality Check Meter</li>
-        </ul>
-        <button onclick="showPage('home-page')">Home</button>
-    </div>
+        <div id="feedback">
+           
+    </section>
+
+    <!-- Appeal Section for Lockout -->
+    <section id="appeal-section" class="hidden">
+        <h2>Appeal Lockout</h2>
+        <p>If you were locked out, submit a reason:</p>
+        <textarea id="appeal-text" placeholder="Explain why this was a mistake..."></textarea>
+        <button onclick="submitAppeal()">Submit Appeal</button>
+        <p id="appeal-feedback"></p>
+    </section>
 
     <script src="script.js"></script>
 </body>
