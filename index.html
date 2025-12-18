@@ -1,234 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Delulu Detector</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background:#f7f7ff;
-        margin:0;
-        padding:0;
-    }
-
-    .container {
-        width: 90%;
-        max-width: 600px;
-        margin: 40px auto;
-        background:white;
-        padding: 25px;
-        border-radius: 15px;
-        box-shadow:0 0 15px rgba(0,0,0,0.1);
-    }
-
-    button {
-        width: 100%;
-        padding: 12px;
-        margin-top: 12px;
-        border:none;
-        background:#6a5acd;
-        color:white;
-        font-size:16px;
-        border-radius:10px;
-        cursor:pointer;
-    }
-
-    button:hover { background:#5947c2; }
-
-    .hidden { display:none; }
-
-    h2 { margin-bottom:10px; }
-
-    .option-btn {
-        background:#eaeaff;
-        color:#222;
-        border:1px solid #ccc;
-    }
-</style>
+  <meta charset="UTF-8" />
+  <title>Delulu Detector</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<div class="container" id="startScreen">
-    <h2>Delulu Detector</h2>
-    <p>Select your mode:</p>
+<div class="app">
 
-    <button onclick="selectGroup('minor')">Minor (13–17) – Safe Mode</button>
-    <button onclick="selectGroup('adult')">Adult (18+) – Full Mode</button>
-</div>
+  <!-- HOME -->
+  <div id="home" class="screen active">
+    <h1>Delulu Detector</h1>
+    <p>Reality check your thoughts — just for fun</p>
+    <button onclick="goTo('privacy')">Start</button>
+  </div>
 
-<div class="container hidden" id="quizTypeScreen">
-    <h2>Choose Quiz Length</h2>
+  <!-- PRIVACY -->
+  <div id="privacy" class="screen">
+    <h2>Privacy & Consent</h2>
+    <p>This app is for entertainment and self-reflection only.</p>
+    <ul>
+      <li>No texts are stored</li>
+      <li>No medical or mental diagnosis</li>
+      <li>Analysis runs locally</li>
+    </ul>
+    <button onclick="goTo('age')">I Agree</button>
+  </div>
 
-    <button onclick="startQuiz('short')">Short Quiz (10–15)</button>
-    <button onclick="startQuiz('long')">Long Quiz (20–25)</button>
-</div>
+  <!-- AGE -->
+  <div id="age" class="screen">
+    <h2>Age Verification</h2>
+    <input id="ageInput" type="number" placeholder="Enter your age" />
+    <button onclick="checkAge()">Continue</button>
+  </div>
 
-<div class="container hidden" id="quizScreen">
-    <h2 id="questionTitle"></h2>
-    <p id="questionText"></p>
+  <!-- 18+ TEXT INPUT -->
+  <div id="scanner" class="screen">
+    <h2>18+ Text Scan</h2>
+    <textarea id="textInput" placeholder="Paste your text here..."></textarea>
+    <button onclick="analyzeText()">Scan</button>
+  </div>
 
-    <button class="option-btn" onclick="answer(1)">Yes</button>
-    <button class="option-btn" onclick="answer(0)">No</button>
-</div>
+  <!-- UNDER 18 QUIZ -->
+  <div id="quiz" class="screen">
+    <h2>Delulu Quiz</h2>
 
-<div class="container hidden" id="resultScreen">
+    <p>Do they take a long time to reply?</p>
+    <select id="q1">
+      <option value="0">No</option>
+      <option value="5">Sometimes</option>
+      <option value="10">Yes</option>
+    </select>
+
+    <p>Have they clearly said they like you?</p>
+    <select id="q2">
+      <option value="0">Yes</option>
+      <option value="5">It's complicated</option>
+      <option value="10">No, but I feel it</option>
+    </select>
+
+    <p>Do you see signs in small things?</p>
+    <select id="q3">
+      <option value="0">No</option>
+      <option value="5">Sometimes</option>
+      <option value="10">Yes</option>
+    </select>
+
+    <button onclick="calculateQuiz()">See Results</button>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results" class="screen">
     <h2>Your Delulu Score</h2>
-    <h1 id="scoreDisplay"></h1>
-    <p id="feedback"></p>
+    <div id="score">0</div>
+    <p id="verdict"></p>
+    <button onclick="goTo('home')">Restart</button>
+  </div>
 
-    <button onclick="restart()">Restart</button>
 </div>
 
-<script>
-// --------------------------------------------------
-// QUIZ DATA
-// --------------------------------------------------
-const minorShort = [
-"Do you feel anxious if someone doesn’t reply fast?",
-"Do you re-read messages a lot?",
-"Do you imagine people are mad without proof?",
-"Do you check if someone is online?",
-"Do you overthink jokes?",
-"Do you compare friendships?",
-"Do you worry about left-on-delivered?",
-"Do you take messages personally?",
-"Do you replay conversations in your head?",
-"Do you imagine worst-case scenarios?"
-];
-
-const minorLong = [
-    ...minorShort,
-"Do you reread texts searching for hidden meaning?",
-"Do you stress about saying the wrong thing?",
-"Do you check old convos for patterns?",
-"Do you imagine conflicts that haven't happened?",
-"Do you analyze punctuation a lot?",
-"Do you get anxious if tone changes?",
-"Do you assume someone is upset without evidence?",
-"Do you feel relieved ONLY when someone replies fast?",
-"Do you try to guess emotions from messages?",
-"Do you compare your convos to others?"
-];
-
-const adultShort = [
-"Do you reread messages to find hidden meaning?",
-"Do you get anxious if someone doesn't reply?",
-"Do you analyze emojis deeply?",
-"Do you imagine conversations that never happened?",
-"Do you assume someone is ignoring you?",
-"Do you replay texts repeatedly?",
-"Do you think small delays are huge?",
-"Do you try to predict intentions?",
-"Do you worry about ghosting?",
-"Do you overthink punctuation?"
-];
-
-const adultLong = [
-    ...adultShort,
-"Do you create arguments in your head?",
-"Do you overanalyze minor interactions?",
-"Do you check for hidden patterns?",
-"Do you stress when tone changes?",
-"Do you worry about rejection often?",
-"Do you feel you must respond instantly?",
-"Do you obsess over typing indicators?",
-"Do you fear being annoying?",
-"Do you reread their messages before replying?",
-"Do you get nervous when they go offline suddenly?",
-"Do you imagine worst-case emotional outcomes?",
-"Do you stress about being left on delivered?"
-];
-
-// --------------------------------------------------
-// VARIABLES
-// --------------------------------------------------
-let userGroup = "";
-let quizLength = "";
-let questions = [];
-let index = 0;
-let score = 0;
-
-// --------------------------------------------------
-// SELECTORS
-// --------------------------------------------------
-const startScreen = document.getElementById("startScreen");
-const quizTypeScreen = document.getElementById("quizTypeScreen");
-const quizScreen = document.getElementById("quizScreen");
-const resultScreen = document.getElementById("resultScreen");
-
-const questionText = document.getElementById("questionText");
-const scoreDisplay = document.getElementById("scoreDisplay");
-const feedback = document.getElementById("feedback");
-
-// --------------------------------------------------
-// FUNCTIONS
-// --------------------------------------------------
-function selectGroup(group) {
-    userGroup = group;
-
-    startScreen.classList.add("hidden");
-    quizTypeScreen.classList.remove("hidden");
-}
-
-function startQuiz(type) {
-    quizLength = type;
-
-    if (userGroup === "minor") {
-        questions = type === "short" ? minorShort : minorLong;
-    } else {
-        questions = type === "short" ? adultShort : adultLong;
-    }
-
-    quizTypeScreen.classList.add("hidden");
-    quizScreen.classList.remove("hidden");
-
-    index = 0;
-    score = 0;
-
-    loadQuestion();
-}
-
-function loadQuestion() {
-    if (index >= questions.length) {
-        return finishQuiz();
-    }
-
-    questionText.textContent = questions[index];
-}
-
-function answer(value) {
-    score += value;
-    index++;
-    loadQuestion();
-}
-
-function finishQuiz() {
-    quizScreen.classList.add("hidden");
-    resultScreen.classList.remove("hidden");
-
-    const percent = Math.round((score / questions.length) * 100);
-    scoreDisplay.textContent = percent + "% Delulu";
-
-    let message = "";
-
-    if (percent <= 30) {
-        message = "You're actually really grounded. You think clearly and don't spiral easily.";
-    } 
-    else if (percent <= 70) {
-        message = "You're a mix of logical and delulu. Normal human overthinking levels.";
-    } 
-    else {
-        message = "Girl… you're in your imagination HARD. Time to relax and stop assuming the worst.";
-    }
-
-    feedback.textContent = message;
-}
-
-function restart() {
-    resultScreen.classList.add("hidden");
-    startScreen.classList.remove("hidden");
-}
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
