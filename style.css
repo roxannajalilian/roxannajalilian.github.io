@@ -1,60 +1,73 @@
+/* Import a modern, tech-looking font */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
 body {
   margin: 0;
-  font-family: Inter, Arial, sans-serif;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: white;
+  font-family: 'Orbitron', Arial, sans-serif;
+  background: #0a0a0a; /* dark tech background */
+  color: #00ffea;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 }
 
 .app {
-  width: 360px;
   background: #111;
+  width: 360px;
+  padding: 30px 25px;
   border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0 0 40px rgba(0,0,0,0.7);
-}
-
-.screen {
-  display: none;
   text-align: center;
+  box-shadow: 0 0 20px #00ffea, 0 0 40px #00ffea40;
+  border: 2px solid #00ffea;
+  transition: transform 0.3s ease;
 }
 
-.screen.active {
-  display: block;
+.app:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 30px #00ffea, 0 0 60px #00ffea80;
 }
 
 h1, h2 {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+  font-weight: 700;
+  color: #00ffea;
+  text-shadow: 0 0 8px #00ffea;
 }
 
-textarea, input, select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  margin-top: 10px;
+p {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #ccc;
 }
 
 button {
   width: 100%;
+  padding: 14px;
   margin-top: 15px;
-  padding: 12px;
-  background: #ff4d6d;
-  color: white;
   border: none;
-  border-radius: 12px;
-  font-weight: bold;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #00ffea, #008080);
+  color: #000;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px #00ffea, 0 0 20px #00ffea60;
 }
 
 button:hover {
-  opacity: 0.9;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #00ffea, 0 0 40px #00ffea80;
 }
 
-#score {
-  font-size: 48px;
-  margin: 15px 0;
-}
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 2px solid #00ffea;
+  background: #111;
+  color: #00ffea;
+  font-size: 16px;
+  tr
