@@ -1,85 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
   <title>Delulu Detector</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <div class="app">
-
-  <!-- HOME -->
-  <div id="home" class="screen active">
-    <h1>Delulu Detector</h1>
-    <p>Reality check your thoughts — just for fun</p>
-    <button onclick="goTo('privacy')">Start</button>
-  </div>
-
-  <!-- PRIVACY -->
-  <div id="privacy" class="screen">
-    <h2>Privacy & Consent</h2>
-    <p>This app is for entertainment and self-reflection only.</p>
-    <ul>
-      <li>No texts are stored</li>
-      <li>No medical or mental diagnosis</li>
-      <li>Analysis runs locally</li>
-    </ul>
-    <button onclick="goTo('age')">I Agree</button>
-  </div>
-
-  <!-- AGE -->
-  <div id="age" class="screen">
-    <h2>Age Verification</h2>
-    <input id="ageInput" type="number" placeholder="Enter your age" />
-    <button onclick="checkAge()">Continue</button>
-  </div>
-
-  <!-- 18+ TEXT INPUT -->
-  <div id="scanner" class="screen">
-    <h2>18+ Text Scan</h2>
-    <textarea id="textInput" placeholder="Paste your text here..."></textarea>
-    <button onclick="analyzeText()">Scan</button>
-  </div>
-
-  <!-- UNDER 18 QUIZ -->
-  <div id="quiz" class="screen">
-    <h2>Delulu Quiz</h2>
-
-    <p>Do they take a long time to reply?</p>
-    <select id="q1">
-      <option value="0">No</option>
-      <option value="5">Sometimes</option>
-      <option value="10">Yes</option>
-    </select>
-
-    <p>Have they clearly said they like you?</p>
-    <select id="q2">
-      <option value="0">Yes</option>
-      <option value="5">It's complicated</option>
-      <option value="10">No, but I feel it</option>
-    </select>
-
-    <p>Do you see signs in small things?</p>
-    <select id="q3">
-      <option value="0">No</option>
-      <option value="5">Sometimes</option>
-      <option value="10">Yes</option>
-    </select>
-
-    <button onclick="calculateQuiz()">See Results</button>
-  </div>
-
-  <!-- RESULTS -->
-  <div id="results" class="screen">
-    <h2>Your Delulu Score</h2>
-    <div id="score">0</div>
-    <p id="verdict"></p>
-    <button onclick="goTo('home')">Restart</button>
-  </div>
-
+  <h1>Delulu Detector</h1>
+  <p>Find out if you're being delulu — just for fun</p>
+  <a href="age.html"><button>Start Delulu Detector</button></a>
 </div>
-
-<script src="script.js"></script>
 </body>
 </html>
