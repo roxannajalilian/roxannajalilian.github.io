@@ -1,156 +1,139 @@
-const questions = [
-  ["Do you reread messages repeatedly?", "Rechecking often signals uncertainty."],
-  ["Do you analyze emojis or punctuation?", "Small details feel meaningful."],
-  ["Do you assume silence means something bad?", "Your brain fills gaps quickly."],
-  ["Do you imagine future scenarios?", "Projection into the future is common."],
-  ["Do you stalk profiles for clues?", "You seek reassurance externally."],
-  ["Do you overthink response times?", "Timing becomes emotionally charged."],
-  ["Do you replay conversations?", "Rumination strengthens emotion."],
-  ["Do you create narratives in your head?", "Stories replace facts."],
-  ["Do you romanticize small gestures?", "Meaning outweighs evidence."],
-  ["Do you feel anxious waiting for replies?", "Uncertainty triggers stress."],
-  ["Do you reread old messages?", "Past moments feel unfinished."],
-  ["Do you assume indirect posts are about you?", "Personalization bias present."],
-  ["Do you overthink body language?", "Non-verbal cues feel loud."],
-  ["Do you imagine conversations that never happened?", "Mental rehearsal increases attachment."],
-  ["Do you assume mixed signals mean interest?", "Hope overrides ambiguity."],
-  ["Do you struggle to stay present?", "Mind drifts to hypotheticals."],
-  ["Do you assume coincidence isn’t coincidence?", "Pattern-seeking behavior."],
-  ["Do you feel disappointed without proof?", "Expectations precede facts."],
-  ["Do you seek reassurance often?", "External validation needed."],
-  ["Do you overthink before sleeping?", "Thoughts amplify at rest."]
+function checkAge() {
+  const ageInput = document.getElementById("age");
+  const age = Number(ageInput.value);
+
+  if (!age) return alert("Please enter your age.");
+
+  if (age < 18) {
+    window.location.href = "under18.html";
+  } else {
+    window.location.href = "choose.html";
+  }
+}
+
+
+const quizQuestions = [
+  "Do you reread messages multiple times?",
+  "Do you analyze emojis or punctuation?",
+  "Do you assume silence means something bad?",
+  "Do you imagine future scenarios with someone?",
+  "Do you stalk profiles for clues?",
+  "Do you overthink response times?",
+  "Do you replay conversations in your head?",
+  "Do you create narratives in your head?",
+  "Do you romanticize small gestures?",
+  "Do you feel anxious waiting for replies?",
+  "Do you reread old conversations?",
+  "Do you assume indirect posts are about you?",
+  "Do you overthink body language?",
+  "Do you imagine conversations that never happened?",
+  "Do you assume mixed signals mean interest?",
+  "Do you struggle to stay present?",
+  "Do you assume coincidence isn’t coincidence?",
+  "Do you feel disappointed without proof?",
+  "Do you seek reassurance often?",
+  "Do you overthink before sleeping?"
 ];
 
-let scanCount = Number(localStorage.getItem("scans") || 0);
+let quizAnswers = [];
+let currentQuestion = 0;
 
-function startApp(){
-  document.getElementById("onboard").classList.add("hidden");
-  document.getElementById("quiz").classList.remove("hidden");
+function loadQuestion() {
+  if (!document.getElementById("question-text")) return;
+  if (currentQuestion >= quizQuestions.length) return finishQuiz();
 
-  const form = document.getElementById("quizForm");
-  questions.forEach((q,i)=>{
-    form.innerHTML += `
-      <div class="question">
-        <p>${i+1}. ${q[0]}</p>
-        <select>
-          <option value="0">No</option>
-          <option value="1">Sometimes</option>
-          <option value="2">Yes</option>
-        </select>
-      </div>`;
-  });
+  document.getElementById("question-title").textContent = `Question ${currentQuestion + 1} of ${quizQuestions.length}`;
+  document.getElementById("question-text").textContent = quizQuestions[currentQuestion];
+
+  const percent = Math.round((currentQuestion / quizQuestions.length) * 100);
+  document.getElementById("progress-bar").style.width = percent + "%";
 }
 
-function beginAnalysis(){
-  document.body.innerHTML = `
-    <div class="app">
-      <h2>Analyzing Cognitive Patterns…</h2>
-      <p class="sub">Looking for trends, not answers</p>
-      <div class="progress"><span id="bar"></span></div>
-    </div>`;
-  setTimeout(calculate, 1800);
+function answer(value) {
+  quizAnswers.push(value);
+  currentQuestion++;
+  loadQuestion();
 }
 
-function calculate(){
-  const selects = document.querySelectorAll("select");
-  let score = 0;
-  selects.forEach(s => score += Number(s.value));
-  const percent = Math.round((score / (selects.length*2)) * 100);
+function finishQuiz() {
+  let score = quizAnswers.reduce((a,b)=>a+b,0);
+  let max = quizQuestions.length*2;
+  let percent = Math.round((score/max)*100);
+  let verdict = percent <= 30 ? "🟢 Grounded Thinking" :
+                percent <= 60 ? "🟡 Some Delulu Tendencies" :
+                percent <= 85 ? "🟠 Highly Delulu" :
+                "🔴 Extremely Delulu";
 
-  scanCount++;
-  localStorage.setItem("scans", scanCount);
-
-  showResults(percent, selects);
+  localStorage.setItem("score", percent);
+  localStorage.setItem("verdict", verdict);
+  window.location.href = "results.html";
 }
 
-function showResults(p, selects){
-  let type =
-    p<30 ? "Grounded Thinker" :
-    p<60 ? "Emotion-Driven Thinker" :
-    p<80 ? "Interpretive Thinker" :
-    "Highly Narrative Thinker";
 
-  let explanation =
-    p<30 ? "You usually rely on facts over assumptions." :
-    p<60 ? "Emotions sometimes guide your interpretations." :
-    p<80 ? "Your mind actively fills in missing information." :
-    "Your thoughts often overpower observable reality.";
+function scanImage() {
+  const input = document.getElementById("imageUpload");
+  const analyzing = document.getElementById("analyzing");
+  if (!input.files || input.files.length === 0) return alert("Please upload an image first!");
 
-  document.body.innerHTML = `
-    <div class="app">
-      <h1>${type}</h1>
-      <h2>${p}% Delulu Intensity</h2>
-
-      <div class="progress"><span id="bar"></span></div>
-
-      <div class="box">${explanation}</div>
-
-      <div class="box">
-        <strong>Pattern Insight:</strong><br>
-        ${buildInsights(selects)}
-      </div>
-
-      <div class="box">
-        <strong>Personality Mapping:</strong><br>
-        You tend toward <em>${personalityMap(p)}</em> thinking patterns.
-      </div>
-
-      <div class="box ${scanCount<5?'locked':''}">
-        <strong>Premium AI Breakdown 🔒</strong><br>
-        ${scanCount<5
-          ?`Complete ${5-scanCount} more scans to unlock deep cognitive analysis.`
-          :"Unlocked: Advanced explanation available."}
-      </div>
-
-      <h3>History</h3>
-      <div id="graph"></div>
-
-      <button onclick="location.reload()">Scan Again</button>
-    </div>`;
-
-  setTimeout(()=>document.getElementById("bar").style.width=p+"%",100);
-  speak(`${type}. Your delulu level is ${p} percent.`);
-  drawHistory(p);
+  analyzing.style.display = "block";
+  setTimeout(()=>{
+    const score = Math.floor(Math.random()*101);
+    const verdict = score<=30?"🟢 Grounded":score<=70?"🟡 Some Delulu":"🔴 Highly Delulu";
+    localStorage.setItem("score", score);
+    localStorage.setItem("verdict", verdict);
+    localStorage.setItem("voiceText","Analyzed image text");
+    window.location.href = "results.html";
+  },2000);
 }
 
-function buildInsights(selects){
-  let text = "";
-  selects.forEach((s,i)=>{
-    if(Number(s.value)>0){
-      text += `• ${questions[i][1]}<br>`;
-    }
-  });
-  return text || "No strong overthinking indicators detected.";
+
+const startBtn = document.getElementById("startRecording");
+if(startBtn){
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+  recognition.lang='en-US';
+  recognition.interimResults=false;
+
+  startBtn.addEventListener('click',()=>recognition.start());
+
+  recognition.onstart = ()=>{
+    document.getElementById("analyzing").style.display="block";
+    document.getElementById("voiceOutput").textContent="Listening...";
+  }
+
+  recognition.onresult = (event)=>{
+    const transcript = event.results[0][0].transcript;
+    document.getElementById("voiceOutput").textContent="Detected Text: "+transcript;
+    const score=Math.floor(Math.random()*101);
+    const verdict = score<=30?"🟢 Grounded":score<=70?"🟡 Some Delulu":"🔴 Highly Delulu";
+    localStorage.setItem("score",score);
+    localStorage.setItem("verdict",verdict);
+    localStorage.setItem("voiceText",transcript);
+    window.location.href="results.html";
+  }
+
+  recognition.onerror=(e)=>alert("Voice recognition error: "+e.error);
 }
 
-function personalityMap(p){
-  if(p<30) return "Logical-grounded";
-  if(p<60) return "Emotionally intuitive";
-  if(p<80) return "Imaginative-interpretive";
-  return "Narrative-dominant";
-}
 
-function drawHistory(p){
-  const h = JSON.parse(localStorage.getItem("history")||"[]");
-  h.push(p);
-  localStorage.setItem("history",JSON.stringify(h));
-  const g=document.getElementById("graph");
-  h.slice(-6).forEach(v=>{
-    const b=document.createElement("div");
-    b.className="graph-bar";
-    b.style.width=v+"%";
-    g.appendChild(b);
-  });
-}
+window.onload=function(){
+  const scoreElem=document.getElementById("score");
+  const verdictElem=document.getElementById("verdict");
+  const voiceElem=document.getElementById("voiceText");
 
-function speak(text){
-  const u=new SpeechSynthesisUtterance(text);
-  u.rate=0.95;
-  window.speechSynthesis.speak(u);
-}
+  if(scoreElem && verdictElem){
+    const score=localStorage.getItem("score")||"??";
+    const verdict=localStorage.getItem("verdict")||"Demo result for fun!";
+    const voiceText=localStorage.getItem("voiceText")||"";
+    scoreElem.textContent=score;
+    verdictElem.textContent=verdict;
+    if(voiceText) voiceElem.textContent="Analysis: "+voiceText;
 
-function startVoice(){
-  if(!('webkitSpeechRecognition'in window))return alert("Voice not supported");
-  const r=new webkitSpeechRecognition();
-  r.start();
+    const utter=new SpeechSynthesisUtterance(verdict);
+    utter.volume=1;
+    window.speechSynthesis.speak(utter);
+  }
+
+ 
+  loadQuestion();
 }
