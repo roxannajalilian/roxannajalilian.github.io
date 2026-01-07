@@ -1,18 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Scan Messages</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="app">
-  <h2>Upload a Screenshot</h2>
-  <p>Analyze messages for fun (entertainment only)</p>
+  <h2>Scan Texts</h2>
+  <p>Upload a screenshot or use voice input (entertainment only)</p>
 
   <input type="file" accept="image/*" id="imageUpload">
-  <button onclick="scanImage()">Scan</button>
+  <button onclick="scanImage()">Scan Image</button>
 
-  <p style="font-size:12px;">Image stays on your device. No data is saved.</p>
+  <h3>Voice Input</h3>
+  <button id="startRecording">🎤 Record Voice</button>
+  <p id="voiceOutput"></p>
+
+  <div id="analyzing" style="display:none; margin-top:20px; color:#0ff;">Analyzing...</div>
 </div>
 <script src="script.js"></script>
 </body>
