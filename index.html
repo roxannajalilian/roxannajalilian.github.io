@@ -1,14 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Delulu Detector</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Delulu Detector</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="app">
+
+<div class="app" id="onboard">
   <h1>Delulu Detector</h1>
-  <p>Detect overthinking in texts — entertainment only!</p>
-  <a href="privacy.html"><button>Start Delulu Detector</button></a>
+  <p>This is not a diagnosis.<br>It analyzes *patterns* in thinking.</p>
+  <button onclick="startApp()">Begin Scan</button>
 </div>
+
+<div class="app hidden" id="quiz">
+  <h2>Answer Slowly & Honestly</h2>
+
+  <form id="quizForm"></form>
+
+  <button onclick="startVoice()">🎙 Voice Input</button>
+  <button onclick="beginAnalysis()">Start Analysis</button>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
