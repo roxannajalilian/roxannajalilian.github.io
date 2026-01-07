@@ -1,29 +1,29 @@
 const questions = [
-  "Do you reread messages repeatedly?",
-  "Do you assume silence means something?",
-  "Do you imagine future scenarios?",
-  "Do you analyze tone or punctuation?",
-  "Do you stalk profiles for meaning?",
-  "Do you overthink response times?",
-  "Do you replay conversations?",
-  "Do you create narratives in your head?",
-  "Do you romanticize small gestures?",
-  "Do you feel anxious waiting for replies?",
-  "Do you reread old messages?",
-  "Do you assume indirect posts are about you?",
-  "Do you overthink body language?",
-  "Do you imagine conversations that never happened?",
-  "Do you assume mixed signals mean interest?",
-  "Do you struggle to stay present?",
-  "Do you assume coincidence isn’t coincidence?",
-  "Do you feel disappointed without proof?",
-  "Do you seek reassurance often?",
-  "Do you overthink before sleeping?"
+  ["Do you reread messages repeatedly?", "Rechecking often signals uncertainty."],
+  ["Do you analyze emojis or punctuation?", "Small details feel meaningful."],
+  ["Do you assume silence means something bad?", "Your brain fills gaps quickly."],
+  ["Do you imagine future scenarios?", "Projection into the future is common."],
+  ["Do you stalk profiles for clues?", "You seek reassurance externally."],
+  ["Do you overthink response times?", "Timing becomes emotionally charged."],
+  ["Do you replay conversations?", "Rumination strengthens emotion."],
+  ["Do you create narratives in your head?", "Stories replace facts."],
+  ["Do you romanticize small gestures?", "Meaning outweighs evidence."],
+  ["Do you feel anxious waiting for replies?", "Uncertainty triggers stress."],
+  ["Do you reread old messages?", "Past moments feel unfinished."],
+  ["Do you assume indirect posts are about you?", "Personalization bias present."],
+  ["Do you overthink body language?", "Non-verbal cues feel loud."],
+  ["Do you imagine conversations that never happened?", "Mental rehearsal increases attachment."],
+  ["Do you assume mixed signals mean interest?", "Hope overrides ambiguity."],
+  ["Do you struggle to stay present?", "Mind drifts to hypotheticals."],
+  ["Do you assume coincidence isn’t coincidence?", "Pattern-seeking behavior."],
+  ["Do you feel disappointed without proof?", "Expectations precede facts."],
+  ["Do you seek reassurance often?", "External validation needed."],
+  ["Do you overthink before sleeping?", "Thoughts amplify at rest."]
 ];
 
 let scanCount = Number(localStorage.getItem("scans") || 0);
 
-function startApp() {
+function startApp(){
   document.getElementById("onboard").classList.add("hidden");
   document.getElementById("quiz").classList.remove("hidden");
 
@@ -31,7 +31,7 @@ function startApp() {
   questions.forEach((q,i)=>{
     form.innerHTML += `
       <div class="question">
-        <p>${i+1}. ${q}</p>
+        <p>${i+1}. ${q[0]}</p>
         <select>
           <option value="0">No</option>
           <option value="1">Sometimes</option>
@@ -41,74 +41,114 @@ function startApp() {
   });
 }
 
-function beginAnalysis() {
+function beginAnalysis(){
   document.body.innerHTML = `
     <div class="app">
-      <h2>Analyzing Patterns…</h2>
-      <p>This may take a moment.</p>
+      <h2>Analyzing Cognitive Patterns…</h2>
+      <p class="sub">Looking for trends, not answers</p>
       <div class="progress"><span id="bar"></span></div>
-    </div>
-  `;
-
-  setTimeout(()=>calculate(),1800);
+    </div>`;
+  setTimeout(calculate, 1800);
 }
 
-function calculate() {
+function calculate(){
   const selects = document.querySelectorAll("select");
-  let total = 0;
-  selects.forEach(s=>total+=Number(s.value));
-  const percent = Math.round((total/(selects.length*2))*100);
+  let score = 0;
+  selects.forEach(s => score += Number(s.value));
+  const percent = Math.round((score / (selects.length*2)) * 100);
 
   scanCount++;
-  localStorage.setItem("scans",scanCount);
+  localStorage.setItem("scans", scanCount);
 
-  showResults(percent);
+  showResults(percent, selects);
 }
 
-function showResults(p) {
-  let label =
-    p<30?"Grounded Thinking":
-    p<60?"Emotionally Reactive":
-    p<80?"Over-Interpretive":
-    "Highly Delusional Patterns";
+function showResults(p, selects){
+  let type =
+    p<30 ? "Grounded Thinker" :
+    p<60 ? "Emotion-Driven Thinker" :
+    p<80 ? "Interpretive Thinker" :
+    "Highly Narrative Thinker";
 
   let explanation =
-    p<30?"You generally interpret situations realistically.":
-    p<60?"You sometimes let emotion guide interpretation.":
-    p<80?"Your mind fills in gaps without evidence.":
-    "Your thoughts frequently override observable facts.";
+    p<30 ? "You usually rely on facts over assumptions." :
+    p<60 ? "Emotions sometimes guide your interpretations." :
+    p<80 ? "Your mind actively fills in missing information." :
+    "Your thoughts often overpower observable reality.";
 
   document.body.innerHTML = `
     <div class="app">
-      <h1>${label}</h1>
-      <h2>${p}% Pattern Intensity</h2>
+      <h1>${type}</h1>
+      <h2>${p}% Delulu Intensity</h2>
 
       <div class="progress"><span id="bar"></span></div>
 
-      <div class="analysis-box">
-        ${explanation}
+      <div class="box">${explanation}</div>
+
+      <div class="box">
+        <strong>Pattern Insight:</strong><br>
+        ${buildInsights(selects)}
       </div>
 
-      <div class="analysis-box">
-        This score reflects *how often your brain searches for meaning*, not reality.
+      <div class="box">
+        <strong>Personality Mapping:</strong><br>
+        You tend toward <em>${personalityMap(p)}</em> thinking patterns.
       </div>
 
-      <div class="locked ${scanCount<5?'locked':''}">
-        <h3>Premium Cognitive Breakdown 🔒</h3>
-        <p>${scanCount<5
-          ?`Complete ${5-scanCount} more scans to unlock`
-          :"Unlocked: Deep pattern explanation available."}
-        </p>
+      <div class="box ${scanCount<5?'locked':''}">
+        <strong>Premium AI Breakdown 🔒</strong><br>
+        ${scanCount<5
+          ?`Complete ${5-scanCount} more scans to unlock deep cognitive analysis.`
+          :"Unlocked: Advanced explanation available."}
       </div>
+
+      <h3>History</h3>
+      <div id="graph"></div>
 
       <button onclick="location.reload()">Scan Again</button>
-    </div>
-  `;
+    </div>`;
 
   setTimeout(()=>document.getElementById("bar").style.width=p+"%",100);
+  speak(`${type}. Your delulu level is ${p} percent.`);
+  drawHistory(p);
 }
 
-/* VOICE */
+function buildInsights(selects){
+  let text = "";
+  selects.forEach((s,i)=>{
+    if(Number(s.value)>0){
+      text += `• ${questions[i][1]}<br>`;
+    }
+  });
+  return text || "No strong overthinking indicators detected.";
+}
+
+function personalityMap(p){
+  if(p<30) return "Logical-grounded";
+  if(p<60) return "Emotionally intuitive";
+  if(p<80) return "Imaginative-interpretive";
+  return "Narrative-dominant";
+}
+
+function drawHistory(p){
+  const h = JSON.parse(localStorage.getItem("history")||"[]");
+  h.push(p);
+  localStorage.setItem("history",JSON.stringify(h));
+  const g=document.getElementById("graph");
+  h.slice(-6).forEach(v=>{
+    const b=document.createElement("div");
+    b.className="graph-bar";
+    b.style.width=v+"%";
+    g.appendChild(b);
+  });
+}
+
+function speak(text){
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=0.95;
+  window.speechSynthesis.speak(u);
+}
+
 function startVoice(){
   if(!('webkitSpeechRecognition'in window))return alert("Voice not supported");
   const r=new webkitSpeechRecognition();
