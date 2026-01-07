@@ -1,56 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Delulu Quiz</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="app">
-  <h2>Delulu Quiz</h2>
-
-  <p>1. Do they take long to reply?</p>
-  <select id="q1">
-    <option value="0">No</option>
-    <option value="5">Sometimes</option>
-    <option value="10">Yes</option>
-  </select>
-
-  <p>2. Have they clearly said they like you?</p>
-  <select id="q2">
-    <option value="0">Yes</option>
-    <option value="5">It's complicated</option>
-    <option value="10">No, but I feel it</option>
-  </select>
-
-  <p>3. Do you see signs in small things?</p>
-  <select id="q3">
-    <option value="0">No</option>
-    <option value="5">Sometimes</option>
-    <option value="10">Yes</option>
-  </select>
-
-  <p>4. Do they often ghost you?</p>
-  <select id="q4">
-    <option value="0">No</option>
-    <option value="5">Sometimes</option>
-    <option value="10">Yes</option>
-  </select>
-
-  <p>5. Do you interpret small actions as big signs?</p>
-  <select id="q5">
-    <option value="0">No</option>
-    <option value="5">Sometimes</option>
-    <option value="10">Yes</option>
-  </select>
-
-  <p>6. Do you imagine scenarios that aren’t real?</p>
-  <select id="q6">
-    <option value="0">No</option>
-    <option value="5">Sometimes</option>
-    <option value="10">Yes</option>
-  </select>
-
-  <button onclick="calculateQuiz()">See Results</button>
+<div class="app" id="quiz-app">
+  <h2 id="question-title">Loading quiz…</h2>
+  <p id="question-text"></p>
+  <div id="options">
+    <button onclick="answer(0)">No</button>
+    <button onclick="answer(1)">Sometimes</button>
+    <button onclick="answer(2)">Yes</button>
+  </div>
+  <div class="progress"><span id="progress-bar"></span></div>
 </div>
 <script src="script.js"></script>
 </body>
