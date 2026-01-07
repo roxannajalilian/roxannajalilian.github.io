@@ -1,73 +1,79 @@
-/* Import a modern, tech-looking font */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-
 body {
+  background: radial-gradient(circle at top, #050505, #000);
+  font-family: system-ui, sans-serif;
+  color: #fff;
   margin: 0;
-  font-family: 'Orbitron', Arial, sans-serif;
-  background: #0a0a0a; /* dark tech background */
-  color: #00ffea;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .app {
+  max-width: 430px;
+  margin: 30px auto;
   background: #111;
-  width: 360px;
-  padding: 30px 25px;
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0 0 20px #00ffea, 0 0 40px #00ffea40;
-  border: 2px solid #00ffea;
-  transition: transform 0.3s ease;
+  padding: 28px;
+  border-radius: 24px;
+  box-shadow: 0 0 30px #00ffe050;
 }
 
-.app:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 30px #00ffea, 0 0 60px #00ffea80;
-}
+.hidden { display:none }
 
 h1, h2 {
-  margin-bottom: 20px;
-  font-weight: 700;
-  color: #00ffea;
-  text-shadow: 0 0 8px #00ffea;
+  text-align:center;
+  color:#00ffe0;
 }
 
-p {
-  font-size: 16px;
-  margin-bottom: 20px;
-  color: #ccc;
+.question {
+  margin-bottom: 16px;
+}
+
+select {
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  background:#000;
+  color:#00ffe0;
+  border:1px solid #00ffe0;
 }
 
 button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 15px;
-  border: none;
-  border-radius: 15px;
-  background: linear-gradient(135deg, #00ffea, #008080);
-  color: #000;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 10px #00ffea, 0 0 20px #00ffea60;
+  width:100%;
+  padding:14px;
+  margin-top:14px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#00ffe0,#00aaff);
+  font-weight:700;
+  border:none;
+  cursor:pointer;
 }
 
-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px #00ffea, 0 0 40px #00ffea80;
+.progress {
+  height:20px;
+  background:#222;
+  border-radius:10px;
+  overflow:hidden;
 }
 
-input, select {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border-radius: 10px;
-  border: 2px solid #00ffea;
-  background: #111;
-  color: #00ffea;
-  font-size: 16px;
-  tr
+.progress span {
+  display:block;
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#00ffe0,#ff2d9a);
+  transition:1.5s;
+}
+
+.analysis-box {
+  background:#0b0b0b;
+  border-left:4px solid #00ffe0;
+  padding:14px;
+  margin-top:15px;
+  border-radius:10px;
+  font-size:14px;
+  color:#ccc;
+}
+
+.locked {
+  opacity:.5;
+  border:2px dashed #444;
+  padding:15px;
+  margin-top:20px;
+  border-radius:14px;
+}
