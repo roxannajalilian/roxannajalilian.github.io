@@ -1,79 +1,116 @@
+const questions = [
+  "Do you reread messages repeatedly?",
+  "Do you assume silence means something?",
+  "Do you imagine future scenarios?",
+  "Do you analyze tone or punctuation?",
+  "Do you stalk profiles for meaning?",
+  "Do you overthink response times?",
+  "Do you replay conversations?",
+  "Do you create narratives in your head?",
+  "Do you romanticize small gestures?",
+  "Do you feel anxious waiting for replies?",
+  "Do you reread old messages?",
+  "Do you assume indirect posts are about you?",
+  "Do you overthink body language?",
+  "Do you imagine conversations that never happened?",
+  "Do you assume mixed signals mean interest?",
+  "Do you struggle to stay present?",
+  "Do you assume coincidence isn’t coincidence?",
+  "Do you feel disappointed without proof?",
+  "Do you seek reassurance often?",
+  "Do you overthink before sleeping?"
+];
 
-function checkAge() {
-  const ageInput = document.getElementById("age");
-  if (!ageInput) return; 
-  const age = Number(ageInput.value);
+let scanCount = Number(localStorage.getItem("scans") || 0);
 
-  if (!age) {
-    alert("Please enter your age.");
-    return;
-  }
+function startApp() {
+  document.getElementById("onboard").classList.add("hidden");
+  document.getElementById("quiz").classList.remove("hidden");
 
-  if (age < 18) {
-    window.location.href = "under18.html";
-  } else {
-    window.location.href = "choose.html";
-  }
+  const form = document.getElementById("quizForm");
+  questions.forEach((q,i)=>{
+    form.innerHTML += `
+      <div class="question">
+        <p>${i+1}. ${q}</p>
+        <select>
+          <option value="0">No</option>
+          <option value="1">Sometimes</option>
+          <option value="2">Yes</option>
+        </select>
+      </div>`;
+  });
 }
 
-/* =====================
-   QUIZ CALCULATION
-===================== */
-function calculateQuiz() {
-  const q1 = document.getElementById("q1") ? Number(document.getElementById("q1").value) : 0;
-  const q2 = document.getElementById("q2") ? Number(document.getElementById("q2").value) : 0;
-  const q3 = document.getElementById("q3") ? Number(document.getElementById("q3").value) : 0;
-  const q4 = document.getElementById("q4") ? Number(document.getElementById("q4").value) : 0;
-  const q5 = document.getElementById("q5") ? Number(document.getElementById("q5").value) : 0;
-  const q6 = document.getElementById("q6") ? Number(document.getElementById("q6").value) : 0;
+function beginAnalysis() {
+  document.body.innerHTML = `
+    <div class="app">
+      <h2>Analyzing Patterns…</h2>
+      <p>This may take a moment.</p>
+      <div class="progress"><span id="bar"></span></div>
+    </div>
+  `;
 
-  const score = q1 + q2 + q3 + q4 + q5 + q6 + 10;
-
-  let verdict = "";
-  if(score <= 30) verdict = "🟢 Grounded thinking";
-  else if(score <= 70) verdict = "🟡 A little delulu";
-  else verdict = "🔴 Very delulu vibes";
-
-  localStorage.setItem("score", score);
-  localStorage.setItem("verdict", verdict);
-
-  window.location.href = "results.html";
+  setTimeout(()=>calculate(),1800);
 }
 
-/* =====================
-   IMAGE SCAN
-===================== */
-function scanImage() {
-  const input = document.getElementById("imageUpload");
-  if (!input.files || input.files.length === 0) {
-    alert("Please upload an image first!");
-    return;
-  }
+function calculate() {
+  const selects = document.querySelectorAll("select");
+  let total = 0;
+  selects.forEach(s=>total+=Number(s.value));
+  const percent = Math.round((total/(selects.length*2))*100);
 
-  const score = Math.floor(Math.random() * 101);
-  let verdict = "";
+  scanCount++;
+  localStorage.setItem("scans",scanCount);
 
-  if(score <= 30) verdict = "🟢 Grounded thinking";
-  else if(score <= 70) verdict = "🟡 A little delulu";
-  else verdict = "🔴 Very delulu vibes";
-
-  localStorage.setItem("score", score);
-  localStorage.setItem("verdict", verdict);
-
-  window.location.href = "results.html";
+  showResults(percent);
 }
 
-/* =====================
-   DISPLAY RESULTS
-===================== */
-window.onload = function() {
-  const scoreElem = document.getElementById("score");
-  const verdictElem = document.getElementById("verdict");
+function showResults(p) {
+  let label =
+    p<30?"Grounded Thinking":
+    p<60?"Emotionally Reactive":
+    p<80?"Over-Interpretive":
+    "Highly Delusional Patterns";
 
-  if(scoreElem && verdictElem) {
-    const score = localStorage.getItem("score") || "??";
-    const verdict = localStorage.getItem("verdict") || "Demo result for fun!";
-    scoreElem.textContent = score;
-    verdictElem.textContent = verdict;
-  }
-};
+  let explanation =
+    p<30?"You generally interpret situations realistically.":
+    p<60?"You sometimes let emotion guide interpretation.":
+    p<80?"Your mind fills in gaps without evidence.":
+    "Your thoughts frequently override observable facts.";
+
+  document.body.innerHTML = `
+    <div class="app">
+      <h1>${label}</h1>
+      <h2>${p}% Pattern Intensity</h2>
+
+      <div class="progress"><span id="bar"></span></div>
+
+      <div class="analysis-box">
+        ${explanation}
+      </div>
+
+      <div class="analysis-box">
+        This score reflects *how often your brain searches for meaning*, not reality.
+      </div>
+
+      <div class="locked ${scanCount<5?'locked':''}">
+        <h3>Premium Cognitive Breakdown 🔒</h3>
+        <p>${scanCount<5
+          ?`Complete ${5-scanCount} more scans to unlock`
+          :"Unlocked: Deep pattern explanation available."}
+        </p>
+      </div>
+
+      <button onclick="location.reload()">Scan Again</button>
+    </div>
+  `;
+
+  setTimeout(()=>document.getElementById("bar").style.width=p+"%",100);
+}
+
+/* VOICE */
+function startVoice(){
+  if(!('webkitSpeechRecognition'in window))return alert("Voice not supported");
+  const r=new webkitSpeechRecognition();
+  r.start();
+}
