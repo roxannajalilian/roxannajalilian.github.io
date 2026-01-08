@@ -1,1 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Delulu Quiz</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="particle-bg"></canvas>
 
+  <div class="box glow">
+    <h2 id="question">Question will appear here</h2>
+    
+    <div class="answers">
+      <button onclick="answer(3)" class="glow-btn">Yes</button>
+      <button onclick="answer(2)" class="glow-btn">Usually</button>
+      <button onclick="answer(1)" class="glow-btn">Sometimes</button>
+      <button onclick="answer(0)" class="glow-btn">No</button>
+    </div>
+
+    <div class="extra-buttons">
+      <button onclick="goBack()" class="glow-btn small">Go Back</button>
+      <button onclick="voiceAnswer()" class="glow-btn small">🎤 Answer by Voice</button>
+    </div>
+
+    <div class="progress-container">
+      <div id="bar"></div>
+    </div>
+
+    <p id="emoji-feedback"></p>
+  </div>
+
+  <script src="quiz.js"></script>
+  <script src="particles.js"></script>
+</body>
+</html>
