@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Delulu Text Scan</title>
+  <title>Delulu Text/Image Scan</title>
   <link rel="stylesheet" href="style-ai.css">
 </head>
 <body>
   <div class="box glow">
-    <h2>Scan Your Messages</h2>
-    <p>Paste your conversation text below:</p>
-    <textarea id="textInput" rows="8" style="width: 100%; border-radius:12px; padding:8px;"></textarea>
-    <button onclick="analyzeText()">Analyze</button>
+    <h2>Scan Messages</h2>
+    <p>Paste conversation or upload image:</p>
+    <textarea id="textInput" rows="8" style="width:100%;border-radius:12px;padding:8px;"></textarea>
+    <input type="file" id="imgInput" accept="image/*" style="margin-top:10px;">
+    <button onclick="analyzeText()">Analyze Text</button>
+    <button onclick="analyzeImage()">Analyze Image</button>
     <p id="scanResult"></p>
   </div>
-
   <script src="scan.js"></script>
 </body>
 </html>
