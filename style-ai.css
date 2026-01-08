@@ -1,4 +1,3 @@
-/* BODY */
 body {
   background: radial-gradient(circle at top, #000000, #050505, #111111);
   color: #00ffee;
@@ -10,11 +9,10 @@ body {
   margin: 0;
 }
 
-/* BOXES */
 .box {
   background: #111;
   padding: 35px;
-  width: 360px;
+  width: 400px;
   text-align: center;
   border-radius: 20px;
   box-shadow: 0 0 25px #00ffee, 0 0 50px #00ffee inset;
@@ -27,14 +25,12 @@ body {
   100% { box-shadow: 0 0 25px #00ffee, 0 0 50px #00ffee inset; }
 }
 
-/* HEADINGS */
 h1, h2 {
   color: #00ffee;
   text-shadow: 0 0 10px #00ffee, 0 0 20px #00ffee;
   margin-bottom: 20px;
 }
 
-/* QUESTIONS */
 #question {
   color: #00ffee;
   font-size: 18px;
@@ -42,23 +38,11 @@ h1, h2 {
   text-shadow: 0 0 8px #00ffee;
 }
 
-/* PARAGRAPHS */
-p {
-  font-size: 15px;
-  line-height: 1.5;
+#progress, p {
   color: #00ffee;
   text-shadow: 0 0 5px #00ffee;
 }
 
-/* PROGRESS TEXT */
-#progress {
-  font-size: 14px;
-  margin-top: 8px;
-  color: #00ffee;
-  text-shadow: 0 0 5px #00ffee;
-}
-
-/* BUTTONS */
 button {
   width: 100%;
   padding: 14px;
@@ -68,7 +52,7 @@ button {
   border-radius: 12px;
   font-weight: bold;
   font-size: 16px;
-  color: #000; /* black text on gradient button */
+  color: #000;
   cursor: pointer;
   box-shadow: 0 0 10px #00ffee, 0 0 20px #0099ff inset;
   transition: 0.3s;
@@ -79,10 +63,9 @@ button:hover {
   transform: translateY(-2px);
 }
 
-/* PROGRESS BAR */
 .bar {
   width: 100%;
-  height: 10px;
+  height: 12px;
   background: #222;
   border-radius: 5px;
   margin-top: 15px;
