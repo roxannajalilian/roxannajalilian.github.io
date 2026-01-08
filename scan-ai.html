@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Voice Scan</title>
+  <title>Scan Mode</title>
   <link rel="stylesheet" href="style-ai.css">
 </head>
 <body>
   <div class="box glow">
-    <h2>Voice Input Quiz</h2>
-    <p>Answer using your voice: "Yes", "Usually", or "No"</p>
-    <button onclick="voiceAnswer()">🎤 Start Voice Input</button>
+    <h2>Scan Mode</h2>
+    <p>Answer questions just like in manual mode.</p>
+
+    <button onclick="answer(2)">Yes</button>
+    <button onclick="answer(1)">Usually</button>
+    <button onclick="answer(0)">No</button>
 
     <div class="bar"><div id="bar"></div></div>
     <p id="progress"></p>
