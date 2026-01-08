@@ -1,80 +1,54 @@
 body {
-  background: radial-gradient(circle at top, #000000, #050505, #111111);
+  background: black;
   color: #00ffee;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
+  font-family: Arial;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  margin:0;
 }
 
 .box {
-  background: #111;
-  padding: 35px;
-  width: 400px;
-  text-align: center;
-  border-radius: 20px;
-  box-shadow: 0 0 25px #00ffee, 0 0 50px #00ffee inset;
-  animation: glowPulse 3s infinite alternate;
-}
-
-@keyframes glowPulse {
-  0% { box-shadow: 0 0 25px #00ffee, 0 0 50px #00ffee inset; }
-  50% { box-shadow: 0 0 35px #00ffee, 0 0 70px #00ffee inset; }
-  100% { box-shadow: 0 0 25px #00ffee, 0 0 50px #00ffee inset; }
-}
-
-h1, h2 {
-  color: #00ffee;
-  text-shadow: 0 0 10px #00ffee, 0 0 20px #00ffee;
-  margin-bottom: 20px;
-}
-
-#question {
-  color: #00ffee;
-  font-size: 18px;
-  margin-bottom: 20px;
-  text-shadow: 0 0 8px #00ffee;
-}
-
-#progress, p {
-  color: #00ffee;
-  text-shadow: 0 0 5px #00ffee;
+  background:#111;
+  padding:30px;
+  width:350px;
+  text-align:center;
+  border-radius:15px;
+  box-shadow:0 0 25px #00ffee;
 }
 
 button {
-  width: 100%;
-  padding: 14px;
-  margin: 10px 0;
-  background: linear-gradient(90deg, #00ffee, #0099ff);
-  border: none;
-  border-radius: 12px;
-  font-weight: bold;
-  font-size: 16px;
-  color: #000;
-  cursor: pointer;
-  box-shadow: 0 0 10px #00ffee, 0 0 20px #0099ff inset;
-  transition: 0.3s;
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  background:#00ffee;
+  border:none;
+  font-weight:bold;
+  cursor:pointer;
+  border-radius:8px;
 }
 
-button:hover {
-  box-shadow: 0 0 20px #00ffee, 0 0 40px #0099ff inset;
-  transform: translateY(-2px);
+.answers button, .nav-buttons button {
+  margin-top:5px;
 }
 
 .bar {
-  width: 100%;
-  height: 12px;
-  background: #222;
-  border-radius: 5px;
-  margin-top: 15px;
-  overflow: hidden;
+  height:8px;
+  background:#222;
+  margin-top:15px;
+  border-radius:4px;
 }
 
 #bar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #00ffee, #0099ff);
-  transition: width 0.5s ease;
+  height:100%;
+  width:0%;
+  background:#00ffee;
+  border-radius:4px;
+}
+
+textarea {
+  background:#111;
+  color:#00ffee;
+  border:1px solid #00ffee;
 }
