@@ -1,14 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Age Check</title>
-  <link rel="stylesheet" href="style-ai.css">
+  <meta charset="UTF-8">
+  <title>Age Verification</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <canvas id="particle-bg"></canvas>
+
   <div class="box glow">
     <h2>Are you 18 or older?</h2>
-    <a href="under18.html"><button>No</button></a>
-    <a href="terms.html"><button>Yes</button></a>
+    <button onclick="location.href='quiz.html'" class="glow-btn">Yes</button>
+    <button onclick="alert('Sorry, you must be 18 or older to use this app');" class="glow-btn">No</button>
+    <p>We care about your privacy and safety.</p>
   </div>
+
+  <script src="particles.js"></script>
 </body>
 </html>
