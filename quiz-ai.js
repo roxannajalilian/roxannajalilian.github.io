@@ -1,4 +1,4 @@
-\let questions = [
+let questions = [
   "Do you reread messages multiple times?",
   "Do you overthink short replies?",
   "Do you assume tone from texts?",
@@ -13,18 +13,27 @@
   "Do you read too much into 'seen' or 'read' notifications?",
   "Do you frequently edit your messages before sending?",
   "Do you imagine the other person’s feelings about your messages?",
-  "Do you feel relief when someone finally replies?"
+  "Do you feel relief when someone finally replies?",
+  "Do you overanalyze previous conversations days later?",
+  "Do you often predict someone’s reaction to your texts?",
+  "Do you feel anxious if you don’t get a reply in time?",
+  "Do you check your phone multiple times in a short period?",
+  "Do you interpret emojis differently than intended?",
+  "Do you imagine arguments or misunderstandings from texts?",
+  "Do you remember tiny details from past conversations?",
+  "Do you feel insecure about how your messages are received?",
+  "Do you frequently reread your own messages before sending?",
+  "Do you assume the other person is upset based on tone?"
 ];
 
 let current = 0;
 let score = 0;
 
 function loadQuestion() {
-  document.getElementById("question").textContent = questions[current];
-  document.getElementById("progress").textContent =
+  document.getElementById("question").innerText = questions[current];
+  document.getElementById("progress").innerText =
     "Question " + (current + 1) + " of " + questions.length;
-  document.getElementById("bar").style.width =
-    (current / questions.length) * 100 + "%";
+  document.getElementById("bar").style.width = (current / questions.length) * 100 + "%";
 }
 
 function answer(value) {
@@ -38,17 +47,4 @@ function answer(value) {
   }
 }
 
-function voiceAnswer() {
-  let recognition = new webkitSpeechRecognition();
-  recognition.start();
-
-  recognition.onresult = function(event) {
-    let text = event.results[0][0].transcript.toLowerCase();
-    if (text.includes("yes")) answer(2);
-    else if (text.includes("usually")) answer(1);
-    else answer(0);
-  };
-}
-
 loadQuestion();
-
