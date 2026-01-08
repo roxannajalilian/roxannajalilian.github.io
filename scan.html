@@ -2,18 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Scan Text</title>
+  <title>Delulu Scan</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <canvas id="particle-bg"></canvas>
-
   <div class="box glow">
-    <h2>Scan a Text Conversation</h2>
-    <input type="file" id="file-input" accept="image/*">
-    <button onclick="scanText()" class="glow-btn">Analyze</button>
-    <div id="scan-result"></div>
-    <a href="quiz.html"><button class="glow-btn small">Back to Quiz</button></a>
+    <h2>Scan a Conversation</h2>
+    <p>Upload a screenshot of your text conversation to see if you might overthink it.</p>
+
+    <input type="file" id="imageInput" accept="image/*">
+    <button class="glow-btn" onclick="scanImage()">Analyze</button>
+
+    <div id="scan-result">
+      <p id="scan-percentage"></p>
+      <p id="scan-advice"></p>
+      <div id="scan-mood-meter"><div id="scan-fill"></div></div>
+    </div>
+
+    <a href="index.html"><button class="glow-btn">Back to Home</button></a>
   </div>
 
   <script src="scan.js"></script>
