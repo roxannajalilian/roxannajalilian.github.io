@@ -27,11 +27,9 @@ let questions = [
 ];
 
 let current = 0;
-let score = 0;
+let answersHistory = [];
 
-window.onload = function() {
-  loadQuestion();
-}
+window.onload = loadQuestion;
 
 function loadQuestion() {
   document.getElementById("question").innerText = questions[current];
@@ -40,27 +38,39 @@ function loadQuestion() {
   document.getElementById("bar").style.width = (current / questions.length) * 100 + "%";
 }
 
+// Answer a question
 function answer(value) {
-  score += value;
+  answersHistory[current] = value;
   current++;
   if (current < questions.length) {
     loadQuestion();
   } else {
+    let score = answersHistory.reduce((a,b)=>a+b,0);
     localStorage.setItem("score", score);
     window.location.href = "results-ai.html";
   }
+}
+
+// Go back to previous question
+function goBack() {
+  if(current === 0) return;
+  current--;
+  loadQuestion();
 }
 
 // Voice recognition
 function voiceAnswer() {
   let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
   recognition.lang = 'en-US';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
   recognition.start();
 
   recognition.onresult = function(event) {
     let text = event.results[0][0].transcript.toLowerCase();
-    if (text.includes("yes")) answer(2);
-    else if (text.includes("usually") || text.includes("sometimes")) answer(1);
+    if(text.includes("yes")) answer(3);
+    else if(text.includes("usually")) answer(2);
+    else if(text.includes("sometimes")) answer(1);
     else answer(0);
   }
 
