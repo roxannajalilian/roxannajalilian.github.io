@@ -33,3 +33,10 @@ canvas#particle-bg {position:fixed; top:0; left:0; width:100%; height:100%; z-in
 
 @keyframes pulse {0%{box-shadow:0 0 15px #00ffee;}50%{box-shadow:0 0 30px #00ffee;}100%{box-shadow:0 0 15px #00ffee;}}
 @keyframes fadeIn {from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);}}
+
+#scan-mood-meter {
+  width:100%; height:20px; background:#222; margin:10px 0; border-radius:10px;
+}
+#scan-fill {
+  height:100%; width:0%; background:#ff5555; border-radius:10px; transition:width 0.5s;
+}
