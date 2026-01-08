@@ -29,7 +29,6 @@ let questions = [
 let current = 0;
 let score = 0;
 
-// Wait for page to load fully before initializing
 window.onload = function() {
   loadQuestion();
 }
@@ -49,5 +48,23 @@ function answer(value) {
   } else {
     localStorage.setItem("score", score);
     window.location.href = "results-ai.html";
+  }
+}
+
+// Voice recognition
+function voiceAnswer() {
+  let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  recognition.lang = 'en-US';
+  recognition.start();
+
+  recognition.onresult = function(event) {
+    let text = event.results[0][0].transcript.toLowerCase();
+    if (text.includes("yes")) answer(2);
+    else if (text.includes("usually") || text.includes("sometimes")) answer(1);
+    else answer(0);
+  }
+
+  recognition.onerror = function() {
+    alert("Voice recognition failed. Please try again.");
   }
 }
