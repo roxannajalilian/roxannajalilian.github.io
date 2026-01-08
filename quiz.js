@@ -1,3 +1,4 @@
+// QUESTIONS ARRAY (25+ realistic questions)
 let questions = [
   "Do you reread messages more than once?",
   "Do you overthink short replies?",
@@ -27,15 +28,16 @@ let questions = [
 ];
 
 let current = 0;
-let score = 0;
 let userAnswers = [];
-const totalScore = questions.length * 3;
+const totalScore = questions.length * 3; // max per question = 3
 
+// ELEMENTS
 const questionEl = document.getElementById("question");
 const barEl = document.getElementById("bar");
 const emojiEl = document.getElementById("emoji-feedback");
 
-function loadQuestion() {
+// LOAD QUESTION
+function loadQuestion(){
   if(current < 0) current = 0;
   if(current >= questions.length) current = questions.length-1;
   questionEl.textContent = questions[current];
@@ -43,18 +45,22 @@ function loadQuestion() {
   updateEmoji();
 }
 
+// RECORD ANSWER
 function answer(value){
   userAnswers[current] = value;
-  score = userAnswers.reduce((a,b)=>a+(b||0),0);
   current++;
   if(current >= questions.length){
+    // calculate final score and save
+    let score = userAnswers.reduce((a,b)=>a+(b||0),0);
     localStorage.setItem("score", score);
+    localStorage.setItem("totalScore", totalScore);
     window.location.href = "results.html";
   } else {
     loadQuestion();
   }
 }
 
+// GO BACK BUTTON
 function goBack(){
   if(current>0){
     current--;
@@ -62,16 +68,19 @@ function goBack(){
   }
 }
 
+// UPDATE PROGRESS BAR
 function updateProgress(){
+  let score = userAnswers.reduce((a,b)=>a+(b||0),0);
   let progress = ((current)/questions.length)*100;
   barEl.style.width = progress + "%";
   let percent = Math.round((score/totalScore)*100);
-  if(percent < 30) barEl.style.background = "#00ff00";
-  else if(percent < 60) barEl.style.background = "#ffff00";
-  else if(percent < 80) barEl.style.background = "#ff9900";
-  else barEl.style.background = "#ff0000";
+  if(percent < 30) barEl.style.background = "#00ff99"; // green
+  else if(percent < 60) barEl.style.background = "#ffff00"; // yellow
+  else if(percent < 80) barEl.style.background = "#ff9900"; // orange
+  else barEl.style.background = "#ff5555"; // red
 }
 
+// UPDATE EMOJI FEEDBACK
 function updateEmoji(){
   if(userAnswers[current]===undefined){ emojiEl.textContent=""; return; }
   let val = userAnswers[current];
@@ -81,7 +90,7 @@ function updateEmoji(){
   else emojiEl.textContent="😰";
 }
 
-// Voice input
+// VOICE INPUT
 function voiceAnswer(){
   if(!('webkitSpeechRecognition' in window)){
     alert("Your browser does not support voice input!");
@@ -99,8 +108,8 @@ function voiceAnswer(){
     else answer(0);
   };
 
-  recognition.onerror = function(event){
-    alert("Voice recognition error. Please try again.");
+  recognition.onerror = function(){
+    alert("Voice recognition failed, try again.");
   };
 }
 
