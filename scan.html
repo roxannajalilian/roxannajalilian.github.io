@@ -1,26 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Scan Messages</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Delulu Text Scan</title>
+  <link rel="stylesheet" href="style-ai.css">
 </head>
 <body>
-<div class="app">
-  <h2>Scan Texts</h2>
-  <p>Upload a screenshot or use voice input (entertainment only)</p>
+  <div class="box glow">
+    <h2>Scan Your Messages</h2>
+    <p>Paste your conversation text below:</p>
+    <textarea id="textInput" rows="8" style="width: 100%; border-radius:12px; padding:8px;"></textarea>
+    <button onclick="analyzeText()">Analyze</button>
+    <p id="scanResult"></p>
+  </div>
 
-  <input type="file" accept="image/*" id="imageUpload">
-  <button onclick="scanImage()">Scan Image</button>
-
-  <h3>Voice Input</h3>
-  <button id="startRecording">🎤 Record Voice</button>
-  <canvas id="voiceWave" width="300" height="50"></canvas>
-  <p id="voiceOutput"></p>
-
-  <div id="analyzing" style="display:none; margin-top:20px; color:#0ff;">Analyzing...</div>
-</div>
-<script src="wave.js"></script>
-<script src="script.js"></script>
+  <script src="scan.js"></script>
 </body>
 </html>
