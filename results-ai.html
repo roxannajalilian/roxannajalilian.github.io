@@ -8,24 +8,27 @@
   <div class="box glow">
     <h2>Your Delulu Analysis</h2>
     <p id="analysis"></p>
-    <a href="index.html"><button>Retake Quiz</button></a>
+    <button onclick="retake()">Retake Quiz</button>
   </div>
 
   <script>
     let score = localStorage.getItem("score");
-    let totalQuestions = 15;
-    let percent = Math.round((score / (totalQuestions * 2)) * 100);
+    let percent = Math.round((score / (25*2)) * 100); // max score 50
     let text = "";
 
-    if (score <= 9) {
-      text = "You generally interpret messages realistically and avoid overthinking.";
-    } else if (score <= 19) {
-      text = "You sometimes overthink communication, especially when responses are unclear.";
+    if (percent < 35) {
+      text = "You are generally calm and rarely overthink messages.";
+    } else if (percent < 70) {
+      text = "You sometimes overthink messages and may read into things.";
     } else {
-      text = "You often overanalyze texting patterns and assign meaning where none exists.";
+      text = "You often overanalyze text conversations and assume meaning where none exists.";
     }
 
     document.getElementById("analysis").innerText = percent + "% – " + text;
+
+    function retake() {
+      window.location.href = "index.html";
+    }
   </script>
 </body>
 </html>
