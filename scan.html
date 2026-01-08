@@ -1,19 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Delulu Text/Image Scan</title>
-  <link rel="stylesheet" href="style-ai.css">
+  <meta charset="UTF-8">
+  <title>Scan Text</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <canvas id="particle-bg"></canvas>
+
   <div class="box glow">
-    <h2>Scan Messages</h2>
-    <p>Paste conversation or upload image:</p>
-    <textarea id="textInput" rows="8" style="width:100%;border-radius:12px;padding:8px;"></textarea>
-    <input type="file" id="imgInput" accept="image/*" style="margin-top:10px;">
-    <button onclick="analyzeText()">Analyze Text</button>
-    <button onclick="analyzeImage()">Analyze Image</button>
-    <p id="scanResult"></p>
+    <h2>Scan a Text Conversation</h2>
+    <input type="file" id="file-input" accept="image/*">
+    <button onclick="scanText()" class="glow-btn">Analyze</button>
+    <div id="scan-result"></div>
+    <a href="quiz.html"><button class="glow-btn small">Back to Quiz</button></a>
   </div>
+
   <script src="scan.js"></script>
+  <script src="particles.js"></script>
 </body>
 </html>
