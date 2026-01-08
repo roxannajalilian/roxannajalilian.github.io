@@ -1,21 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>Delulu Quiz</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style-ai.css">
 </head>
 <body>
-<div class="app" id="quiz-app">
-  <h2 id="question-title">Loading quiz…</h2>
-  <p id="question-text"></p>
-  <div id="options">
-    <button onclick="answer(0)">No</button>
-    <button onclick="answer(1)">Sometimes</button>
-    <button onclick="answer(2)">Yes</button>
+  <div class="box glow">
+    <h2 id="question">Loading question...</h2>
+
+    <div class="answers">
+      <button onclick="answer(3)">Yes</button>
+      <button onclick="answer(2)">Usually</button>
+      <button onclick="answer(1)">Sometimes</button>
+      <button onclick="answer(0)">No</button>
+      <button onclick="voiceAnswer()">🎤 Answer by Voice</button>
+    </div>
+
+    <div class="nav-buttons">
+      <button onclick="goBack()">⬅ Go Back</button>
+    </div>
+
+    <div class="bar"><div id="bar"></div></div>
+    <p id="progress"></p>
   </div>
-  <div class="progress"><span id="progress-bar"></span></div>
-</div>
-<script src="script.js"></script>
+
+  <script src="quiz25.js"></script>
 </body>
 </html>
