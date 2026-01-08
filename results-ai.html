@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Delulu Results</title>
+  <title>Delulu Analysis</title>
   <link rel="stylesheet" href="style-ai.css">
 </head>
 <body>
@@ -12,8 +12,9 @@
   </div>
 
   <script>
-    let score = parseInt(localStorage.getItem("score"));
-    let percent = Math.round((score / 30) * 100);
+    let score = localStorage.getItem("score");
+    let totalQuestions = 15;
+    let percent = Math.round((score / (totalQuestions * 2)) * 100);
     let text = "";
 
     if (score <= 9) {
@@ -21,11 +22,10 @@
     } else if (score <= 19) {
       text = "You sometimes overthink communication, especially when responses are unclear.";
     } else {
-      text = "You often overanalyze texting patterns and assign extra meaning where none exists.";
+      text = "You often overanalyze texting patterns and assign meaning where none exists.";
     }
 
-    document.getElementById("analysis").textContent =
-      percent + "% – " + text;
+    document.getElementById("analysis").innerText = percent + "% – " + text;
   </script>
 </body>
 </html>
