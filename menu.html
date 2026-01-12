@@ -1,77 +1,76 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Menu • Delulu Detector</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
 <nav>
-  <div class="nav-left brand">
+  <div class="brand">
     <div class="logo">DD</div>
-    <div class="brand-text">
-      <div class="title">Delulu Detector</div>
-      <div class="sub">Choose what you want to do</div>
+    <div>
+      <div class="title">Menu</div>
+      <div class="sub">Pick a section</div>
     </div>
   </div>
   <div class="nav-right">
     <a class="navlink" href="index.html">Home</a>
-    <a class="navlink" href="menu.html">Menu</a>
+    <a class="navlink active" href="menu.html">Menu</a>
     <a class="navlink" href="policy.html">Policy</a>
   </div>
 </nav>
 
 <div class="container">
   <div class="card center">
-    <div class="split">
+    <div class="row" style="justify-content:space-between;">
       <div>
         <h2>Main Menu</h2>
-        <p class="muted">Pick a section. Everything is linked + saved locally.</p>
+        <div class="muted">Everything is linked. Choose where to go.</div>
       </div>
       <div class="pill" id="modePill">Mode: —</div>
     </div>
 
     <div class="grid" style="margin-top:1rem;">
-      <div class="item">
-        <h3>Analyze Messages</h3>
-        <p class="muted small">Paste convo → highlights + signals.</p>
+      <div class="notice">
+        <h3>Analyze</h3>
+        <p class="muted small">Paste messages → signals.</p>
         <button class="primary" onclick="location.href='scan.html'">Open</button>
       </div>
 
-      <div class="item">
-        <h3>Take the Quiz</h3>
+      <div class="notice">
+        <h3>Quiz</h3>
         <p class="muted small">~2 mins • back button • accurate %.</p>
         <button class="primary" onclick="location.href='quiz.html'">Open</button>
       </div>
 
-      <div class="item">
+      <div class="notice">
         <h3>Results</h3>
-        <p class="muted small">See your score + bestie advice.</p>
+        <p class="muted small">Your score + bestie advice.</p>
         <button class="secondary" onclick="location.href='result.html'">Open</button>
       </div>
 
-      <div class="item">
-        <h3>Action Plan</h3>
-        <p class="muted small">What to do next (based on score).</p>
-        <button class="secondary" onclick="location.href='plan.html'">Open</button>
-      </div>
-
-      <div class="item">
+      <div class="notice">
         <h3>Mini Game</h3>
-        <p class="muted small">Delulu-themed game to calm down.</p>
+        <p class="muted small">Delulu Dash (tap to jump).</p>
         <button class="primary" onclick="location.href='game.html'">Play</button>
       </div>
 
-      <div class="item">
+      <div class="notice">
+        <h3>Plan</h3>
+        <p class="muted small">What to do next.</p>
+        <button class="secondary" onclick="location.href='plan.html'">Open</button>
+      </div>
+
+      <div class="notice">
         <h3>History</h3>
         <p class="muted small">Saved results.</p>
         <button class="secondary" onclick="location.href='history.html'">Open</button>
       </div>
     </div>
 
-    <hr>
+    <hr style="border:none;height:1px;background:rgba(255,255,255,.14);margin:1rem 0;">
     <div class="row">
       <button class="secondary" onclick="location.href='index.html'">Back</button>
       <button class="secondary" onclick="localStorage.removeItem('delulu_data_v1'); alert('Reset done.');">Reset data</button>
@@ -82,10 +81,9 @@
 <script>
   const KEY="delulu_data_v1";
   let d={};
-  try{ d = JSON.parse(localStorage.getItem(KEY) || "{}"); }catch(e){ d={}; }
-  const age = Number(d.age || 0);
-  document.getElementById("modePill").textContent = `Mode: ${age && age < 18 ? "Teen" : "Adult"}`;
+  try{ d=JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){ d={}; }
+  const age=Number(d.age||0);
+  document.getElementById("modePill").textContent = `Mode: ${age && age<18 ? "Teen" : "Adult"}`;
 </script>
-
 </body>
 </html>
