@@ -1,234 +1,88 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Delulu Detector</title>
-  <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <div class="logo">DD</div>
-      <div>
-        <div class="title">Delulu Detector</div>
-        <div class="subtitle">Questionnaire + message analysis • Local-only</div>
-      </div>
+
+<nav>
+  <div class="nav-left brand">
+    <div class="logo">DD</div>
+    <div class="brand-text">
+      <div class="title">Delulu Detector</div>
+      <div class="sub">Multi-page • Vanilla HTML/CSS/JS</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a class="navlink" href="index.html">Home</a>
+    <a class="navlink" href="scan.html">Scan</a>
+    <a class="navlink" href="quiz.html">Quiz</a>
+    <a class="navlink" href="history.html">History</a>
+    <a class="navlink" href="policy.html">Policy</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="card center">
+    <h1>Start</h1>
+    <p class="muted">
+      Enter your age to continue. Under 18 goes to Teen Mode first.
+    </p>
+
+    <div class="field">
+      <label class="muted">Your age</label>
+      <input id="ageInput" type="number" min="1" max="120" placeholder="e.g., 16">
     </div>
 
-    <div class="top-actions">
-      <button id="themeBtn" class="btn ghost" type="button" aria-label="Toggle theme">🌙</button>
-      <a class="btn ghost" href="policy.html">Terms & Privacy</a>
-    </div>
-  </header>
-
-  <main class="container">
-
-    <!-- Age Gate -->
-    <section id="ageGate" class="card">
-      <h1>Before we start</h1>
-      <p class="muted">
-        This app gives a “delulu score” (overthinking vs realistic) based on your answers and patterns in the text situation.
-        It does not diagnose anything. It’s guidance, not therapy.
-      </p>
-
-      <div class="row wrap">
-        <label class="field grow">
-          <span>Your age</span>
-          <input id="ageInput" type="number" inputmode="numeric" min="1" max="120" placeholder="e.g., 16" />
-        </label>
-
-        <button id="startBtn" class="btn primary" type="button">Continue</button>
-      </div>
-
-      <label class="row checkbox">
-        <input id="acceptPolicyChk" type="checkbox" />
-        <span>I agree to the <a href="policy.html">Terms & Privacy</a></span>
+    <div class="row">
+      <label class="muted">
+        <input id="agreeChk" type="checkbox">
+        I agree to the <a href="policy.html">Terms & Privacy</a>
       </label>
+    </div>
 
-      <div id="ageMsg" class="notice hidden" role="status" aria-live="polite"></div>
-    </section>
+    <div class="row" style="margin-top:1rem;">
+      <button class="primary" type="button"
+        onclick="
+          const msg=document.getElementById('msg');
+          msg.style.display='none';
 
-    <!-- Underage Lock -->
-    <section id="locked" class="card hidden">
-      <h1>Locked</h1>
-      <p class="muted">
-        This app isn’t available for your age. If you need support, talk to a trusted adult or a youth support line in your area.
-      </p>
-      <a class="btn primary" href="policy.html">Read the policy</a>
-    </section>
+          const age=Number(document.getElementById('ageInput').value);
+          const agree=document.getElementById('agreeChk').checked;
 
-    <!-- App -->
-    <section id="app" class="hidden">
+          if(!agree){ msg.textContent='Please accept the Terms & Privacy.'; msg.style.display='block'; return; }
+          if(!age || age<13){ msg.textContent='Enter a valid age (13+).'; msg.style.display='block'; return; }
 
-      <div class="tabs">
-        <button class="tab active" data-tab="scan">Scan</button>
-        <button class="tab" data-tab="questions">Questions</button>
-        <button class="tab" data-tab="plan">Action Plan</button>
-        <button class="tab" data-tab="insights">Insights</button>
-      </div>
+          // save
+          try{
+            const KEY='delulu_data_v1';
+            const raw=localStorage.getItem(KEY);
+            const data=raw?JSON.parse(raw):{};
+            data.age=age;
+            data.mode=(age<18)?'teen':'adult';
+            localStorage.setItem(KEY, JSON.stringify(data));
+          }catch(e){}
 
-      <!-- Scan -->
-      <section class="tab-panel active" id="tab-scan">
-        <div class="grid">
-          <section class="card">
-            <div class="card-head">
-              <h2>Describe the situation</h2>
-              <div class="pill" id="modePill">Mode: —</div>
-            </div>
+          // route
+          location.href = (age<18) ? 'under18.html' : 'scan.html';
+        ">
+        Continue
+      </button>
 
-            <label class="field">
-              <span>Quick summary (1–3 sentences)</span>
-              <textarea id="situationInput" rows="3" placeholder="Example: He replied after 8 hours with 'lol' and now I'm spiraling..."></textarea>
-            </label>
+      <button class="secondary" type="button"
+        onclick="localStorage.removeItem('delulu_data_v1'); alert('Reset done.');">
+        Reset
+      </button>
+    </div>
 
-            <label class="field">
-              <span>Paste the messages (optional)</span>
-              <textarea id="messagesInput" rows="7" placeholder="Paste the chat here..."></textarea>
-            </label>
+    <div id="msg" class="notice" style="display:none; margin-top:1rem;"></div>
+  </div>
+</div>
 
-            <div class="row wrap">
-              <button id="micBtn" class="btn" type="button">🎤 Voice to text</button>
-              <button id="analyzeBtn" class="btn" type="button">Analyze</button>
-              <button id="clearTextBtn" class="btn ghost" type="button">Clear</button>
-            </div>
+<div class="footer">If a button doesn’t work on GitHub Pages, it’s usually file name / case.</div>
 
-            <div class="row wrap">
-              <button id="demoBtn" class="btn ghost" type="button">Load demo chat</button>
-              <button id="resetBtn" class="btn ghost" type="button">Reset everything</button>
-            </div>
-
-            <div id="speechNotice" class="notice hidden"></div>
-
-            <div id="analysisBox" class="analysis hidden">
-              <div class="analysis-head">
-                <h3>Message analysis</h3>
-                <button id="copyAnalysisBtn" class="btn ghost" type="button">Copy</button>
-              </div>
-              <div id="analysisSummary" class="muted"></div>
-              <div id="signalChips" class="chips"></div>
-              <div class="divider"></div>
-              <div id="highlightedText" class="highlight"></div>
-            </div>
-          </section>
-
-          <section class="card">
-            <div class="card-head">
-              <h2>Questionnaire (quick)</h2>
-              <div class="progress"><div id="progressBar" class="bar"></div></div>
-            </div>
-
-            <div id="questionWrap" class="qwrap"></div>
-
-            <div class="row wrap">
-              <button id="prevBtn" class="btn ghost" type="button">Back</button>
-              <button id="nextBtn" class="btn" type="button">Next</button>
-              <button id="submitBtn" class="btn primary hidden" type="button">Get my score</button>
-            </div>
-
-            <div id="resultBox" class="result hidden" aria-live="polite">
-              <div class="result-top">
-                <h2>Your Delulu Score</h2>
-                <div class="score">
-                  <div id="scoreNum" class="score-num">—</div>
-                  <div class="score-label">/ 100</div>
-                </div>
-              </div>
-
-              <div id="tierPill" class="tier">—</div>
-              <p id="adviceText" class="advice"></p>
-
-              <div class="divider"></div>
-
-              <div class="row wrap">
-                <button id="saveBtn" class="btn" type="button">Save result</button>
-                <button id="exportBtn" class="btn ghost" type="button">Download report</button>
-                <button id="newRunBtn" class="btn ghost" type="button">New check</button>
-              </div>
-
-              <div class="divider"></div>
-
-              <div class="card-subhead">
-                <h3>Saved history</h3>
-                <div class="row wrap">
-                  <button id="refreshHistoryBtn" class="btn ghost" type="button">Refresh</button>
-                  <button id="clearHistoryBtn" class="btn ghost" type="button">Delete all</button>
-                </div>
-              </div>
-              <div id="historyList" class="history"></div>
-            </div>
-
-            <div id="qHint" class="muted small">Tip: You can score even without pasting messages.</div>
-          </section>
-        </div>
-      </section>
-
-      <!-- Questions -->
-      <section class="tab-panel" id="tab-questions">
-        <section class="card">
-          <div class="card-head">
-            <h2>Questionnaire (focused)</h2>
-            <div class="progress"><div id="progressBar2" class="bar"></div></div>
-          </div>
-
-          <div id="questionWrap2" class="qwrap"></div>
-
-          <div class="row wrap">
-            <button id="prevBtn2" class="btn ghost" type="button">Back</button>
-            <button id="nextBtn2" class="btn" type="button">Next</button>
-            <button id="submitBtn2" class="btn primary hidden" type="button">Get my score</button>
-          </div>
-
-          <div class="muted small">Same scoring. This view just makes it easier.</div>
-        </section>
-      </section>
-
-      <!-- Action Plan -->
-      <section class="tab-panel" id="tab-plan">
-        <section class="card">
-          <div class="card-head">
-            <h2>Your Action Plan</h2>
-            <div class="pill" id="planPill">Plan: —</div>
-          </div>
-
-          <div id="planBox" class="plan">
-            <p class="muted">Get a score first, then come back here.</p>
-          </div>
-
-          <div class="row wrap">
-            <button id="regenPlanBtn" class="btn" type="button">Regenerate plan</button>
-            <button id="copyPlanBtn" class="btn ghost" type="button">Copy plan</button>
-          </div>
-        </section>
-      </section>
-
-      <!-- Insights -->
-      <section class="tab-panel" id="tab-insights">
-        <section class="card">
-          <div class="card-head">
-            <h2>Insights Dashboard</h2>
-            <div class="pill" id="insightsPill">Insights: —</div>
-          </div>
-
-          <canvas id="insightsChart" width="900" height="320" class="canvas"></canvas>
-
-          <div class="row wrap">
-            <button id="shareCardBtn" class="btn primary" type="button">Download share card</button>
-            <button id="refreshInsightsBtn" class="btn ghost" type="button">Refresh insights</button>
-          </div>
-
-          <div class="muted small">All local. No server. No libraries.</div>
-        </section>
-      </section>
-
-    </section>
-  </main>
-
-  <footer class="footer">
-    <span class="muted">Delulu Detector • Vanilla HTML/CSS/JS • Local-only storage</span>
-  </footer>
-
-  <script type="module" src="app.js"></script>
 </body>
 </html>
