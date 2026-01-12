@@ -1,21 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Delulu Results</title>
+  <title>Your Results</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <canvas id="particle-bg"></canvas>
-  <div class="box glow">
-    <h2>Your Delulu Score</h2>
-    <p id="percentage"></p>
-    <p id="advice"></p>
-    <div id="mood-meter"><div id="mood-fill"></div></div>
-    <div id="achievement"></div>
-    <a href="index.html"><button class="glow-btn">Retake Quiz</button></a>
-  </div>
-  <script src="results.js"></script>
-  <script src="particles.js"></script>
+
+<nav>
+  <a href="scan.html">Scan</a>
+  <a href="quiz.html">Quiz</a>
+  <a href="plan.html">Action Plan</a>
+  <a href="history.html">History</a>
+</nav>
+
+<div class="card center">
+  <h2>Your Overthinking Score</h2>
+
+  <div id="percentage" class="big-number"></div>
+  <div id="tier" class="pill"></div>
+
+  <p id="explanation"></p>
+  <p id="advice" class="advice"></p>
+
+  <button onclick="window.location.href='plan.html'">
+    Continue to Action Plan
+  </button>
+</div>
+
+<script src="core.js"></script>
+<script src="result.js"></script>
 </body>
 </html>
