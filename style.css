@@ -151,3 +151,15 @@ button, a, input { position:relative; z-index:10; pointer-events:auto !important
 .card::before {
   pointer-events: none !important;
 }
+/* ===== CLICK FIX (answers/buttons not clickable) ===== */
+.answers, .answer, .row, .card, .container, nav {
+  position: relative;
+  z-index: 50;
+}
+.answer {
+  pointer-events: auto !important;
+}
+.card::before {
+  pointer-events: none !important;
+}
+
