@@ -1,89 +1,141 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delulu Detector</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-<nav>
-  <div class="brand">
-    <div class="logo">DD</div>
-    <div>
-      <div class="title">Delulu Detector</div>
-      <div class="sub">Multi-page • Vanilla HTML/CSS/JS</div>
-    </div>
-  </div>
-  <div class="nav-right">
-    <a class="navlink active" href="index.html">Home</a>
-    <a class="navlink" href="menu.html">Menu</a>
-    <a class="navlink" href="policy.html">Policy</a>
-  </div>
-</nav>
+:root{
+  --bg0:#070716; --bg1:#0b0b1f; --bg2:#101033;
+  --text: rgba(255,255,255,.92);
+  --muted: rgba(255,255,255,.66);
+  --card: rgba(255,255,255,.06);
+  --card2: rgba(255,255,255,.09);
+  --border: rgba(255,255,255,.14);
+  --accent:#8f8cff; --accent2:#53ffd6;
+  --radius: 22px; --radius2: 16px; --blur: 14px;
+  --shadow: 0 24px 90px rgba(0,0,0,.50);
+}
 
-<div class="container">
-  <div class="card center">
-    <h1>Start</h1>
-    <p class="muted">Enter your age to continue. Then you’ll choose what page to use.</p>
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: system-ui,-apple-system,Segoe UI,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(143,140,255,.18), transparent 55%),
+    radial-gradient(900px 500px at 85% 15%, rgba(83,255,214,.14), transparent 55%),
+    radial-gradient(900px 700px at 40% 95%, rgba(255,211,106,.10), transparent 60%),
+    linear-gradient(180deg, var(--bg0), var(--bg1) 45%, var(--bg2));
+  overflow-x:hidden;
+}
 
-    <div class="field">
-      <label class="muted">Your age (13+)</label>
-      <input id="ageInput" type="number" min="13" max="120" placeholder="e.g., 16" />
-    </div>
+body::before, body::after{
+  content:"";
+  position:fixed; inset:-220px;
+  filter: blur(44px);
+  opacity:.65;
+  z-index:-1;
+  pointer-events:none;
+}
+body::before{
+  background:
+    radial-gradient(520px 420px at 15% 20%, rgba(143,140,255,.36), transparent 60%),
+    radial-gradient(560px 480px at 85% 30%, rgba(83,255,214,.28), transparent 65%);
+}
+body::after{
+  background:
+    radial-gradient(520px 520px at 40% 90%, rgba(255,211,106,.18), transparent 65%),
+    radial-gradient(420px 420px at 70% 80%, rgba(255,107,107,.12), transparent 70%);
+}
 
-    <div class="row">
-      <label class="muted">
-        <input id="agreeChk" type="checkbox" />
-        I agree to the <a href="policy.html">Terms & Privacy</a>
-      </label>
-    </div>
+.container{max-width:1100px;margin:0 auto;padding:1.25rem; position:relative; z-index:1;}
+a{color:inherit}
 
-    <div class="row" style="margin-top:1rem;">
-      <button class="primary" type="button" onclick="startApp()">Continue</button>
-      <button class="secondary" type="button" onclick="resetApp()">Reset</button>
-    </div>
+nav{
+  position:sticky; top:0; z-index:10;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:.9rem 1.25rem;
+  background: rgba(10,10,25,.55);
+  border-bottom:1px solid rgba(255,255,255,.10);
+  backdrop-filter: blur(var(--blur));
+}
+.brand{display:flex; align-items:center; gap:.75rem;}
+.logo{
+  width:44px; height:44px; border-radius:16px;
+  display:grid; place-items:center; font-weight:900;
+  color:#071018;
+  background: linear-gradient(135deg,var(--accent),var(--accent2));
+  box-shadow: 0 18px 45px rgba(0,0,0,.35);
+}
+.brand .title{font-weight:900}
+.brand .sub{color:var(--muted);font-size:.85rem;margin-top:.1rem}
 
-    <div id="msg" class="notice" style="display:none;"></div>
-  </div>
-</div>
+.nav-right{display:flex;gap:.55rem;flex-wrap:wrap;align-items:center}
+.navlink{
+  padding:.52rem .9rem; border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  text-decoration:none;
+  font-weight:650;
+}
+.navlink:hover{background:rgba(255,255,255,.07)}
+.navlink.active{
+  border-color: rgba(143,140,255,.55);
+  box-shadow: 0 0 0 3px rgba(143,140,255,.18);
+}
 
-<div class="footer">GitHub Pages tip: filenames are case-sensitive (all lowercase).</div>
+.card{
+  background: linear-gradient(180deg,var(--card2),var(--card));
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:1.25rem;
+  position:relative;
+  overflow:hidden;
+  z-index:2;
+}
+.card::before{
+  content:"";
+  position:absolute; inset:-2px;
+  background: radial-gradient(700px 250px at 10% 0%, rgba(143,140,255,.18), transparent 60%);
+  pointer-events:none;
+}
+.center{max-width:760px;margin:1.1rem auto;}
+.muted{color:var(--muted)}
+.footer{text-align:center;padding:1.4rem 1rem;color:var(--muted);font-size:.88rem}
 
-<script>
-  const KEY = "delulu_data_v1";
+.row{display:flex;gap:.7rem;align-items:center;flex-wrap:wrap}
+.field{display:flex;flex-direction:column;gap:.4rem;margin:.75rem 0}
 
-  function startApp(){
-    const age = Number(document.getElementById("ageInput").value);
-    const agree = document.getElementById("agreeChk").checked;
-    const msg = document.getElementById("msg");
-    msg.style.display = "none";
+input{
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.14);
+  color: var(--text);
+  border-radius: 16px;
+  padding: .72rem .85rem;
+}
 
-    if(!agree){
-      msg.textContent = "Please accept the Terms & Privacy.";
-      msg.style.display = "block";
-      return;
-    }
-    if(!age || age < 13){
-      msg.textContent = "Enter a valid age (13+).";
-      msg.style.display = "block";
-      return;
-    }
+button{
+  border-radius:999px;
+  padding:.62rem 1.05rem;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  color:var(--text);
+  cursor:pointer;
+  font-weight:750;
+}
+button:hover{background:rgba(255,255,255,.09)}
+button.primary{
+  background: linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#071018;
+  border-color:transparent;
+}
+button.secondary{background:rgba(255,255,255,.04)}
 
-    let data = {};
-    try{ data = JSON.parse(localStorage.getItem(KEY) || "{}"); }catch(e){ data = {}; }
+.notice{
+  margin-top:.75rem;
+  padding:.85rem;
+  border-radius: 16px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  color: var(--muted);
+}
 
-    data.age = age;
-    data.mode = age < 18 ? "teen" : "adult";
-    localStorage.setItem(KEY, JSON.stringify(data));
-
-    location.href = "menu.html";
-  }
-
-  function resetApp(){
-    localStorage.removeItem(KEY);
-    alert("Reset done.");
-  }
-</script>
-</body>
-</html>
+/* click safety */
+body::before, body::after, .card::before { pointer-events:none !important; }
+button, a, input { position:relative; z-index:10; pointer-events:auto !important; }
