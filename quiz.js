@@ -106,7 +106,7 @@ function finishQuiz() {
   };
   setData(data);
 
-  window.location.href = "result.html";
+  window.location.href = "loading.html";
 }
 
 renderQuestion();
