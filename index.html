@@ -1,18 +1,254 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/components.css" />
+  <link rel="stylesheet" href="styles/theme.css" />
 </head>
+
 <body>
-  <canvas id="particle-bg"></canvas>
-  <div class="box glow">
-    <h1>Delulu Detector</h1>
-    <p>Check if you overthink text messages!</p>
-    <a href="age.html"><button class="glow-btn">Start Quiz</button></a>
-    <a href="scan.html"><button class="glow-btn">Scan a Conversation</button></a>
-  </div>
-  <script src="particles.js"></script>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div>
+        <div class="title">Delulu Detector</div>
+        <div class="subtitle">Questionnaire + message analysis</div>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button id="themeBtn" class="btn ghost" type="button" aria-label="Toggle theme">🌙</button>
+      <a class="btn ghost" href="policy.html">Terms & Privacy</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Age Gate -->
+    <section id="ageGate" class="card">
+      <h1>Before we start</h1>
+      <p class="muted">
+        This app estimates “overthinking vs realistic” based on your answers + patterns in a text-message situation.
+        It’s not therapy or a diagnosis — it’s guidance.
+      </p>
+
+      <div class="row">
+        <label class="field">
+          <span>Your age</span>
+          <input id="ageInput" type="number" inputmode="numeric" min="1" max="120" placeholder="e.g., 16" />
+        </label>
+        <button id="startBtn" class="btn primary" type="button">Continue</button>
+      </div>
+
+      <label class="row checkbox">
+        <input id="acceptPolicyChk" type="checkbox" />
+        <span>I agree to the <a href="policy.html">Terms & Privacy</a></span>
+      </label>
+
+      <div id="ageMsg" class="notice hidden" role="status" aria-live="polite"></div>
+
+      <details class="muted small">
+        <summary>Teacher rubric note</summary>
+        <p class="small">
+          Built with HTML/CSS/JS only. Uses browser APIs (SpeechRecognition, LocalStorage, Canvas) — no installs.
+        </p>
+      </details>
+    </section>
+
+    <!-- Underage Lock Screen -->
+    <section id="locked" class="card hidden">
+      <h1>Locked</h1>
+      <p class="muted">
+        This app is not available for your age.
+        If you need help right now, talk to a trusted adult or a youth support line in your area.
+      </p>
+      <div class="row wrap">
+        <a class="btn primary" href="policy.html">Read why</a>
+        <button id="lockedBackBtn" class="btn ghost" type="button">Back</button>
+      </div>
+    </section>
+
+    <!-- App -->
+    <section id="app" class="hidden">
+      <div class="tabs">
+        <button class="tab active" data-tab="scan">Scan</button>
+        <button class="tab" data-tab="questions">Questions</button>
+        <button class="tab" data-tab="plan">Action Plan</button>
+        <button class="tab" data-tab="insights">Insights</button>
+      </div>
+
+      <!-- SCAN -->
+      <section class="tab-panel active" id="tab-scan">
+        <div class="grid">
+          <!-- LEFT -->
+          <section class="card">
+            <div class="card-head">
+              <h2>Describe the situation</h2>
+              <div class="pill" id="modePill">Mode: —</div>
+            </div>
+
+            <label class="field">
+              <span>Quick summary (1–3 sentences)</span>
+              <textarea id="situationInput" rows="3"
+                placeholder="Example: He replied after 8 hours with 'lol' and now I'm spiraling..."></textarea>
+            </label>
+
+            <label class="field">
+              <span>Paste the text messages (optional)</span>
+              <textarea id="messagesInput" rows="7"
+                placeholder="Paste your chat here... (you can remove names/numbers)"></textarea>
+            </label>
+
+            <div class="row wrap">
+              <button id="micBtn" class="btn" type="button">🎤 Voice to text</button>
+              <button id="clearTextBtn" class="btn ghost" type="button">Clear</button>
+              <button id="analyzeBtn" class="btn" type="button">Analyze</button>
+            </div>
+
+            <div class="row wrap">
+              <button id="demoBtn" class="btn ghost" type="button">Load demo chat</button>
+              <button id="resetBtn" class="btn ghost" type="button">Reset everything</button>
+            </div>
+
+            <div id="speechNotice" class="notice hidden"></div>
+
+            <div id="analysisBox" class="analysis hidden">
+              <div class="analysis-head">
+                <h3>Message analysis</h3>
+                <button id="copyAnalysisBtn" class="btn ghost" type="button">Copy</button>
+              </div>
+              <div id="analysisSummary" class="muted"></div>
+              <div id="signalChips" class="chips"></div>
+              <div class="divider"></div>
+              <div id="highlightedText" class="highlight"></div>
+            </div>
+          </section>
+
+          <!-- RIGHT -->
+          <section class="card">
+            <div class="card-head">
+              <h2>Questionnaire</h2>
+              <div class="progress"><div id="progressBar" class="bar"></div></div>
+            </div>
+
+            <div id="questionWrap" class="qwrap"></div>
+
+            <div class="row wrap">
+              <button id="prevBtn" class="btn ghost" type="button">Back</button>
+              <button id="nextBtn" class="btn" type="button">Next</button>
+              <button id="submitBtn" class="btn primary hidden" type="button">Get my score</button>
+            </div>
+
+            <div id="resultBox" class="result hidden" aria-live="polite">
+              <div class="result-top">
+                <h2>Your Delulu Score</h2>
+                <div class="score">
+                  <div id="scoreNum" class="score-num">—</div>
+                  <div class="score-label">/ 100</div>
+                </div>
+              </div>
+
+              <div id="tierPill" class="tier">—</div>
+              <p id="adviceText" class="advice"></p>
+
+              <div class="divider"></div>
+
+              <div class="row wrap">
+                <button id="saveBtn" class="btn" type="button">Save result</button>
+                <button id="exportBtn" class="btn ghost" type="button">Download report</button>
+                <button id="newRunBtn" class="btn ghost" type="button">New check</button>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="card-subhead">
+                <h3>Saved history</h3>
+                <div class="row wrap">
+                  <button id="refreshHistoryBtn" class="btn ghost" type="button">Refresh</button>
+                  <button id="clearHistoryBtn" class="btn ghost" type="button">Delete all</button>
+                </div>
+              </div>
+
+              <div id="historyList" class="history"></div>
+            </div>
+
+            <div id="qHint" class="muted small">
+              Tip: You can still get a score even if you don’t paste messages.
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- QUESTIONS (Focused view) -->
+      <section class="tab-panel" id="tab-questions">
+        <section class="card">
+          <div class="card-head">
+            <h2>Questionnaire (Focused)</h2>
+            <div class="progress"><div id="progressBar2" class="bar"></div></div>
+          </div>
+
+          <div id="questionWrap2" class="qwrap"></div>
+
+          <div class="row wrap">
+            <button id="prevBtn2" class="btn ghost" type="button">Back</button>
+            <button id="nextBtn2" class="btn" type="button">Next</button>
+            <button id="submitBtn2" class="btn primary hidden" type="button">Get my score</button>
+          </div>
+
+          <div class="muted small">
+            Same questions — just easier to focus.
+          </div>
+        </section>
+      </section>
+
+      <!-- ACTION PLAN -->
+      <section class="tab-panel" id="tab-plan">
+        <section class="card">
+          <div class="card-head">
+            <h2>Your Action Plan</h2>
+            <div class="pill" id="planPill">Plan: —</div>
+          </div>
+
+          <div id="planBox" class="plan">
+            <p class="muted">Get a score first, then come back here.</p>
+          </div>
+
+          <div class="row wrap">
+            <button id="regenPlanBtn" class="btn" type="button">Regenerate plan</button>
+            <button id="copyPlanBtn" class="btn ghost" type="button">Copy plan</button>
+          </div>
+        </section>
+      </section>
+
+      <!-- INSIGHTS -->
+      <section class="tab-panel" id="tab-insights">
+        <section class="card">
+          <div class="card-head">
+            <h2>Insights Dashboard</h2>
+            <div class="pill" id="insightsPill">Insights: —</div>
+          </div>
+
+          <canvas id="insightsChart" width="900" height="320" class="canvas"></canvas>
+
+          <div class="row wrap">
+            <button id="shareCardBtn" class="btn primary" type="button">Download share card</button>
+            <button id="refreshInsightsBtn" class="btn ghost" type="button">Refresh insights</button>
+          </div>
+
+          <div class="muted small">
+            Chart + share card generated locally with Canvas (no libraries).
+          </div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span class="muted">Delulu Detector • Local-only (no server) • Built with HTML/CSS/JS</span>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>
