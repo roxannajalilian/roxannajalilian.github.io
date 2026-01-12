@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Calculating…</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-left brand">
+    <div class="logo">DD</div>
+    <div class="brand-text">
+      <div class="title">Results</div>
+      <div class="sub">Calculating your score…</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a class="navlink" href="quiz.html">Quiz</a>
+    <a class="navlink" href="history.html">History</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="card center">
+    <h2>One sec…</h2>
+    <p class="muted">We’re putting your answers together.</p>
+
+    <div class="loader-wrap">
+      <div class="ring" aria-label="Loading"></div>
+      <div id="loadingText" class="pill">Checking patterns…</div>
+    </div>
+
+    <div class="muted small">
+      Tip: if you refreshed by accident, your answers are saved.
+    </div>
+  </div>
+</div>
+
+<script src="core.js"></script>
+<script src="loading.js"></script>
+</body>
+</html>
