@@ -1,86 +1,164 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Delulu Detector</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+const c = document.getElementById("c");
+const ctx = c.getContext("2d");
 
-<nav>
-  <div class="nav-left brand">
-    <div class="logo">DD</div>
-    <div class="brand-text">
-      <div class="title">Delulu Detector</div>
-      <div class="sub">Multi-page • Vanilla HTML/CSS/JS</div>
-    </div>
-  </div>
-  <div class="nav-right">
-    <a class="navlink" href="index.html">Home</a>
-    <a class="navlink" href="scan.html">Scan</a>
-    <a class="navlink" href="quiz.html">Quiz</a>
-    <a class="navlink" href="history.html">History</a>
-    <a class="navlink" href="policy.html">Policy</a>
-  </div>
-</nav>
+let running=false;
+let score=0;
 
-<div class="container">
-  <div class="card center">
-    <h1>Start</h1>
-    <p class="muted">
-      Enter your age to continue. Under 18 goes to Teen Mode first.
-    </p>
+const player = { x: 120, y: 260, vy: 0, r: 18, grounded:true };
+let clouds=[];
+let checks=[];
+let t=0;
 
-    <div class="field">
-      <label class="muted">Your age</label>
-      <input id="ageInput" type="number" min="1" max="120" placeholder="e.g., 16">
-    </div>
+function rand(min,max){ return Math.random()*(max-min)+min; }
 
-    <div class="row">
-      <label class="muted">
-        <input id="agreeChk" type="checkbox">
-        I agree to the <a href="policy.html">Terms & Privacy</a>
-      </label>
-    </div>
+function reset(){
+  running=false; score=0; t=0;
+  player.y=260; player.vy=0; player.grounded=true;
+  clouds=[]; checks=[];
+  updateScore();
+  draw();
+}
 
-    <div class="row" style="margin-top:1rem;">
-      <button class="primary" type="button"
-        onclick="
+function updateScore(){
+  document.getElementById("score").textContent = `Score: ${score}`;
+}
 
-  const age=Number(document.getElementById('ageInput').value);
-  const agree=document.getElementById('agreeChk').checked;
-  const msg=document.getElementById('msg');
+function spawn(){
+  // cloud obstacle
+  if(Math.random()<0.035){
+    clouds.push({ x: c.width+30, y: rand(170, 290), w: rand(34,60), h: rand(26,44), vx: rand(3.6,5.2) });
+  }
+  // reality check collectible
+  if(Math.random()<0.022){
+    checks.push({ x: c.width+30, y: rand(120, 250), r: 12, vx: rand(3.3,4.7) });
+  }
+}
 
-  msg.style.display='none';
-  if(!agree){ msg.textContent='Please accept the Terms & Privacy.'; msg.style.display='block'; return; }
-  if(!age || age<13){ msg.textContent='Enter a valid age (13+).'; msg.style.display='block'; return; }
+function hitCircleRect(cx,cy,cr, rx,ry,rw,rh){
+  const px = Math.max(rx, Math.min(cx, rx+rw));
+  const py = Math.max(ry, Math.min(cy, ry+rh));
+  const dx = cx-px, dy=cy-py;
+  return (dx*dx+dy*dy) <= cr*cr;
+}
 
-  const KEY='delulu_data_v1';
-  let data={}; try{ data=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ data={}; }
-  data.age=age;
-  data.mode=(age<18)?'teen':'adult';
-  localStorage.setItem(KEY, JSON.stringify(data));
+function hitCircleCircle(a,b){
+  const dx=a.x-b.x, dy=a.y-b.y;
+  const rr=a.r+b.r;
+  return dx*dx+dy*dy <= rr*rr;
+}
 
-  location.href='menu.html';
-">Continue</button>
+function jump(){
+  if(!running) return;
+  if(player.grounded){
+    player.vy = -10.5;
+    player.grounded=false;
+  }
+}
 
-          location.href = (age<18) ? 'under18.html' : 'scan.html';
-        ">
-        Continue
-      </button>
+function step(){
+  if(!running) return;
 
-      <button class="secondary" type="button"
-        onclick="localStorage.removeItem('delulu_data_v1'); alert('Reset done.');">
-        Reset
-      </button>
-    </div>
+  t++;
+  spawn();
 
-    <div id="msg" class="notice" style="display:none; margin-top:1rem;"></div>
-  </div>
-</div>
+  // physics
+  player.vy += 0.55;
+  player.y += player.vy;
+  if(player.y >= 260){
+    player.y = 260;
+    player.vy = 0;
+    player.grounded = true;
+  }
 
-<div class="footer">If a button doesn’t work on GitHub Pages, it’s usually file name / case.</div>
+  // move obstacles
+  clouds.forEach(o=> o.x -= o.vx);
+  checks.forEach(o=> o.x -= o.vx);
 
-</body>
-</html>
+  // collisions
+  for(const o of clouds){
+    if(hitCircleRect(player.x, player.y, player.r, o.x, o.y, o.w, o.h)){
+      running=false;
+      draw(true);
+      return;
+    }
+  }
+  for(let i=checks.length-1;i>=0;i--){
+    const p = {x:player.x, y:player.y, r:player.r};
+    const q = checks[i];
+    if(hitCircleCircle(p, {x:q.x, y:q.y, r:q.r})){
+      checks.splice(i,1);
+      score += 5;
+      updateScore();
+    }
+  }
+
+  // cleanup + score tick
+  clouds = clouds.filter(o=> o.x > -80);
+  checks = checks.filter(o=> o.x > -40);
+
+  if(t % 20 === 0){
+    score += 1;
+    updateScore();
+  }
+
+  draw();
+  requestAnimationFrame(step);
+}
+
+function draw(gameOver=false){
+  ctx.clearRect(0,0,c.width,c.height);
+
+  // ground line
+  ctx.globalAlpha = 0.9;
+  ctx.beginPath();
+  ctx.moveTo(0, 300);
+  ctx.lineTo(c.width, 300);
+  ctx.stroke();
+
+  // player (delulu orb)
+  ctx.globalAlpha = 1;
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, player.r, 0, Math.PI*2);
+  ctx.fill();
+  ctx.stroke();
+
+  // label
+  ctx.font = "14px system-ui";
+  ctx.fillText("YOU", player.x-14, player.y-28);
+
+  // clouds (delusion)
+  ctx.font = "18px system-ui";
+  clouds.forEach(o=>{
+    ctx.fillText("☁️", o.x, o.y+18);
+  });
+
+  // checks (reality)
+  checks.forEach(o=>{
+    ctx.fillText("✅", o.x-8, o.y+8);
+  });
+
+  if(!running && score===0){
+    ctx.font = "18px system-ui";
+    ctx.fillText("Press Start. Tap/click to jump.", 280, 70);
+  }
+
+  if(gameOver){
+    ctx.font = "26px system-ui";
+    ctx.fillText("Game Over 😭", 360, 120);
+    ctx.font = "16px system-ui";
+    ctx.fillText("Press Start to try again.", 350, 150);
+  }
+}
+
+document.getElementById("start").onclick=()=>{
+  reset();
+  running=true;
+  requestAnimationFrame(step);
+};
+document.getElementById("reset").onclick=reset;
+
+c.addEventListener("mousedown", jump);
+c.addEventListener("touchstart", (e)=>{ e.preventDefault(); jump(); }, {passive:false});
+document.addEventListener("keydown", (e)=>{ if(e.code==="Space") jump(); });
+
+reset();
