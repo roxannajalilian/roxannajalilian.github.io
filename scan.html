@@ -1,29 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Delulu Scan</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Analyze • Delulu Detector</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <canvas id="particle-bg"></canvas>
-  <div class="box glow">
-    <h2>Scan a Conversation</h2>
-    <p>Upload a screenshot of your chat to check overthinking risk.</p>
+<nav>
+  <div class="brand">
+    <div class="logo">DD</div>
+    <div>
+      <div class="title">Analyze</div>
+      <div class="sub">Paste texts → get a vibe check</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a class="navlink" href="menu.html">Menu</a>
+    <a class="navlink" href="quiz.html">Quiz</a>
+    <a class="navlink active" href="scan.html">Analyze</a>
+    <a class="navlink" href="result.html">Results</a>
+  </div>
+</nav>
 
-    <input type="file" id="imageInput" accept="image/*">
-    <button class="glow-btn" onclick="scanImage()">Analyze</button>
+<div class="container">
+  <div class="card center">
+    <h2>Message Analyzer</h2>
+    <p class="muted small">
+      Paste a chunk of conversation. This highlights patterns that usually trigger overthinking.
+    </p>
 
-    <div id="scan-result">
-      <p id="scan-percentage"></p>
-      <p id="scan-advice"></p>
-      <div id="scan-mood-meter"><div id="scan-fill"></div></div>
+    <div class="field">
+      <label class="muted">Paste messages</label>
+      <textarea id="textInput" rows="8" placeholder="Paste the convo here..."></textarea>
     </div>
 
-    <a href="index.html"><button class="glow-btn">Back to Home</button></a>
-  </div>
+    <div class="row">
+      <button class="primary" type="button" id="analyzeBtn">Analyze</button>
+      <button class="secondary" type="button" id="clearBtn">Clear</button>
+      <button class="secondary" type="button" onclick="location.href='menu.html'">Back</button>
+    </div>
 
-  <script src="scan.js"></script>
-  <script src="particles.js"></script>
+    <div id="out" class="notice" style="display:none;"></div>
+  </div>
+</div>
+
+<script src="scan.js"></script>
 </body>
 </html>
