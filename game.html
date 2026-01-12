@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mini Game • Delulu Detector</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-left brand">
+    <div class="logo">DD</div>
+    <div class="brand-text">
+      <div class="title">Delulu Dash</div>
+      <div class="sub">Tap to stay grounded</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a class="navlink" href="menu.html">Menu</a>
+    <a class="navlink" href="result.html">Results</a>
+    <a class="navlink" href="quiz.html">Quiz</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="card center">
+    <div class="split">
+      <h2>Delulu Dash</h2>
+      <button class="secondary" onclick="location.href='menu.html'">Back</button>
+    </div>
+
+    <p class="muted small">
+      Click / tap to jump. Avoid the “Delusion Clouds” ☁️ and grab “Reality Checks” ✅.
+    </p>
+
+    <canvas id="c" width="900" height="360" style="border-radius:16px; border:1px solid rgba(255,255,255,.12); background:rgba(0,0,0,.18);"></canvas>
+
+    <div class="row" style="margin-top:.9rem;">
+      <button id="start" class="primary">Start</button>
+      <button id="reset" class="secondary">Reset</button>
+      <div class="pill" id="score">Score: 0</div>
+    </div>
+  </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
