@@ -1,46 +1,82 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Under 18 Mode</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <nav>
-  <a href="index.html">Home</a>
-  <a href="policy.html">Policy</a>
+  <div class="nav-left brand">
+    <div class="logo">DD</div>
+    <div class="brand-text">
+      <div class="title">Under 18 Mode</div>
+      <div class="sub">Teen-safe version</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a class="navlink" href="index.html">Home</a>
+    <a class="navlink" href="policy.html">Policy</a>
+  </div>
 </nav>
 
-<div class="card center">
-  <h1>Under 18 Mode</h1>
+<div class="container">
+  <div class="card center">
+    <h1>Under 18 Mode</h1>
 
-  <p class="muted">
-    You’re accessing the teen version of Delulu Detector.
-  </p>
+    <p class="muted">
+      You’re using the teen version of Delulu Detector. This version avoids adult topics and focuses on
+      overthinking, communication, and emotional awareness.
+    </p>
 
-  <p>
-    This version avoids adult situations and focuses on
-    overthinking, communication, and emotional awareness.
-  </p>
+    <div class="notice">
+      • No adult topics<br>
+      • Focus on thoughts & patterns<br>
+      • You can always reset from Home
+    </div>
 
-  <div class="notice">
-    • No relationship advice  
-    • No sexual or adult topics  
-    • Focus on thoughts, not people  
-  </div>
+    <div class="row" style="margin-top:1rem;">
+      <button id="continueTeen" class="primary" type="button">Continue (Teen Mode)</button>
+      <button class="secondary" type="button" onclick="location.href='index.html'">Go Back</button>
+    </div>
 
-  <div class="actions">
-    <button id="continueTeen">
-      Continue (Teen Mode)
-    </button>
-
-    <button class="secondary" onclick="window.location.href='index.html'">
-      Go Back
-    </button>
+    <div id="msg" class="notice" style="display:none; margin-top:1rem;"></div>
   </div>
 </div>
 
-<script src="core.js"></script>
-<script src="under18.js"></script>
+<script>
+  // Local-only storage (no dependencies)
+  const STORAGE_KEY = "delulu_data_v1";
+
+  function getData(){
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  }
+  function setData(d){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+  }
+
+  const msg = document.getElementById("msg");
+  function show(m){
+    msg.style.display = "block";
+    msg.textContent = m;
+  }
+
+  document.getElementById("continueTeen").addEventListener("click", () => {
+    const data = getData();
+    data.mode = "teen";
+    setData(data);
+
+    // Go to quiz (teen-safe flow)
+    location.href = "quiz.html";
+  });
+</script>
+
 </body>
 </html>
