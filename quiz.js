@@ -34,36 +34,43 @@ const answerButtons = document.querySelectorAll(".answer");
 const backBtn = document.getElementById("backBtn");
 const nextBtn = document.getElementById("nextBtn");
 
+function paintSelected(){
+  answerButtons.forEach(btn => {
+    btn.classList.remove("selected");
+    if (Number(btn.dataset.value) === answers[current]) {
+      btn.classList.add("selected");
+    }
+  });
+}
+
 function render(){
   qText.textContent = questions[current];
   progressText.textContent = `Question ${current+1} of ${questions.length}`;
   progressFill.style.width = `${((current+1)/questions.length)*100}%`;
 
-  answerButtons.forEach(btn=>{
-    btn.classList.remove("selected");
-    if(Number(btn.dataset.value) === answers[current]) btn.classList.add("selected");
-  });
+  backBtn.disabled = current === 0;
+  nextBtn.textContent = current === questions.length - 1 ? "Finish" : "Next";
 
-  backBtn.disabled = current===0;
-  nextBtn.textContent = current===questions.length-1 ? "Finish" : "Next";
+  paintSelected();
 }
 
 answerButtons.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     answers[current] = Number(btn.dataset.value);
-    answerButtons.forEach(b=>b.classList.remove("selected"));
-    btn.classList.add("selected");
 
-    // autosave
+    // save + update selected style
     let dd={};
     try{ dd=JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){ dd={}; }
     dd.answers = answers;
     localStorage.setItem(KEY, JSON.stringify(dd));
+
+    paintSelected();
   });
 });
 
 backBtn.addEventListener("click", ()=>{
   if(current>0){ current--; render(); }
+  else location.href="menu.html"; // optional: if on Q1 and hit Return
 });
 
 nextBtn.addEventListener("click", ()=>{
@@ -89,14 +96,12 @@ function finishQuiz(){
   else if(percentage<=75) tier="High overthinking";
   else tier="Very high overthinking";
 
-  // save
   let dd={};
   try{ dd=JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){ dd={}; }
   dd.answers = answers;
   dd.quizResult = { percentage, tier };
   localStorage.setItem(KEY, JSON.stringify(dd));
 
-  // go to loader
   location.href = "loading.html";
 }
 
