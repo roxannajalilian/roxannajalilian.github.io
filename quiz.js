@@ -1,116 +1,112 @@
-// QUESTIONS ARRAY (25+ realistic questions)
-let questions = [
-  "Do you reread messages more than once?",
-  "Do you overthink short replies?",
-  "Do you assume tone from texts?",
-  "Do you imagine future conversations?",
-  "Do you check your phone often waiting for a reply?",
-  "Do emojis affect how you feel about a message?",
-  "Do you feel anxious when someone doesn’t reply?",
-  "Do you replay conversations in your head?",
-  "Do you assume silence means something bad?",
-  "Do small actions feel very meaningful to you?",
-  "Do you worry about messages you sent days ago?",
-  "Do you feel nervous sending texts to someone important?",
-  "Do you analyze every word of a text?",
-  "Do you feel insecure about not getting a reply fast?",
-  "Do you imagine someone is upset without evidence?",
-  "Do you reread conversations repeatedly?",
-  "Do you interpret emojis in a negative way?",
-  "Do you avoid texting first because of fear?",
-  "Do you predict negative outcomes of conversations?",
-  "Do you obsess over deleted messages?",
-  "Do you feel judged by text tone?",
-  "Do you feel anxious when ignored in group chats?",
-  "Do you often overthink your replies?",
-  "Do you assume meanings that may not exist?",
-  "Do small miscommunications stress you out?"
+const questions = [
+  "I reread texts to find hidden meaning.",
+  "If someone replies late, I assume something is wrong.",
+  "I overthink emojis, punctuation, or short replies.",
+  "I imagine worst-case scenarios before having proof.",
+  "My mood depends on how fast someone texts back.",
+  "I check my phone repeatedly waiting for a reply.",
+  "I overanalyze one message instead of the whole conversation.",
+  "I assume tone or intention without asking.",
+  "I feel anxious if I don’t get reassurance.",
+  "I replay conversations in my head.",
+  "I read into what someone didn’t say.",
+  "I assume silence means something negative.",
+  "I want to double-text when anxious.",
+  "I focus more on texts than real-life actions.",
+  "I struggle to sit with uncertainty.",
+  "I overthink even when nothing is clearly wrong."
 ];
 
 let current = 0;
-let userAnswers = [];
-const totalScore = questions.length * 3; // max per question = 3
+let answers = new Array(questions.length).fill(null);
 
-// ELEMENTS
-const questionEl = document.getElementById("question");
-const barEl = document.getElementById("bar");
-const emojiEl = document.getElementById("emoji-feedback");
+const qText = document.getElementById("questionText");
+const progressText = document.getElementById("progressText");
+const progressFill = document.getElementById("progressFill");
+const answerButtons = document.querySelectorAll(".answer");
+const backBtn = document.getElementById("backBtn");
+const nextBtn = document.getElementById("nextBtn");
 
-// LOAD QUESTION
-function loadQuestion(){
-  if(current < 0) current = 0;
-  if(current >= questions.length) current = questions.length-1;
-  questionEl.textContent = questions[current];
-  updateProgress();
-  updateEmoji();
+function renderQuestion() {
+  qText.textContent = questions[current];
+  progressText.textContent = `Question ${current + 1} of ${questions.length}`;
+  progressFill.style.width = `${((current + 1) / questions.length) * 100}%`;
+
+  answerButtons.forEach(btn => {
+    btn.classList.remove("selected");
+    if (Number(btn.dataset.value) === answers[current]) {
+      btn.classList.add("selected");
+    }
+  });
+
+  backBtn.disabled = current === 0;
+  nextBtn.textContent = current === questions.length - 1 ? "Finish" : "Next";
 }
 
-// RECORD ANSWER
-function answer(value){
-  userAnswers[current] = value;
-  current++;
-  if(current >= questions.length){
-    // calculate final score and save
-    let score = userAnswers.reduce((a,b)=>a+(b||0),0);
-    localStorage.setItem("score", score);
-    localStorage.setItem("totalScore", totalScore);
-    window.location.href = "results.html";
-  } else {
-    loadQuestion();
-  }
-}
+answerButtons.forEach(btn => {
+  btn.onclick = () => {
+    answers[current] = Number(btn.dataset.value);
+    answerButtons.forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+  };
+});
 
-// GO BACK BUTTON
-function goBack(){
-  if(current>0){
+backBtn.onclick = () => {
+  if (current > 0) {
     current--;
-    loadQuestion();
+    renderQuestion();
   }
-}
+};
 
-// UPDATE PROGRESS BAR
-function updateProgress(){
-  let score = userAnswers.reduce((a,b)=>a+(b||0),0);
-  let progress = ((current)/questions.length)*100;
-  barEl.style.width = progress + "%";
-  let percent = Math.round((score/totalScore)*100);
-  if(percent < 30) barEl.style.background = "#00ff99"; // green
-  else if(percent < 60) barEl.style.background = "#ffff00"; // yellow
-  else if(percent < 80) barEl.style.background = "#ff9900"; // orange
-  else barEl.style.background = "#ff5555"; // red
-}
-
-// UPDATE EMOJI FEEDBACK
-function updateEmoji(){
-  if(userAnswers[current]===undefined){ emojiEl.textContent=""; return; }
-  let val = userAnswers[current];
-  if(val===3) emojiEl.textContent="😎";
-  else if(val===2) emojiEl.textContent="😬";
-  else if(val===1) emojiEl.textContent="😟";
-  else emojiEl.textContent="😰";
-}
-
-// VOICE INPUT
-function voiceAnswer(){
-  if(!('webkitSpeechRecognition' in window)){
-    alert("Your browser does not support voice input!");
+nextBtn.onclick = () => {
+  if (answers[current] === null) {
+    alert("Please select an answer before continuing.");
     return;
   }
-  let recognition = new webkitSpeechRecognition();
-  recognition.lang = "en-US";
-  recognition.start();
 
-  recognition.onresult = function(event){
-    let text = event.results[0][0].transcript.toLowerCase();
-    if(text.includes("yes")) answer(3);
-    else if(text.includes("usually")) answer(2);
-    else if(text.includes("sometimes")) answer(1);
-    else answer(0);
-  };
+  if (current < questions.length - 1) {
+    current++;
+    renderQuestion();
+  } else {
+    finishQuiz();
+  }
+};
 
-  recognition.onerror = function(){
-    alert("Voice recognition failed, try again.");
+function finishQuiz() {
+  const totalScore = answers.reduce((a, b) => a + b, 0);
+  const maxScore = questions.length * 3;
+  const percentage = Math.round((totalScore / maxScore) * 100);
+
+  let tier, explanation, advice;
+
+  if (percentage <= 25) {
+    tier = "Low overthinking";
+    explanation = "You generally interpret situations realistically and don’t jump to conclusions.";
+    advice = "Keep trusting patterns over single messages. You’re doing well staying grounded.";
+  } else if (percentage <= 50) {
+    tier = "Mild overthinking";
+    explanation = "You sometimes overthink, especially in uncertain situations.";
+    advice = "When you feel anxious, pause and ask yourself whether you have real evidence.";
+  } else if (percentage <= 75) {
+    tier = "High overthinking";
+    explanation = "You often read into messages and assume meanings that may not be there.";
+    advice = "Try delaying responses and focus more on actions than words.";
+  } else {
+    tier = "Very high overthinking";
+    explanation = "Your thoughts are frequently driven by anxiety rather than facts.";
+    advice = "Create space before reacting and seek clarity instead of reassurance.";
+  }
+
+  const data = getData();
+  data.quizResult = {
+    percentage,
+    tier,
+    explanation,
+    advice
   };
+  setData(data);
+
+  window.location.href = "result.html";
 }
 
-window.onload = loadQuestion;
+renderQuestion();
