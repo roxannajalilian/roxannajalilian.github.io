@@ -355,3 +355,39 @@ button, a, input, textarea, select {
   z-index: 5;
   pointer-events: auto !important;
 }
+/* Loading / results reveal */
+.loader-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:1rem;
+  padding: 1.2rem 0 .6rem 0;
+}
+
+.ring{
+  width: 110px;
+  height: 110px;
+  border-radius: 999px;
+  border: 10px solid rgba(255,255,255,.10);
+  border-top-color: rgba(143,140,255,.85);
+  border-right-color: rgba(83,255,214,.65);
+  animation: spin 0.9s linear infinite;
+  box-shadow: 0 0 0 6px rgba(143,140,255,.10), 0 0 40px rgba(143,140,255,.15);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.reveal{
+  opacity: 0;
+  transform: translateY(10px);
+  animation: reveal .55s ease forwards;
+}
+@keyframes reveal{
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.friend{
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+.friend b{ color: rgba(255,255,255,.92); }
+
