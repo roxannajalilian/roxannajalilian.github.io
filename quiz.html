@@ -1,41 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Delulu Quiz</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quiz • Delulu Detector</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
 <nav>
-  <a href="scan.html">Scan</a>
-  <a href="quiz.html" class="active">Quiz</a>
-  <a href="history.html">History</a>
+  <div class="brand">
+    <div class="logo">DD</div>
+    <div>
+      <div class="title">Quiz</div>
+      <div class="sub">~2 minutes</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a class="navlink" href="menu.html">Menu</a>
+    <a class="navlink active" href="quiz.html">Quiz</a>
+    <a class="navlink" href="scan.html">Analyze</a>
+    <a class="navlink" href="result.html">Results</a>
+  </div>
 </nav>
 
-<div class="card quiz-card">
-  <h2>Overthinking Questionnaire</h2>
+<div class="container">
+  <div class="card center">
+    <h2>Overthinking Questionnaire</h2>
+    <div id="progressText" class="muted"></div>
+    <div class="progress-bar"><div id="progressFill"></div></div>
 
-  <div id="progressText" class="muted"></div>
-  <div class="progress-bar">
-    <div id="progressFill"></div>
-  </div>
+    <p id="questionText" class="muted" style="font-size:1.1rem;font-weight:800;margin:.2rem 0 1rem 0;"></p>
 
-  <p id="questionText" class="question-text"></p>
+    <div class="answers">
+      <button class="answer" type="button" data-value="0">No</button>
+      <button class="answer" type="button" data-value="1">Sometimes</button>
+      <button class="answer" type="button" data-value="2">Yes</button>
+      <button class="answer" type="button" data-value="3">All the time</button>
+    </div>
 
-  <div class="answers">
-    <button class="answer" data-value="0">No</button>
-    <button class="answer" data-value="1">Sometimes</button>
-    <button class="answer" data-value="2">Yes</button>
-    <button class="answer" data-value="3">All the time</button>
-  </div>
-
-  <div class="quiz-controls">
-    <button id="backBtn" class="secondary">Return</button>
-    <button id="nextBtn">Next</button>
+    <div class="row" style="justify-content:space-between;margin-top:1rem;">
+      <button id="backBtn" class="secondary" type="button">Return</button>
+      <button id="nextBtn" class="primary" type="button">Next</button>
+    </div>
   </div>
 </div>
 
-<script src="core.js"></script>
 <script src="quiz.js"></script>
 </body>
 </html>
