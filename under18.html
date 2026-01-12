@@ -1,14 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Access Denied</title>
-  <link rel="stylesheet" href="style-ai.css">
+  <title>Under 18 Mode</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="box glow">
-    <h2>Access Denied</h2>
-    <p>Sorry! This app is only for users 18+.</p>
-    <button onclick="window.location.href='https://www.google.com/'">Go to Safe Site</button>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="policy.html">Policy</a>
+</nav>
+
+<div class="card center">
+  <h1>Under 18 Mode</h1>
+
+  <p class="muted">
+    You’re accessing the teen version of Delulu Detector.
+  </p>
+
+  <p>
+    This version avoids adult situations and focuses on
+    overthinking, communication, and emotional awareness.
+  </p>
+
+  <div class="notice">
+    • No relationship advice  
+    • No sexual or adult topics  
+    • Focus on thoughts, not people  
   </div>
+
+  <div class="actions">
+    <button id="continueTeen">
+      Continue (Teen Mode)
+    </button>
+
+    <button class="secondary" onclick="window.location.href='index.html'">
+      Go Back
+    </button>
+  </div>
+</div>
+
+<script src="core.js"></script>
+<script src="under18.js"></script>
 </body>
 </html>
