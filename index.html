@@ -4,9 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector</title>
-  <link rel="stylesheet" href="styles/base.css" />
-  <link rel="stylesheet" href="styles/components.css" />
-  <link rel="stylesheet" href="styles/theme.css" />
+  <link rel="stylesheet" href="main.css" />
 </head>
 
 <body>
@@ -15,7 +13,7 @@
       <div class="logo">DD</div>
       <div>
         <div class="title">Delulu Detector</div>
-        <div class="subtitle">Questionnaire + message analysis</div>
+        <div class="subtitle">Questionnaire + message analysis • Local-only</div>
       </div>
     </div>
 
@@ -26,19 +24,21 @@
   </header>
 
   <main class="container">
+
     <!-- Age Gate -->
     <section id="ageGate" class="card">
       <h1>Before we start</h1>
       <p class="muted">
-        This app estimates “overthinking vs realistic” based on your answers + patterns in a text-message situation.
-        It’s not therapy or a diagnosis — it’s guidance.
+        This app gives a “delulu score” (overthinking vs realistic) based on your answers and patterns in the text situation.
+        It does not diagnose anything. It’s guidance, not therapy.
       </p>
 
-      <div class="row">
-        <label class="field">
+      <div class="row wrap">
+        <label class="field grow">
           <span>Your age</span>
           <input id="ageInput" type="number" inputmode="numeric" min="1" max="120" placeholder="e.g., 16" />
         </label>
+
         <button id="startBtn" class="btn primary" type="button">Continue</button>
       </div>
 
@@ -48,30 +48,20 @@
       </label>
 
       <div id="ageMsg" class="notice hidden" role="status" aria-live="polite"></div>
-
-      <details class="muted small">
-        <summary>Teacher rubric note</summary>
-        <p class="small">
-          Built with HTML/CSS/JS only. Uses browser APIs (SpeechRecognition, LocalStorage, Canvas) — no installs.
-        </p>
-      </details>
     </section>
 
-    <!-- Underage Lock Screen -->
+    <!-- Underage Lock -->
     <section id="locked" class="card hidden">
       <h1>Locked</h1>
       <p class="muted">
-        This app is not available for your age.
-        If you need help right now, talk to a trusted adult or a youth support line in your area.
+        This app isn’t available for your age. If you need support, talk to a trusted adult or a youth support line in your area.
       </p>
-      <div class="row wrap">
-        <a class="btn primary" href="policy.html">Read why</a>
-        <button id="lockedBackBtn" class="btn ghost" type="button">Back</button>
-      </div>
+      <a class="btn primary" href="policy.html">Read the policy</a>
     </section>
 
     <!-- App -->
     <section id="app" class="hidden">
+
       <div class="tabs">
         <button class="tab active" data-tab="scan">Scan</button>
         <button class="tab" data-tab="questions">Questions</button>
@@ -79,10 +69,9 @@
         <button class="tab" data-tab="insights">Insights</button>
       </div>
 
-      <!-- SCAN -->
+      <!-- Scan -->
       <section class="tab-panel active" id="tab-scan">
         <div class="grid">
-          <!-- LEFT -->
           <section class="card">
             <div class="card-head">
               <h2>Describe the situation</h2>
@@ -91,20 +80,18 @@
 
             <label class="field">
               <span>Quick summary (1–3 sentences)</span>
-              <textarea id="situationInput" rows="3"
-                placeholder="Example: He replied after 8 hours with 'lol' and now I'm spiraling..."></textarea>
+              <textarea id="situationInput" rows="3" placeholder="Example: He replied after 8 hours with 'lol' and now I'm spiraling..."></textarea>
             </label>
 
             <label class="field">
-              <span>Paste the text messages (optional)</span>
-              <textarea id="messagesInput" rows="7"
-                placeholder="Paste your chat here... (you can remove names/numbers)"></textarea>
+              <span>Paste the messages (optional)</span>
+              <textarea id="messagesInput" rows="7" placeholder="Paste the chat here..."></textarea>
             </label>
 
             <div class="row wrap">
               <button id="micBtn" class="btn" type="button">🎤 Voice to text</button>
-              <button id="clearTextBtn" class="btn ghost" type="button">Clear</button>
               <button id="analyzeBtn" class="btn" type="button">Analyze</button>
+              <button id="clearTextBtn" class="btn ghost" type="button">Clear</button>
             </div>
 
             <div class="row wrap">
@@ -126,10 +113,9 @@
             </div>
           </section>
 
-          <!-- RIGHT -->
           <section class="card">
             <div class="card-head">
-              <h2>Questionnaire</h2>
+              <h2>Questionnaire (quick)</h2>
               <div class="progress"><div id="progressBar" class="bar"></div></div>
             </div>
 
@@ -170,22 +156,19 @@
                   <button id="clearHistoryBtn" class="btn ghost" type="button">Delete all</button>
                 </div>
               </div>
-
               <div id="historyList" class="history"></div>
             </div>
 
-            <div id="qHint" class="muted small">
-              Tip: You can still get a score even if you don’t paste messages.
-            </div>
+            <div id="qHint" class="muted small">Tip: You can score even without pasting messages.</div>
           </section>
         </div>
       </section>
 
-      <!-- QUESTIONS (Focused view) -->
+      <!-- Questions -->
       <section class="tab-panel" id="tab-questions">
         <section class="card">
           <div class="card-head">
-            <h2>Questionnaire (Focused)</h2>
+            <h2>Questionnaire (focused)</h2>
             <div class="progress"><div id="progressBar2" class="bar"></div></div>
           </div>
 
@@ -197,13 +180,11 @@
             <button id="submitBtn2" class="btn primary hidden" type="button">Get my score</button>
           </div>
 
-          <div class="muted small">
-            Same questions — just easier to focus.
-          </div>
+          <div class="muted small">Same scoring. This view just makes it easier.</div>
         </section>
       </section>
 
-      <!-- ACTION PLAN -->
+      <!-- Action Plan -->
       <section class="tab-panel" id="tab-plan">
         <section class="card">
           <div class="card-head">
@@ -222,7 +203,7 @@
         </section>
       </section>
 
-      <!-- INSIGHTS -->
+      <!-- Insights -->
       <section class="tab-panel" id="tab-insights">
         <section class="card">
           <div class="card-head">
@@ -237,18 +218,17 @@
             <button id="refreshInsightsBtn" class="btn ghost" type="button">Refresh insights</button>
           </div>
 
-          <div class="muted small">
-            Chart + share card generated locally with Canvas (no libraries).
-          </div>
+          <div class="muted small">All local. No server. No libraries.</div>
         </section>
       </section>
+
     </section>
   </main>
 
   <footer class="footer">
-    <span class="muted">Delulu Detector • Local-only (no server) • Built with HTML/CSS/JS</span>
+    <span class="muted">Delulu Detector • Vanilla HTML/CSS/JS • Local-only storage</span>
   </footer>
 
-  <script type="module" src="js/app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
