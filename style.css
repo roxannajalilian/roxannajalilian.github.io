@@ -1,13 +1,89 @@
-.loader-wrap{ display:flex; flex-direction:column; align-items:center; gap:1rem; padding:1.2rem 0 .6rem 0; }
-.ring{
-  width:110px; height:110px; border-radius:999px;
-  border:10px solid rgba(255,255,255,.10);
-  border-top-color: rgba(143,140,255,.85);
-  border-right-color: rgba(83,255,214,.65);
-  animation: spin .9s linear infinite;
-  box-shadow: 0 0 0 6px rgba(143,140,255,.10), 0 0 40px rgba(143,140,255,.15);
-}
-@keyframes spin{ to{ transform: rotate(360deg); } }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delulu Detector</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<nav>
+  <div class="brand">
+    <div class="logo">DD</div>
+    <div>
+      <div class="title">Delulu Detector</div>
+      <div class="sub">Multi-page • Vanilla HTML/CSS/JS</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a class="navlink active" href="index.html">Home</a>
+    <a class="navlink" href="menu.html">Menu</a>
+    <a class="navlink" href="policy.html">Policy</a>
+  </div>
+</nav>
 
-body::before, body::after, .card::before { pointer-events:none !important; }
-button, a, input, textarea, select { position: relative; z-index: 10; pointer-events:auto !important; }
+<div class="container">
+  <div class="card center">
+    <h1>Start</h1>
+    <p class="muted">Enter your age to continue. Then you’ll choose what page to use.</p>
+
+    <div class="field">
+      <label class="muted">Your age (13+)</label>
+      <input id="ageInput" type="number" min="13" max="120" placeholder="e.g., 16" />
+    </div>
+
+    <div class="row">
+      <label class="muted">
+        <input id="agreeChk" type="checkbox" />
+        I agree to the <a href="policy.html">Terms & Privacy</a>
+      </label>
+    </div>
+
+    <div class="row" style="margin-top:1rem;">
+      <button class="primary" type="button" onclick="startApp()">Continue</button>
+      <button class="secondary" type="button" onclick="resetApp()">Reset</button>
+    </div>
+
+    <div id="msg" class="notice" style="display:none;"></div>
+  </div>
+</div>
+
+<div class="footer">GitHub Pages tip: filenames are case-sensitive (all lowercase).</div>
+
+<script>
+  const KEY = "delulu_data_v1";
+
+  function startApp(){
+    const age = Number(document.getElementById("ageInput").value);
+    const agree = document.getElementById("agreeChk").checked;
+    const msg = document.getElementById("msg");
+    msg.style.display = "none";
+
+    if(!agree){
+      msg.textContent = "Please accept the Terms & Privacy.";
+      msg.style.display = "block";
+      return;
+    }
+    if(!age || age < 13){
+      msg.textContent = "Enter a valid age (13+).";
+      msg.style.display = "block";
+      return;
+    }
+
+    let data = {};
+    try{ data = JSON.parse(localStorage.getItem(KEY) || "{}"); }catch(e){ data = {}; }
+
+    data.age = age;
+    data.mode = age < 18 ? "teen" : "adult";
+    localStorage.setItem(KEY, JSON.stringify(data));
+
+    location.href = "menu.html";
+  }
+
+  function resetApp(){
+    localStorage.removeItem(KEY);
+    alert("Reset done.");
+  }
+</script>
+</body>
+</html>
