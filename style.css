@@ -342,3 +342,16 @@ hr{
   background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
   margin: 1rem 0;
 }
+/* --- CLICK FIX: nothing should block buttons --- */
+body::before, body::after { pointer-events: none !important; }
+
+.card::before { pointer-events: none !important; }
+
+.container { position: relative; z-index: 1; }
+.card { position: relative; z-index: 2; }
+
+button, a, input, textarea, select {
+  position: relative;
+  z-index: 5;
+  pointer-events: auto !important;
+}
