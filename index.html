@@ -29,7 +29,7 @@
 
     <div class="field">
       <label class="muted">Your age (13+)</label>
-      <input id="ageInput" type="number" min="13" max="120" placeholder="e.g., 16" />
+     <input id="ageInput" type="number" min="17" max="120"> placeholder="e.g., 18" />
     </div>
 
     <div class="row">
@@ -65,8 +65,8 @@
       msg.style.display = "block";
       return;
     }
-    if(!age || age < 13){
-      msg.textContent = "Enter a valid age (13+).";
+    if(!age || age < 17){
+      msg.textContent = "Enter a valid age (17+).";
       msg.style.display = "block";
       return;
     }
