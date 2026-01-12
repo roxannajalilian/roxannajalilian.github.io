@@ -1,45 +1,42 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Analyze • Delulu Detector</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<nav>
-  <div class="brand">
-    <div class="logo">DD</div>
-    <div><div class="title">Analyze</div><div class="sub">Paste texts → vibe check</div></div>
-  </div>
-  <div class="nav-right">
-    <a class="navlink" href="menu.html">Menu</a>
-    <a class="navlink" href="quiz.html">Quiz</a>
-    <a class="navlink active" href="scan.html">Analyze</a>
-    <a class="navlink" href="result.html">Results</a>
-  </div>
-</nav>
+const KEY="delulu_data_v1";
+const input = document.getElementById("textInput");
+const out = document.getElementById("out");
 
-<div class="container">
-  <div class="card center">
-    <h2>Message Analyzer</h2>
-    <p class="muted small">Paste a chunk of convo. It flags common overthinking triggers.</p>
+document.getElementById("clearBtn").onclick = () => {
+  input.value = "";
+  out.style.display = "none";
+};
 
-    <div class="field">
-      <label class="muted">Paste messages</label>
-      <textarea id="textInput" rows="8" placeholder="Paste the convo here..."></textarea>
-    </div>
+document.getElementById("analyzeBtn").onclick = () => {
+  const t = (input.value || "").trim();
+  if(!t){
+    out.style.display="block";
+    out.innerHTML = "Paste something first bestie 😭";
+    return;
+  }
 
-    <div class="row">
-      <button class="primary" type="button" id="analyzeBtn">Analyze</button>
-      <button class="secondary" type="button" id="clearBtn">Clear</button>
-      <button class="secondary" type="button" onclick="location.href='menu.html'">Back</button>
-    </div>
+  const lower = t.toLowerCase();
+  const signals = [];
+  if(/seen|left on read|read at|delivered/.test(lower)) signals.push("Read receipts / ‘seen’ is triggering you.");
+  if(/ok\b|k\b|sure\b|fine\b/.test(lower)) signals.push("Short replies can feel cold even if they’re not.");
+  if(/\.\.\.|…/.test(t)) signals.push("Ellipses (‘…’) can feel like attitude.");
+  if(/\?{2,}/.test(t)) signals.push("Multiple question marks = anxious urgency.");
+  if(/sorry\b/.test(lower)) signals.push("You’re apologizing a lot.");
+  if(/nvm|nevermind|whatever|i guess/.test(lower)) signals.push("Shutdown words can spike anxiety.");
+  const scoreGuess = Math.min(100, 20 + signals.length * 12);
 
-    <div id="out" class="notice" style="display:none;"></div>
-  </div>
-</div>
+  out.style.display="block";
+  out.innerHTML = `
+    <b>Vibe check:</b> ~<b>${scoreGuess}%</b> overthinking-trigger potential.<br><br>
+    <b>Triggers found:</b><br>• ${signals.length ? signals.join("<br>• ") : "No obvious red flags — uncertainty might be the trigger."}
+    <br><br>
+    <b>Bestie advice:</b><br>
+    • Look at patterns, not one message.<br>
+    • Ask one calm clarity question if needed.<br>
+    • Don’t reread 20 times — anxiety edits meaning.
+  `;
 
-<script src="scan.js"></script>
-</body>
-</html>
+  let d={}; try{ d=JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){ d={}; }
+  d.lastScan = { scoreGuess, signals, savedAt:new Date().toISOString() };
+  localStorage.setItem(KEY, JSON.stringify(d));
+};
