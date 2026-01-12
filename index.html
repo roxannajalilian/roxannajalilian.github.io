@@ -7,31 +7,38 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+<!-- SIMPLE NAV (NO MENU, NO BACK) -->
 <nav>
   <div class="brand">
     <div class="logo">DD</div>
     <div>
       <div class="title">Delulu Detector</div>
-      <div class="sub">Multi-page • Vanilla HTML/CSS/JS</div>
+      <div class="sub">Age verification</div>
     </div>
-  </div>
-  <div class="nav-right">
-   <a class="navlink" href="menu.html">Menu</a>
-    <a class="navlink" href="menu.html">Menu</a>
-    <a class="navlink" href="policy.html">Policy</a>
   </div>
 </nav>
 
 <div class="container">
   <div class="card center">
     <h1>Start</h1>
-    <p class="muted">Enter your age to continue. Then you’ll choose what page to use.</p>
+    <p class="muted">
+      Enter your age to continue. You must be 17 or older.
+    </p>
 
+    <!-- AGE INPUT -->
     <div class="field">
       <label class="muted">Your age (17+)</label>
-     <input id="ageInput" type="number" min="17" max="120"> placeholder="e.g., 18" />
+      <input
+        id="ageInput"
+        type="number"
+        min="17"
+        max="120"
+        placeholder="e.g., 18"
+      />
     </div>
 
+    <!-- TERMS -->
     <div class="row">
       <label class="muted">
         <input id="agreeChk" type="checkbox" />
@@ -39,8 +46,8 @@
       </label>
     </div>
 
+    <!-- BUTTONS (NO BACK) -->
     <div class="row" style="margin-top:1rem;">
-      <button class="secondary" onclick="location.href='menu.html'">Back</button>
       <button class="primary" type="button" onclick="startApp()">Continue</button>
       <button class="secondary" type="button" onclick="resetApp()">Reset</button>
     </div>
@@ -49,7 +56,9 @@
   </div>
 </div>
 
-<div class="footer">GitHub Pages tip: filenames are case-sensitive (all lowercase).</div>
+<div class="footer">
+  GitHub Pages tip: filenames are case-sensitive (all lowercase).
+</div>
 
 <script>
   const KEY = "delulu_data_v1";
@@ -58,33 +67,40 @@
     const age = Number(document.getElementById("ageInput").value);
     const agree = document.getElementById("agreeChk").checked;
     const msg = document.getElementById("msg");
+
     msg.style.display = "none";
 
-    if(!agree){
+    if (!agree) {
       msg.textContent = "Please accept the Terms & Privacy.";
       msg.style.display = "block";
       return;
     }
-   if (!age || age < 17) {
-  msg.textContent = "You must be 17 or older to use this app.";
-  msg.style.display = "block";
-  return;
-}
+
+    if (!age || age < 17) {
+      msg.textContent = "You must be 17 or older to use this app.";
+      msg.style.display = "block";
+      return;
+    }
 
     let data = {};
-    try{ data = JSON.parse(localStorage.getItem(KEY) || "{}"); }catch(e){ data = {}; }
+    try {
+      data = JSON.parse(localStorage.getItem(KEY) || "{}");
+    } catch (e) {
+      data = {};
+    }
 
     data.age = age;
-    data.mode = age < 18 ? "teen" : "adult";
     localStorage.setItem(KEY, JSON.stringify(data));
 
+    // GO TO REAL HOME (MENU)
     location.href = "menu.html";
   }
 
   function resetApp(){
     localStorage.removeItem(KEY);
-    alert("Reset done.");
+    alert("App reset.");
   }
 </script>
+
 </body>
 </html>
