@@ -1,33 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Your Results</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<nav>
-  <a href="scan.html">Scan</a>
-  <a href="quiz.html">Quiz</a>
-  <a href="plan.html">Action Plan</a>
-  <a href="history.html">History</a>
-</nav>
-
 <div class="card center">
-  <h2>Your Overthinking Score</h2>
+  <div class="split">
+    <h2>Your Score</h2>
+    <button id="toMenu" class="secondary">Menu</button>
+  </div>
 
-  <div id="percentage" class="big-number"></div>
-  <div id="tier" class="pill"></div>
+  <div id="percent" class="big-number">—%</div>
+  <div id="tier" class="pill">—</div>
 
-  <p id="explanation"></p>
-  <p id="advice" class="advice"></p>
+  <hr>
 
-  <button onclick="window.location.href='plan.html'">
-    Continue to Action Plan
-  </button>
+  <p id="bestieText" class="friend"></p>
+
+  <div class="notice">
+    <b>Why might you feel this way?</b>
+    <div class="chips" id="whyChips" style="margin-top:.6rem;"></div>
+    <div class="muted small" style="margin-top:.5rem;">Pick 1–2 that match you. It’ll adjust the advice.</div>
+  </div>
+
+  <div class="row" style="margin-top:1rem;">
+    <button id="toPlan" class="primary">Action Plan</button>
+    <button id="redo" class="secondary">Change answers</button>
+    <button id="save" class="secondary">Save to History</button>
+  </div>
 </div>
-
-<script src="core.js"></script>
-<script src="result.js"></script>
-</body>
-</html>
