@@ -47,26 +47,24 @@
     <div class="row" style="margin-top:1rem;">
       <button class="primary" type="button"
         onclick="
-          const msg=document.getElementById('msg');
-          msg.style.display='none';
 
-          const age=Number(document.getElementById('ageInput').value);
-          const agree=document.getElementById('agreeChk').checked;
+  const age=Number(document.getElementById('ageInput').value);
+  const agree=document.getElementById('agreeChk').checked;
+  const msg=document.getElementById('msg');
 
-          if(!agree){ msg.textContent='Please accept the Terms & Privacy.'; msg.style.display='block'; return; }
-          if(!age || age<13){ msg.textContent='Enter a valid age (13+).'; msg.style.display='block'; return; }
+  msg.style.display='none';
+  if(!agree){ msg.textContent='Please accept the Terms & Privacy.'; msg.style.display='block'; return; }
+  if(!age || age<13){ msg.textContent='Enter a valid age (13+).'; msg.style.display='block'; return; }
 
-          // save
-          try{
-            const KEY='delulu_data_v1';
-            const raw=localStorage.getItem(KEY);
-            const data=raw?JSON.parse(raw):{};
-            data.age=age;
-            data.mode=(age<18)?'teen':'adult';
-            localStorage.setItem(KEY, JSON.stringify(data));
-          }catch(e){}
+  const KEY='delulu_data_v1';
+  let data={}; try{ data=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ data={}; }
+  data.age=age;
+  data.mode=(age<18)?'teen':'adult';
+  localStorage.setItem(KEY, JSON.stringify(data));
 
-          // route
+  location.href='menu.html';
+">Continue</button>
+
           location.href = (age<18) ? 'under18.html' : 'scan.html';
         ">
         Continue
