@@ -203,4 +203,9 @@ button, .answer, a, input, textarea { position: relative; z-index: 5; pointer-ev
 .bg, .glow, .overlay, .blur, .backdrop {
   pointer-events: none !important;
 }
-
+.answer.selected{
+  border-color: rgba(83,255,214,.9);
+  box-shadow: 0 0 22px rgba(83,255,214,.28);
+  transform: translateY(-1px);
+}
+.answer:active{ transform: translateY(0px); }
