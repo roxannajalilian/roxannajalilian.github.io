@@ -2,95 +2,69 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Analyze • Delulu Detector</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delulu Detector • Analyzer</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
 <nav>
-  <div class="brand">
-    <div class="logo">DD</div>
-    <div>
-      <div class="title">Analyze</div>
-      <div class="sub">Text + photo (optional) → % + explanation</div>
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div>
+        <div class="title">Text Analyzer</div>
+        <div class="sub">Paste convo + optional screenshot</div>
+      </div>
     </div>
-  </div>
-  <div class="nav-right">
-    <a class="navlink" href="menu.html">Menu</a>
-    <a class="navlink" href="quiz.html">Quiz</a>
-    <a class="navlink active" href="scan.html">Analyze</a>
-    <a class="navlink" href="result.html">Results</a>
-    <a class="navlink" href="history.html">History</a>
+    <div class="nav-right">
+      <a class="navlink" href="menu.html">Menu</a>
+      <a class="navlink" href="plan.html">Plan</a>
+    </div>
   </div>
 </nav>
 
 <div class="container">
-  <div class="card center">
-    <h2>Analyzer</h2>
-    <p class="muted small">
-      Paste/type messages if you remember a convo or upload a screenshot of your text. You’ll get a delulu % + why + bestie advice.
-      (Photos are always private so everything stays on your device.)
-    </p>
+  <div class="card">
+    <div class="grid">
+      <div class="col-6">
+        <h2>Paste the messages</h2>
+        <p class="muted" style="margin-top:6px;">It looks for patterns (short replies, “seen”, “ok”, “??”, shutdown words, etc.).</p>
+        <textarea id="textInput" placeholder="Paste conversation text here…"></textarea>
 
-    <!-- Tabs -->
-    <div class="row" style="gap:.5rem;margin:.75rem 0 1rem 0;">
-      <button class="secondary" type="button" id="tabText">Text input</button>
-      <button class="secondary" type="button" id="tabPhoto">Photo input</button>
-    </div>
-
-    <!-- TEXT PANEL -->
-    <div id="panelText">
-      <div class="field">
-        <label class="muted">Paste the convo</label>
-        <textarea id="textInput" rows="8" placeholder="Paste messages here..."></textarea>
-      </div>
-
-      <div class="row" style="gap:.5rem;">
-        <button class="secondary" type="button" id="startVoiceBtn">🎙️ Voice-to-text</button>
-        <button class="secondary" type="button" id="stopVoiceBtn" disabled>Stop</button>
-        <span id="voiceStatus" class="muted small"></span>
-      </div>
-    </div>
-
-    <!-- PHOTO PANEL -->
-    <div id="panelPhoto" style="display:none;">
-      <div class="field">
-        <label class="muted">Upload a screenshot/photo</label>
-        <input id="photoInput" type="file" accept="image/*" />
-      </div>
-
-      <div id="photoWrap" class="notice" style="display:none;">
-        <div class="row" style="justify-content:space-between;">
-          <b>Preview</b>
-          <button class="secondary" type="button" id="removePhotoBtn">Remove</button>
+        <div class="row" style="justify-content:flex-start; margin-top:10px;">
+          <input id="imgInput" type="file" accept="image/*" />
         </div>
-        <img id="photoPreview" alt="preview" style="width:100%;border-radius:16px;margin-top:.7rem;max-height:360px;object-fit:contain;" />
+
+        <div class="row" style="justify-content:flex-start; margin-top:12px;">
+          <button class="primary" id="analyzeBtn">Analyze</button>
+          <button class="secondary" onclick="location.href='menu.html'">Back</button>
+          <button class="secondary" id="clearBtn">Clear</button>
+        </div>
+
+        <div id="scanWarn" class="notice" style="display:none;"></div>
       </div>
 
-      <div class="field">
-        <label class="muted">Type what the screenshot says (or what happened)</label>
-        <textarea id="photoNotes" rows="6" placeholder="Example: They replied 'k' after I sent a long paragraph, then left me on seen..."></textarea>
+      <div class="col-6">
+        <h2>Result</h2>
+
+        <div class="circleWrap">
+          <div class="circle">
+            <div>
+              <div class="big" id="scanPct">--%</div>
+              <div class="label" id="scanLabel">No scan yet</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="signalsBox" class="muted" style="margin-top:12px;"></div>
+        <hr/>
+        <div id="scanAdvice"></div>
       </div>
-
-      <p class="muted small">
-        Note: Without extra libraries, the browser can’t auto-read text from images.
-        So this uses your notes + patterns to score it.
-      </p>
     </div>
-
-    <!-- Actions -->
-    <div class="row" style="margin-top:1rem;">
-      <button class="primary" type="button" id="analyzeBtn">Analyze</button>
-      <button class="secondary" type="button" id="clearBtn">Clear</button>
-      <button class="secondary" type="button" onclick="location.href='menu.html'">Back</button>
-    </div>
-
-    <!-- Output -->
-    <div id="out" class="notice" style="display:none;margin-top:1rem;"></div>
   </div>
 </div>
 
+<script src="storage.js"></script>
 <script src="scan.js"></script>
 </body>
 </html>
