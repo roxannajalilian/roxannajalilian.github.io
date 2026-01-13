@@ -1,100 +1,104 @@
-// scan.js
-requireAdultOrRedirect();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delulu Detector • Analyzer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div>
+        <div class="title">Text Analyzer</div>
+        <div class="sub">Paste convo + optional screenshot</div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <a class="navlink" href="menu.html">Menu</a>
+      <a class="navlink" href="plan.html">Plan</a>
+    </div>
+  </div>
+</nav>
 
-const textInput = document.getElementById("textInput");
-const imgInput = document.getElementById("imgInput");
-const analyzeBtn = document.getElementById("analyzeBtn");
-const clearBtn = document.getElementById("clearBtn");
+<div class="container">
+  <div class="card">
+    <div class="grid">
+      <div class="col-6">
+        <h2>Paste the messages</h2>
+        <p class="muted" style="margin-top:6px;">
+          Choose format + whose messages you want to scan. (Auto works for most pasted chats.)
+        </p>
 
-const scanWarn = document.getElementById("scanWarn");
-const scanPct = document.getElementById("scanPct");
-const scanLabel = document.getElementById("scanLabel");
-const signalsBox = document.getElementById("signalsBox");
-const scanAdvice = document.getElementById("scanAdvice");
+        <!-- NEW: FORMAT + WHO FILTERS -->
+        <div class="grid" style="margin:12px 0;">
+          <div class="col-6">
+            <div class="field">
+              <label class="muted">Input format</label>
+              <select id="formatMode">
+                <option value="auto" selected>Auto-detect</option>
+                <option value="texts">Texts (one-sided)</option>
+                <option value="chat">Chat (two-sided)</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="field">
+              <label class="muted">Scan whose messages?</label>
+              <select id="whoMode">
+                <option value="both" selected>Both</option>
+                <option value="me">Only me</option>
+                <option value="them">Only them</option>
+              </select>
+            </div>
+          </div>
 
-function warn(msg){
-  scanWarn.textContent = msg;
-  scanWarn.style.display = msg ? "block" : "none";
-}
+          <div class="col-12">
+            <div class="field">
+              <label class="muted">Your name (optional, helps auto-detect)</label>
+              <input id="myName" type="text" placeholder="e.g., Roxanna" />
+            </div>
+          </div>
+        </div>
 
-function addSignal(signals, condition, message){
-  if (condition) signals.push(message);
-}
+        <textarea id="textInput" placeholder="Paste conversation text here…"></textarea>
 
-analyzeBtn.addEventListener("click", () => {
-  warn("");
-  const t = (textInput.value || "").trim();
-  if (!t) {
-    warn("Paste some text first.");
-    return;
-  }
+        <div class="row" style="justify-content:flex-start; margin-top:10px;">
+          <input id="imgInput" type="file" accept="image/*" />
+        </div>
 
-  const lower = t.toLowerCase();
-  const signals = [];
+        <div class="row" style="justify-content:flex-start; margin-top:12px;">
+          <button class="primary" id="analyzeBtn">Analyze</button>
+          <button class="secondary" onclick="location.href='menu.html'">Back</button>
+          <button class="secondary" id="clearBtn">Clear</button>
+        </div>
 
-  // Your requested “real convo signal” style
-  addSignal(signals, /seen|left on read|read at|delivered/.test(lower), "Read receipts / ‘seen’ is triggering you.");
-  addSignal(signals, /\bok\b|\bk\b|\bsure\b|\bfine\b/.test(lower), "Short replies (‘ok’, ‘k’, ‘sure’) can feel cold even if not intended.");
-  addSignal(signals, /\.\.\.|…/.test(t), "Ellipses (‘…’) can feel like attitude / suspense.");
-  addSignal(signals, /\?{2,}/.test(t), "Multiple question marks = anxious urgency.");
-  addSignal(signals, /\bsorry\b/.test(lower), "You’re apologizing a lot (often a stress sign).");
-  addSignal(signals, /\bnvm\b|\bnevermind\b|\bwhatever\b|\bi guess\b|\balright bro\b/.test(lower), "Shutdown words can spike anxiety.");
-  addSignal(signals, /\bon ur life\b|\bi'm gonna be alone\b|\byou hate me\b|\byou don't care\b/.test(lower), "Catastrophizing language (fear of abandonment).");
-  addSignal(signals, /\bwhy r u mad\b|\bwhy are you mad\b|\bare you mad\b/.test(lower), "Repeated checking for mood/anger (reassurance seeking).");
-  addSignal(signals, /\bexplain\b|\bi didn’t mean\b|\blet me explain\b/.test(lower), "Over-explaining after tension (panic-fixing).");
+        <div id="scanWarn" class="notice" style="display:none;"></div>
+      </div>
 
-  // Score guess (simple but consistent)
-  const scoreGuess = Math.min(100, 18 + signals.length * 12);
-  scanPct.textContent = scoreGuess + "%";
+      <div class="col-6">
+        <h2>Result</h2>
 
-  let label, explanation, advice;
-  if (scoreGuess <= 30) {
-    label = "Low delulu risk";
-    explanation = "Nothing here screams “spiral.” The convo reads pretty normal overall.";
-    advice = "Stay calm and ask 1 clear question if you’re unsure — don’t create stories from silence.";
-  } else if (scoreGuess <= 60) {
-    label = "Medium delulu risk";
-    explanation = "Some patterns could trigger overthinking (short replies / uncertainty / checking tone).";
-    advice = "Try not to send paragraphs. One calm message is stronger than ten stressed ones.";
-  } else if (scoreGuess <= 85) {
-    label = "High delulu risk";
-    explanation = "There are multiple stress signals that usually lead to spiraling or mind-reading.";
-    advice = "Step away 10–20 minutes before texting back. Ask for clarity, not reassurance.";
-  } else {
-    label = "Very high delulu risk";
-    explanation = "This looks like a full spiral zone (short replies + fear language + urgency).";
-    advice = "Put the phone down. Calm your body first. Then send ONE clear message or wait until you’re grounded.";
-  }
+        <div class="circleWrap">
+          <div class="circle">
+            <div>
+              <div class="big" id="scanPct">--%</div>
+              <div class="label" id="scanLabel">No scan yet</div>
+            </div>
+          </div>
+        </div>
 
-  scanLabel.textContent = label;
+        <div id="signalsBox" class="muted" style="margin-top:12px;"></div>
+        <hr/>
+        <div id="scanAdvice"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  signalsBox.innerHTML = signals.length
-    ? `<p><b>Signals detected:</b></p><ul>${signals.map(s => `<li>${s}</li>`).join("")}</ul>`
-    : `<p><b>Signals detected:</b> none major.</p>`;
-
-  scanAdvice.innerHTML = `
-    <p><b>What it might mean:</b> ${explanation}</p>
-    <p><b>Best-friend advice:</b> ${advice}</p>
-    <p class="muted small">Note: This is a fun pattern detector, not a real mental health diagnosis.</p>
-  `;
-
-  // Save last scan (optional)
-  const data = getData();
-  data.lastScan = { scoreGuess, label, signals, at: new Date().toISOString() };
-  setData(data);
-
-  // Image upload is optional; we just acknowledge it (no OCR)
-  if (imgInput.files && imgInput.files[0]) {
-    // You can extend later to show preview if you want
-  }
-});
-
-clearBtn.addEventListener("click", () => {
-  textInput.value = "";
-  if (imgInput) imgInput.value = "";
-  warn("");
-  scanPct.textContent = "--%";
-  scanLabel.textContent = "No scan yet";
-  signalsBox.innerHTML = "";
-  scanAdvice.innerHTML = "";
-});
+<script src="storage.js"></script>
+<script src="scan.js"></script>
+</body>
+</html>
