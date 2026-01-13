@@ -1,164 +1,154 @@
-const c = document.getElementById("c");
-const ctx = c.getContext("2d");
+// game.js
+requireAdultOrRedirect();
 
-let running=false;
-let score=0;
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+const scorePill = document.getElementById("scorePill");
+const startBtn = document.getElementById("startBtn");
+const resetBtn = document.getElementById("resetBtn");
+const gameMsg = document.getElementById("gameMsg");
 
-const player = { x: 120, y: 260, vy: 0, r: 18, grounded:true };
-let clouds=[];
-let checks=[];
-let t=0;
+let running = false;
+let score = 0;
 
-function rand(min,max){ return Math.random()*(max-min)+min; }
+const player = { x: canvas.width/2, y: canvas.height-40, w: 60, h: 18, vx: 0 };
+let drops = [];
+let lastSpawn = 0;
 
-function reset(){
-  running=false; score=0; t=0;
-  player.y=260; player.vy=0; player.grounded=true;
-  clouds=[]; checks=[];
-  updateScore();
-  draw();
+function msg(t){
+  gameMsg.textContent = t;
+  gameMsg.style.display = t ? "block" : "none";
 }
 
-function updateScore(){
-  document.getElementById("score").textContent = `Score: ${score}`;
+function reset(){
+  running = false;
+  score = 0;
+  drops = [];
+  player.x = canvas.width/2;
+  player.vx = 0;
+  scorePill.textContent = "Score: 0";
+  msg("");
+  draw();
 }
 
 function spawn(){
-  // cloud obstacle
-  if(Math.random()<0.035){
-    clouds.push({ x: c.width+30, y: rand(170, 290), w: rand(34,60), h: rand(26,44), vx: rand(3.6,5.2) });
-  }
-  // reality check collectible
-  if(Math.random()<0.022){
-    checks.push({ x: c.width+30, y: rand(120, 250), r: 12, vx: rand(3.3,4.7) });
-  }
+  const words = ["k", "ok", "seen", "…", "??", "fine", "whatever"];
+  drops.push({
+    x: Math.random()*(canvas.width-40)+20,
+    y: -20,
+    r: 16 + Math.random()*10,
+    vy: 2.2 + Math.random()*2.4,
+    t: words[Math.floor(Math.random()*words.length)]
+  });
 }
 
-function hitCircleRect(cx,cy,cr, rx,ry,rw,rh){
-  const px = Math.max(rx, Math.min(cx, rx+rw));
-  const py = Math.max(ry, Math.min(cy, ry+rh));
-  const dx = cx-px, dy=cy-py;
-  return (dx*dx+dy*dy) <= cr*cr;
+function hit(a,b){
+  return a.x < b.x + b.r &&
+         a.x + a.w > b.x - b.r &&
+         a.y < b.y + b.r &&
+         a.y + a.h > b.y - b.r;
 }
 
-function hitCircleCircle(a,b){
-  const dx=a.x-b.x, dy=a.y-b.y;
-  const rr=a.r+b.r;
-  return dx*dx+dy*dy <= rr*rr;
-}
+function update(ts){
+  if (!running) return;
 
-function jump(){
-  if(!running) return;
-  if(player.grounded){
-    player.vy = -10.5;
-    player.grounded=false;
-  }
-}
+  // movement
+  player.x += player.vx;
+  player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
 
-function step(){
-  if(!running) return;
-
-  t++;
-  spawn();
-
-  // physics
-  player.vy += 0.55;
-  player.y += player.vy;
-  if(player.y >= 260){
-    player.y = 260;
-    player.vy = 0;
-    player.grounded = true;
+  // spawn
+  if (!lastSpawn || ts - lastSpawn > 520) {
+    spawn();
+    lastSpawn = ts;
   }
 
-  // move obstacles
-  clouds.forEach(o=> o.x -= o.vx);
-  checks.forEach(o=> o.x -= o.vx);
+  // drops
+  drops.forEach(d => d.y += d.vy);
 
   // collisions
-  for(const o of clouds){
-    if(hitCircleRect(player.x, player.y, player.r, o.x, o.y, o.w, o.h)){
-      running=false;
-      draw(true);
-      return;
-    }
-  }
-  for(let i=checks.length-1;i>=0;i--){
-    const p = {x:player.x, y:player.y, r:player.r};
-    const q = checks[i];
-    if(hitCircleCircle(p, {x:q.x, y:q.y, r:q.r})){
-      checks.splice(i,1);
-      score += 5;
-      updateScore();
+  for (const d of drops) {
+    if (hit(player, d)) {
+      running = false;
+      msg("You got hit by a red flag 😭  Press Start to try again.");
+      return draw();
     }
   }
 
-  // cleanup + score tick
-  clouds = clouds.filter(o=> o.x > -80);
-  checks = checks.filter(o=> o.x > -40);
+  // remove passed
+  drops = drops.filter(d => d.y < canvas.height + 30);
 
-  if(t % 20 === 0){
-    score += 1;
-    updateScore();
-  }
+  score++;
+  scorePill.textContent = "Score: " + score;
 
   draw();
-  requestAnimationFrame(step);
+  requestAnimationFrame(update);
 }
 
-function draw(gameOver=false){
-  ctx.clearRect(0,0,c.width,c.height);
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // ground line
-  ctx.globalAlpha = 0.9;
-  ctx.beginPath();
-  ctx.moveTo(0, 300);
-  ctx.lineTo(c.width, 300);
-  ctx.stroke();
-
-  // player (delulu orb)
+  // background glow lines
+  ctx.globalAlpha = 0.15;
+  for (let i=0;i<8;i++){
+    ctx.beginPath();
+    ctx.moveTo(0, i*60);
+    ctx.lineTo(canvas.width, i*60 + 30);
+    ctx.strokeStyle = "white";
+    ctx.stroke();
+  }
   ctx.globalAlpha = 1;
-  ctx.beginPath();
-  ctx.arc(player.x, player.y, player.r, 0, Math.PI*2);
-  ctx.fill();
-  ctx.stroke();
 
-  // label
-  ctx.font = "14px system-ui";
-  ctx.fillText("YOU", player.x-14, player.y-28);
+  // player
+  ctx.fillStyle = "rgba(83,255,214,.9)";
+  ctx.fillRect(player.x, player.y, player.w, player.h);
 
-  // clouds (delusion)
-  ctx.font = "18px system-ui";
-  clouds.forEach(o=>{
-    ctx.fillText("☁️", o.x, o.y+18);
+  // drops
+  drops.forEach(d => {
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, d.r, 0, Math.PI*2);
+    ctx.fillStyle = "rgba(255,77,109,.85)";
+    ctx.fill();
+
+    ctx.fillStyle = "white";
+    ctx.font = "bold 14px system-ui";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(d.t, d.x, d.y);
   });
 
-  // checks (reality)
-  checks.forEach(o=>{
-    ctx.fillText("✅", o.x-8, o.y+8);
-  });
-
-  if(!running && score===0){
-    ctx.font = "18px system-ui";
-    ctx.fillText("Press Start. Tap/click to jump.", 280, 70);
-  }
-
-  if(gameOver){
-    ctx.font = "26px system-ui";
-    ctx.fillText("Game Over 😭", 360, 120);
-    ctx.font = "16px system-ui";
-    ctx.fillText("Press Start to try again.", 350, 150);
+  if (!running) {
+    ctx.fillStyle = "rgba(255,255,255,.85)";
+    ctx.font = "bold 16px system-ui";
+    ctx.textAlign = "center";
+    ctx.fillText("Avoid the red flags falling from the sky", canvas.width/2, 26);
   }
 }
 
-document.getElementById("start").onclick=()=>{
-  reset();
-  running=true;
-  requestAnimationFrame(step);
-};
-document.getElementById("reset").onclick=reset;
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") player.vx = -7;
+  if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") player.vx = 7;
+});
+document.addEventListener("keyup", (e) => {
+  if (["ArrowLeft","ArrowRight","a","d","A","D"].includes(e.key)) player.vx = 0;
+});
 
-c.addEventListener("mousedown", jump);
-c.addEventListener("touchstart", (e)=>{ e.preventDefault(); jump(); }, {passive:false});
-document.addEventListener("keydown", (e)=>{ if(e.code==="Space") jump(); });
+// mobile drag
+let dragging = false;
+canvas.addEventListener("pointerdown", () => dragging = true);
+canvas.addEventListener("pointerup", () => dragging = false);
+canvas.addEventListener("pointermove", (e) => {
+  if (!dragging) return;
+  const rect = canvas.getBoundingClientRect();
+  const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+  player.x = x - player.w/2;
+});
+
+startBtn.addEventListener("click", () => {
+  reset();
+  running = true;
+  msg("");
+  requestAnimationFrame(update);
+});
+resetBtn.addEventListener("click", reset);
 
 reset();
