@@ -336,3 +336,17 @@ function initPlan(){
 
   renderPlan();
 }
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const isPlanPage = location.pathname.toLowerCase().includes("plan");
+  const planLink =
+    document.querySelector('nav a[href*="plan"]') ||
+    document.querySelector('.nav a[href*="plan"]') ||
+    document.querySelector('.topnav a[href*="plan"]') ||
+    document.querySelector('.menu a[href*="plan"]');
+
+  if (isPlanPage && planLink) {
+    planLink.classList.add("is-active-plan");
+  }
+});
