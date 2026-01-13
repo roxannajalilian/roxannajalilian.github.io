@@ -49,31 +49,38 @@
 
 <script src="storage.js"></script>
 <script>
-  const msg = document.getElementById("msg");
-
   function showError(text){
+    const msg = document.getElementById("msg");
     msg.textContent = text;
     msg.style.display = "block";
   }
 
   document.getElementById("continueBtn").addEventListener("click", () => {
-    msg.style.display = "none";
     const age = Number(document.getElementById("ageInput").value);
     const agree = document.getElementById("agreeChk").checked;
 
-    if (!agree) return showError("Please accept the Terms & Privacy.");
-    if (!age || age < 18) return showError("You must be 18 or older to use this app.");
+    if (!agree) {
+      showError("Please accept the Terms & Privacy.");
+      return;
+    }
 
+    // ✅ PUT YOUR CODE HERE
+    if (!age) {
+      showError("Enter a valid age.");
+      return;
+    }
+
+    if (age < 18) {
+      lockOut("Sorry — you must be 18 or older to use this app.");
+      return;
+    }
+
+    // ✅ ONLY 18+ USERS REACH HERE
     const data = getData();
     data.age = age;
     setData(data);
 
     window.location.href = "menu.html";
-  });
-
-  document.getElementById("resetBtn").addEventListener("click", () => {
-    localStorage.removeItem(KEY);
-    alert("App reset.");
   });
 </script>
 </body>
