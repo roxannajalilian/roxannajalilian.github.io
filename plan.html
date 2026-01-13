@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Plan • Delulu Detector</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Plan • Delulu Detector</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
 <nav>
   <div class="brand">
     <div class="logo">DD</div>
     <div>
-      <div class="title">Action Plan</div>
+      <div class="title">Plan</div>
       <div class="sub">What to do next</div>
     </div>
   </div>
@@ -20,20 +21,20 @@
     <a class="navlink" href="quiz.html">Quiz</a>
     <a class="navlink" href="scan.html">Analyze</a>
     <a class="navlink active" href="plan.html">Plan</a>
-  
+    <a class="navlink" href="policy.html">Policy</a>
   </div>
 </nav>
 
 <div class="container">
   <div class="card center">
-    <h2>Your plan</h2>
-    <p class="muted small">This changes based on your score.</p>
+    <h2>Your Plan</h2>
+    <p class="muted small" id="meta"></p>
 
-    <div id="planOut" class="notice"></div>
+    <div id="content" class="notice"></div>
 
-    <div class="row" style="margin-top:1rem;">
-      <button class="primary" onclick="location.href='quiz.html'">Retake quiz</button>
-      <button class="secondary" onclick="location.href='menu.html'">Back</button>
+    <div class="row" style="margin-top:1rem;flex-wrap:wrap;">
+      <button class="secondary" type="button" onclick="location.href='menu.html'">Back</button>
+      <button class="primary" id="goQuizBtn" type="button" style="display:none;">Take the Quiz</button>
     </div>
   </div>
 </div>
