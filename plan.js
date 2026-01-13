@@ -1,66 +1,66 @@
-const KEY="delulu_data_v1";
+// plan.js
+requireAdultOrRedirect();
 
-function getData(){
-  try { return JSON.parse(localStorage.getItem(KEY) || "{}"); }
-  catch(e){ return {}; }
-}
+const data = getData();
+const r = data.quizResult;
 
-const meta = document.getElementById("meta");
-const content = document.getElementById("content");
-const goQuizBtn = document.getElementById("goQuizBtn");
+const planTitle = document.getElementById("planTitle");
+const planPct = document.getElementById("planPct");
+const planBody = document.getElementById("planBody");
 
-const d = getData();
-const r = d.quizResult;
-
-function planFor(p){
-  if(p <= 25){
-    return `
-      <b>Grounded Plan (Low overthinking)</b><br><br>
-      • Keep doing what you’re doing: trust patterns, not one text.<br>
-      • If you feel doubt: write 1 sentence “What facts do I have?” then stop.<br>
-      • Don’t reread try and skim once, then move on.<br><br>
-      <b>Mini goal:</b> Wait 5-10 minutes before replying when you feel anxious.
-    `;
-  }
-  if(p <= 50){
-    return `
-      <b>Balance Plan (Mild overthinking)</b><br><br>
-      • Use the “Evidence vs Assumption” rule: if it’s not proof, treat it as a guess.<br>
-      • Set a timer: no checking your phone for 15 minutes after you send a message.<br>
-      • Ask 1 calm clarity question instead of rereading 20 times.<br><br>
-      <b>Mini goal:</b> One deep breath + one sentence: “I’m okay even if I don’t know yet.”
-    `;
-  }
-  if(p <= 75){
-    return `
-      <b>Calm-First Plan (High overthinking)</b><br><br>
-      • Don’t double text when emotional. Wait 20–30 minutes.<br>
-      • Move your body: quick walk / water / stretch — your nervous system needs it.<br>
-      • Replace mind-reading with 1 direct question: “Hey, are we good?” then stop.<br><br>
-      <b>Mini goal:</b> Mute notifications for 30 minutes after a trigger.
-    `;
-  }
-  return `
-    <b>Reset Plan (Very high overthinking)</b><br><br>
-    • Your brain is treating uncertainty like danger. Calm first, then interpret.<br>
-    • Do a 60-second reset when overthinking breathe in 4, hold 4, out 6 (x5).<br>
-    • Stop rereading. One read only. Then do something physical (water, walk, shower).<br>
-    • If it’s serious: ask for clarity once regarding the issue. If they avoid it, protect your peace!<br><br>
-    <b>Mini goal:</b> No checking texts for 45 minutes after you feel triggered or upset.
+if (!r) {
+  planTitle.textContent = "No plan yet";
+  planPct.textContent = "Take quiz";
+  planBody.innerHTML = `
+    <p>You haven’t taken the quiz yet, so I can’t personalize your plan.</p>
+    <p><b>Do this:</b> go back to Menu → start the quiz → then come back here.</p>
   `;
-}
-
-if(!r || typeof r.percentage !== "number"){
-  meta.textContent = "No quiz result found yet.";
-  content.innerHTML = "Take the quiz first, then this page will generate your plan automatically.";
-  goQuizBtn.style.display = "inline-block";
-  goQuizBtn.onclick = () => location.href = "quiz.html";
 } else {
-  meta.textContent = `Based on your quiz score: ${r.percentage}% (${r.tier || ""})`;
-  content.innerHTML = `
-    <b>Your type:</b> ${r.personaName || ""}<br>
-    <span class="muted">${r.personaParagraph || ""}</span>
-    <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:.9rem 0;">
-    ${planFor(r.percentage)}
+  planTitle.textContent = "Your anti-spiral plan";
+  planPct.textContent = r.percentage + "%";
+
+  const p = r.percentage;
+
+  let steps = [];
+  if (p <= 25) {
+    steps = [
+      "Keep your balance: don’t over-check the chat.",
+      "If something feels off, ask once calmly — then move on.",
+      "Protect your peace: don’t create stories from one message."
+    ];
+  } else if (p <= 50) {
+    steps = [
+      "Use the 3-question reset: (1) what’s the proof? (2) what’s the story? (3) what’s the simplest explanation?",
+      "Wait 10 minutes before sending a stressed message.",
+      "Replace double-texting with one clear question."
+    ];
+  } else if (p <= 75) {
+    steps = [
+      "No reacting in the moment: put phone down for 15 minutes.",
+      "Switch from mind-reading to clarity: one direct question, not paragraphs.",
+      "Track patterns: actions > texting tone."
+    ];
+  } else {
+    steps = [
+      "Emergency rule: if you feel panic, do NOT text for 20 minutes.",
+      "Do a reality check: ask a trusted friend what they think the message means.",
+      "Use clarity scripts: “Hey are we good? I’m reading into it.”",
+      "If it’s constant anxiety, take a break from the convo and ground yourself."
+    ];
+  }
+
+  planBody.innerHTML = `
+    <p><b>Your vibe:</b> ${r.vibe || ""}</p>
+    <p>${r.explanation}</p>
+    <hr/>
+    <p><b>Plan steps (do these in order):</b></p>
+    <ol>
+      ${steps.map(s => `<li>${s}</li>`).join("")}
+    </ol>
+    <hr/>
+    <p><b>Quick script you can use:</b></p>
+    <p style="margin:0;">
+      “Hey, I might be overthinking. Just checking — are we good?”
+    </p>
   `;
 }
