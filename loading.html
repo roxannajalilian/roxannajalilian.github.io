@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Calculating…</title>
+  <title>Calculating… • Delulu Detector</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -11,8 +11,8 @@
   <div class="brand">
     <div class="logo">DD</div>
     <div>
-      <div class="title">Results</div>
-      <div class="sub">Calculating…</div>
+      <div class="title">Calculating…</div>
+      <div class="sub">Hang on bestie</div>
     </div>
   </div>
   <div class="nav-right">
@@ -22,31 +22,15 @@
 </nav>
 
 <div class="container">
-  <div class="card center">
-    <h2>One sec bestie…</h2>
-    <p class="muted">Putting your answers together.</p>
-
-    <div class="loader-wrap">
-      <div class="ring"></div>
-      <div class="pill" id="txt">Checking…</div>
-    </div>
+  <div class="card center" style="text-align:center;">
+    <h2>Analyzing your answers…</h2>
+    <div class="ring"></div>
+    <p class="muted">Doing the math + decoding the delulu 😭</p>
   </div>
 </div>
 
 <script>
-  const KEY="delulu_data_v1";
-  const steps=["Checking…","Doing the math…","Writing your advice…","Almost done…"];
-  let i=0;
-  const txt=document.getElementById("txt");
-  const tick=setInterval(()=>{ i++; if(i<steps.length) txt.textContent=steps[i]; }, 520);
-
-  setTimeout(()=>{
-    clearInterval(tick);
-    let d={};
-    try{ d=JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){ d={}; }
-    if(!d.quizResult){ location.href="quiz.html"; return; }
-    location.href="result.html";
-  }, 2200);
+  setTimeout(() => location.href = "results.html", 1400);
 </script>
 </body>
 </html>
