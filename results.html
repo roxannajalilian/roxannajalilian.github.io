@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Results • Delulu Detector</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Results • Delulu Detector</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -16,41 +16,65 @@
       <div class="sub">Your score + bestie explanation</div>
     </div>
   </div>
+
   <div class="nav-right">
     <a class="navlink" href="menu.html">Menu</a>
     <a class="navlink" href="quiz.html">Quiz</a>
     <a class="navlink" href="plan.html">Plan</a>
-    <a class="navlink" href="history.html">History</a>
+    <a class="navlink" href="policy.html">Policy</a>
   </div>
 </nav>
 
 <div class="container">
-  <div class="card center">
-    <div class="row" style="justify-content:space-between;align-items:flex-start;">
+  <div class="card">
+
+    <div class="row" style="justify-content:space-between;align-items:flex-start;flex-wrap:wrap;">
       <div>
-        <h2>Your Delulu Score</h2>
-        <p class="muted small" id="stamp"></p>
+        <h2 style="margin:0;">Your Delulu Score</h2>
+        <p class="muted" id="tierText" style="margin:.25rem 0 0 0;"></p>
       </div>
+
       <button class="secondary" id="saveBtn" type="button">Save</button>
     </div>
 
-    <div class="score-wrap" style="margin:1rem 0;">
-      <div class="score-circle">
-        <div class="score-num" id="pct">--%</div>
-        <div class="muted small" id="tier">—</div>
+    <div class="notice" style="margin-top:1rem; text-align:center;">
+      <!-- Ring -->
+      <div id="ring" class="ring" style="margin:0 auto;">
+        <div class="ringInner">
+          <div id="scoreNumber" style="font-size:2rem;font-weight:800;">--%</div>
+        </div>
+      </div>
+
+      <!-- Bar -->
+      <div class="bar" style="margin-top:1rem;">
+        <div class="barFill" id="barFill"></div>
+      </div>
+
+      <div class="row" style="justify-content:center;gap:.6rem;margin-top:1rem;flex-wrap:wrap;">
+        <button class="primary" type="button" onclick="location.href='plan.html'">See my plan</button>
+        <button class="secondary" type="button" onclick="location.href='menu.html'">Back</button>
+        <button class="secondary" type="button" onclick="location.href='quiz.html'">Retake</button>
       </div>
     </div>
 
-    <div class="notice" id="explainBox"></div>
-
-    <div class="row" style="margin-top:1rem;">
-      <button class="primary" type="button" onclick="location.href='plan.html'">See my plan</button>
-      <button class="secondary" type="button" onclick="location.href='menu.html'">Back</button>
-      <button class="secondary" type="button" onclick="location.href='quiz.html'">Retake</button>
+    <div class="notice" style="margin-top:1rem;">
+      <b>Your vibe:</b><br>
+      <span id="personaText" class="muted"></span>
     </div>
+
+    <div class="notice" style="margin-top:1rem;">
+      <b>Why it rated you this way:</b>
+      <pre id="whyText" style="white-space:pre-wrap;margin:.5rem 0 0 0;" class="muted"></pre>
+    </div>
+
+    <div class="notice" style="margin-top:1rem;">
+      <b>Bestie advice:</b>
+      <pre id="adviceText" style="white-space:pre-wrap;margin:.5rem 0 0 0;" class="muted"></pre>
+    </div>
+
   </div>
 </div>
 
-<script src="result.js"></script>
+<script src="results.js"></script>
 </body>
 </html>
