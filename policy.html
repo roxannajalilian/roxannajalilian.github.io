@@ -1,37 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Policy • Delulu Detector</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delulu Detector • Policy</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <nav>
-  <div class="brand">
-    <div class="logo">DD</div>
-    <div>
-      <div class="title">Terms & Privacy</div>
-      <div class="sub">Local-only</div>
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div>
+        <div class="title">Terms & Privacy</div>
+        <div class="sub">Simple + clear</div>
+      </div>
     </div>
-  </div>
-  <div class="nav-right">
-    <a class="navlink" href="index.html">Home</a>
-    <a class="navlink" href="menu.html">Menu</a>
-    <a class="navlink active" href="policy.html">Policy</a>
+    <div class="nav-right">
+      <a class="navlink" href="menu.html">Menu</a>
+      <a class="navlink active" href="policy.html">Policy</a>
+    </div>
   </div>
 </nav>
 
 <div class="container">
-  <div class="card center">
+  <div class="card">
     <h2>Terms</h2>
-    <p class="muted">This app gives an estimate based on your inputs. It’s not professional advice.</p>
-    <h3>Privacy</h3>
-    <ul class="muted">
-      <li>No server, no accounts.</li>
-      <li>Your data stays in your browser (localStorage).</li>
-      <li>You can reset from Home/Menu.</li>
-    </ul>
+    <p class="muted">
+      Delulu Detector is a fun project. It’s not medical advice, therapy, or a professional diagnosis.
+      Use it for entertainment and reflection only.
+    </p>
+
+    <h2 style="margin-top:14px;">Privacy</h2>
+    <p class="muted">
+      Your inputs (quiz answers / analyzer text) are stored only in your browser using <b>localStorage</b>.
+      This project does not send your data to a server.
+    </p>
+
+    <h2 style="margin-top:14px;">Safety note</h2>
+    <p class="muted">
+      If your situation feels unsafe or harmful, talk to a trusted adult or a professional support service.
+      This app can’t provide emergency help.
+    </p>
+
+    <div class="row" style="margin-top:16px;">
+      <button class="secondary" onclick="location.href='menu.html'">Back to Menu</button>
+      <button class="secondary" onclick="location.href='index.html'">Start Screen</button>
+    </div>
   </div>
 </div>
 </body>
