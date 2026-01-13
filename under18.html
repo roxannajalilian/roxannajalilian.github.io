@@ -1,82 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Under 18 Mode</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Access Denied</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
 <nav>
-  <div class="nav-left brand">
-    <div class="logo">DD</div>
-    <div class="brand-text">
-      <div class="title">Under 18 Mode</div>
-      <div class="sub">Teen-safe version</div>
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div>
+        <div class="title">Delulu Detector</div>
+        <div class="sub">Access denied</div>
+      </div>
     </div>
-  </div>
-  <div class="nav-right">
-    <a class="navlink" href="index.html">Home</a>
-    <a class="navlink" href="policy.html">Policy</a>
   </div>
 </nav>
 
 <div class="container">
   <div class="card center">
-    <h1>Under 18 Mode</h1>
+    <h1>Sorry — you can’t use this app</h1>
+    <p class="muted" id="reason">This app is 18+.</p>
 
-    <p class="muted">
-      You’re using the teen version of Delulu Detector. This version avoids adult topics and focuses on
-      overthinking, communication, and emotional awareness.
-    </p>
-
-    <div class="notice">
-      • No adult topics<br>
-      • Focus on thoughts & patterns<br>
-      • You can always reset from Home
+    <div class="notice" style="display:block; margin-top:14px;">
+      You were redirected because you entered an age under 18.
     </div>
 
-    <div class="row" style="margin-top:1rem;">
-      <button id="continueTeen" class="primary" type="button">Continue (Teen Mode)</button>
-      <button class="secondary" type="button" onclick="location.href='index.html'">Go Back</button>
+    <div class="row" style="margin-top:16px;">
+      <button class="primary" id="leaveBtn">Leave site</button>
+      <button class="secondary" id="retryBtn">Go back</button>
     </div>
-
-    <div id="msg" class="notice" style="display:none; margin-top:1rem;"></div>
   </div>
 </div>
 
+<script src="storage.js"></script>
 <script>
-  // Local-only storage (no dependencies)
-  const STORAGE_KEY = "delulu_data_v1";
+  const data = getData();
+  document.getElementById("reason").textContent =
+    data.lockReason || "This app is 18+.";
 
-  function getData(){
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : {};
-    } catch {
-      return {};
-    }
-  }
-  function setData(d){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
-  }
+  // "Leave site" tries to close tab (works best if opened by a click),
+  // if browser blocks it, it will just go to a neutral page.
+  document.getElementById("leaveBtn").addEventListener("click", () => {
+    try { window.close(); } catch (e) {}
+    window.location.href = "https://www.google.com";
+  });
 
-  const msg = document.getElementById("msg");
-  function show(m){
-    msg.style.display = "block";
-    msg.textContent = m;
-  }
-
-  document.getElementById("continueTeen").addEventListener("click", () => {
-    const data = getData();
-    data.mode = "teen";
-    setData(data);
-
-    // Go to quiz (teen-safe flow)
-    location.href = "quiz.html";
+  // back to index
+  document.getElementById("retryBtn").addEventListener("click", () => {
+    localStorage.removeItem(KEY);
+    window.location.href = "index.html";
   });
 </script>
-
 </body>
 </html>
