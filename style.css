@@ -209,3 +209,8 @@ button, .answer, a, input, textarea { position: relative; z-index: 5; pointer-ev
   transform: translateY(-1px);
 }
 .answer:active{ transform: translateY(0px); }
+.navlink.primaryLink{
+  border-color: rgba(83,255,214,.55);
+  box-shadow: 0 0 18px rgba(83,255,214,.22);
+  color: #dffff4;
+}
