@@ -55,16 +55,22 @@ body{
 .navlink{
   color:var(--muted);
   text-decoration:none;
-  font-weight:700;
+  font-weight:800;
   padding:8px 10px;
-  border-radius:12px;
+  border-radius:14px;
   border:1px solid transparent;
+  position:relative;
 }
 .navlink:hover{border-color:var(--stroke); color:var(--text);}
-.navlink.active{color:var(--text); border-color:var(--stroke); background:rgba(255,255,255,.04);}
+.navlink.active{
+  color:var(--text);
+  border-color:rgba(79,227,209,.22);
+  background:rgba(255,255,255,.04);
+}
 
 .planlink{display:flex; gap:8px; align-items:center;}
-/* FIX: Plan icon color is forced to match theme */
+
+/* FIX: Plan icon color */
 .plan-ico{
   color: var(--primary);
   font-weight:900;
@@ -73,6 +79,7 @@ body{
   filter: drop-shadow(0 0 10px rgba(79,227,209,.25));
 }
 
+/* Badge */
 .badge{
   margin-left:2px;
   min-width:30px;
@@ -86,6 +93,48 @@ body{
   font-weight:900;
   color:#051116;
   background: linear-gradient(135deg, rgba(79,227,209,.95), rgba(86,168,255,.95));
+}
+
+/* ===== Plan link glow (hover + active) ===== */
+.planlink{
+  position: relative;
+  overflow: visible;
+}
+
+.planlink::before{
+  content:"";
+  position:absolute;
+  inset:-6px;
+  border-radius:16px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(79,227,209,.35), transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(86,168,255,.30), transparent 60%);
+  opacity:0;
+  filter: blur(12px);
+  transition: opacity .18s ease;
+  z-index:-1;
+}
+
+.planlink:hover::before{ opacity:1; }
+.navlink.active.planlink::before{ opacity:1; }
+
+.navlink.active.planlink{
+  background: rgba(255,255,255,.07);
+  border-color: rgba(79,227,209,.38);
+  box-shadow:
+    0 0 0 1px rgba(79,227,209,.18),
+    0 18px 44px rgba(79,227,209,.10);
+}
+
+.planlink:hover .plan-ico,
+.navlink.active.planlink .plan-ico{
+  color: rgba(79,227,209,1);
+  filter: drop-shadow(0 0 14px rgba(79,227,209,.48));
+}
+
+.planlink:hover .badge,
+.navlink.active.planlink .badge{
+  filter: drop-shadow(0 0 14px rgba(86,168,255,.30));
 }
 
 h1{margin:0 0 6px 0;}
@@ -169,7 +218,10 @@ h2{margin:12px 0 6px 0;}
   gap:10px;
 }
 .opt:hover{border-color: rgba(79,227,209,.35);}
-.opt.selected{border-color: rgba(79,227,209,.7); box-shadow: 0 0 0 3px rgba(79,227,209,.12) inset;}
+.opt.selected{
+  border-color: rgba(79,227,209,.7);
+  box-shadow: 0 0 0 3px rgba(79,227,209,.12) inset;
+}
 
 .msg{margin-top:10px; font-weight:800; color: var(--danger); min-height:20px;}
 
