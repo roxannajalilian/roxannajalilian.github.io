@@ -1,4 +1,8 @@
-const KEY = "delulu_data_v1";
+// quiz.js
+requireAdultOrRedirect();
+
+// Start fresh each time you enter quiz (so it doesn't "trap" you)
+let current = 0;
 
 const questions = [
   "I reread texts to find hidden meaning.",
@@ -16,70 +20,43 @@ const questions = [
   "I want to double-text when anxious.",
   "I focus more on texts than real-life actions.",
   "I struggle to sit with uncertainty.",
-  "I overthink even when nothing is clearly wrong."
+  "I overthink even when nothing is clearly wrong.",
+  "I get triggered by short answers like “ok” or “k”.",
+  "I assume “seen” means they’re ignoring me.",
+  "I feel like I need to explain myself a lot after a tense reply.",
+  "I try to mind-read what they meant instead of asking directly."
 ];
 
-let current = 0;
 let answers = new Array(questions.length).fill(null);
 
 const qText = document.getElementById("questionText");
 const progressText = document.getElementById("progressText");
 const progressFill = document.getElementById("progressFill");
-const answerButtons = document.querySelectorAll(".answer");
+const answerButtons = Array.from(document.querySelectorAll(".answer"));
 const backBtn = document.getElementById("backBtn");
 const nextBtn = document.getElementById("nextBtn");
+const warn = document.getElementById("warn");
+const pillSave = document.getElementById("pillSave");
 
-function getData(){
-  try { return JSON.parse(localStorage.getItem(KEY) || "{}"); }
-  catch(e){ return {}; }
-}
-function setData(d){
-  localStorage.setItem(KEY, JSON.stringify(d));
-}
-
-// fun type paragraph (your butterfly thing)
-function getPersona(percent){
-  if (percent <= 25) {
-    return {
-      name: "Butterfly 🦋",
-      paragraph: "You’re a Butterfly because you’re naturally light-minded and grounded — you notice little details, but you don’t let one message control your whole mood. You can handle uncertainty better than most people."
-    };
-  }
-  if (percent <= 50) {
-    return {
-      name: "Glow-Worm ✨",
-      paragraph: "You’re a Glow-Worm because you overthink sometimes, especially when the vibe feels unclear. You’re sensitive and observant — not dramatic — your brain just wants certainty and reassurance."
-    };
-  }
-  if (percent <= 75) {
-    return {
-      name: "Detective 🔎",
-      paragraph: "You’re a Detective because you read between the lines a LOT. You notice timing, tone, and tiny changes, and your mind tries to solve the situation fast — even before you have proof."
-    };
-  }
-  return {
-    name: "Storm Cloud ⛈️",
-    paragraph: "You’re a Storm Cloud because when you’re anxious, your brain fills in the blanks with worst-case stories. It doesn’t mean you’re crazy — it means your nervous system needs calm before you interpret the situation."
-  };
+function setWarn(text){
+  warn.textContent = text;
+  warn.style.display = text ? "block" : "none";
 }
 
 function renderQuestion() {
-  if (!qText || !progressText || !progressFill || !backBtn || !nextBtn) {
-    alert("Quiz HTML IDs don't match quiz.js. Make sure questionText/progressText/progressFill/backBtn/nextBtn exist.");
-    return;
-  }
-
   qText.textContent = questions[current];
   progressText.textContent = `Question ${current + 1} of ${questions.length}`;
   progressFill.style.width = `${((current + 1) / questions.length) * 100}%`;
 
   answerButtons.forEach(btn => {
     btn.classList.remove("selected");
-    if (Number(btn.dataset.value) === answers[current]) btn.classList.add("selected");
+    const v = Number(btn.dataset.value);
+    if (answers[current] === v) btn.classList.add("selected");
   });
 
   backBtn.disabled = current === 0;
   nextBtn.textContent = current === questions.length - 1 ? "Finish" : "Next";
+  setWarn("");
 }
 
 answerButtons.forEach(btn => {
@@ -87,6 +64,7 @@ answerButtons.forEach(btn => {
     answers[current] = Number(btn.dataset.value);
     answerButtons.forEach(b => b.classList.remove("selected"));
     btn.classList.add("selected");
+    setWarn("");
   });
 });
 
@@ -99,7 +77,7 @@ backBtn.addEventListener("click", () => {
 
 nextBtn.addEventListener("click", () => {
   if (answers[current] === null) {
-    alert("Pick an answer before continuing.");
+    setWarn("Pick an answer before continuing.");
     return;
   }
 
@@ -116,33 +94,41 @@ function finishQuiz() {
   const maxScore = questions.length * 3;
   const percentage = Math.round((totalScore / maxScore) * 100);
 
-  let tier;
-  if (percentage <= 25) tier = "Low overthinking";
-  else if (percentage <= 50) tier = "Mild overthinking";
-  else if (percentage <= 75) tier = "High overthinking";
-  else tier = "Very high overthinking";
+  let tier, explanation, advice, vibe;
 
-  const persona = getPersona(percentage);
+  if (percentage <= 25) {
+    tier = "Low overthinking";
+    explanation = "You usually read things pretty realistically. You don’t spiral off one message.";
+    advice = "Keep trusting patterns over one text. If something feels off, ask once and move on.";
+    vibe = "🧊 Calm Queen/King energy";
+  } else if (percentage <= 50) {
+    tier = "Mild overthinking";
+    explanation = "You’re mostly fine, but uncertainty can make you over-analyze little details.";
+    advice = "When you feel triggered, pause. Ask: “Do I have proof or just vibes?” Then act on proof.";
+    vibe = "🌙 Soft thinker energy";
+  } else if (percentage <= 75) {
+    tier = "High overthinking";
+    explanation = "You often mind-read and assume meanings that might not be there (especially in texts).";
+    advice = "Try a 10-minute delay before reacting. Focus more on actions than the exact wording.";
+    vibe = "🦋 Butterfly brain (sensitive + deep)";
+  } else {
+    tier = "Very high overthinking";
+    explanation = "Your brain is basically doing detective work 24/7. A text can flip your mood fast.";
+    advice = "If you’re spiraling, step away from the chat, breathe, and ask for clarity (not reassurance).";
+    vibe = "🔥 Delulu Detective (intense edition)";
+  }
 
-  // SAVE ONLY FINAL RESULT (NOT answers)
   const data = getData();
   data.quizResult = {
-    percentage,
-    tier,
-    personaName: persona.name,
-    personaParagraph: persona.paragraph,
-    savedAt: new Date().toISOString()
+    percentage, tier, explanation, advice, vibe,
+    at: new Date().toISOString()
   };
   setData(data);
 
-  // reset in-memory so when they come back it's fresh
-  current = 0;
-  answers = new Array(questions.length).fill(null);
+  pillSave.textContent = "Saved ✓";
+  pillSave.style.borderColor = "rgba(83,255,214,.55)";
 
-  location.href = "loading.html";
+  window.location.href = "loading.html";
 }
 
-// ALWAYS start fresh when opening quiz
-current = 0;
-answers = new Array(questions.length).fill(null);
 renderQuestion();
