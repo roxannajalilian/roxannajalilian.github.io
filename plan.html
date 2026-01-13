@@ -1,44 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Plan • Delulu Detector</title>
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Delulu Detector - Plan</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<nav>
+<nav class="nav">
   <div class="brand">
     <div class="logo">DD</div>
-    <div>
-      <div class="title">Plan</div>
-      <div class="sub">What to do next</div>
+    <div class="brand-text">
+      <div class="title">Delulu Detector</div>
+      <div class="sub">My Plan</div>
     </div>
   </div>
-  <div class="nav-right">
+
+  <div class="nav-actions">
     <a class="navlink" href="menu.html">Menu</a>
     <a class="navlink" href="quiz.html">Quiz</a>
-    <a class="navlink" href="scan.html">Analyze</a>
-    <a class="navlink active" href="plan.html">Plan</a>
-    <a class="navlink" href="policy.html">Policy</a>
+    <a class="navlink active planlink" href="plan.html">
+      <span class="plan-ico" aria-hidden="true">◎</span>
+      <span>Plan</span>
+      <span id="planBadge" class="badge">–</span>
+    </a>
   </div>
 </nav>
 
-<div class="container">
-  <div class="card center">
-    <h2>Your Plan</h2>
-    <p class="muted small" id="meta"></p>
+<main class="container">
+  <section class="card">
+    <h1>My Plan</h1>
+    <p class="muted">This is based on your most recent quiz score.</p>
 
-    <div id="content" class="notice"></div>
-
-    <div class="row" style="margin-top:1rem;flex-wrap:wrap;">
-      <button class="secondary" type="button" onclick="location.href='menu.html'">Back</button>
-      <button class="primary" id="goQuizBtn" type="button" style="display:none;">Take the Quiz</button>
+    <div class="plan-head">
+      <div class="score-mini">
+        <div class="score-mini-num" id="planScore">–%</div>
+        <div class="muted" id="planLabel">Take the quiz to get a plan.</div>
+      </div>
+      <a class="btn btn-primary" href="quiz.html">Take / Retake Quiz</a>
     </div>
-  </div>
-</div>
 
-<script src="plan.js"></script>
+    <hr class="hr"/>
+
+    <h2>What to do next</h2>
+    <ul id="planSteps" class="list"></ul>
+
+    <div class="grid" style="margin-top:14px;">
+      <a class="btn btn-ghost" href="menu.html">Return</a>
+      <button id="clearBtn" class="btn btn-secondary">Clear Saved Score</button>
+    </div>
+  </section>
+</main>
+
+<script src="app.js"></script>
 </body>
 </html>
