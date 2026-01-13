@@ -94,33 +94,64 @@ function finishQuiz() {
   const maxScore = questions.length * 3;
   const percentage = Math.round((totalScore / maxScore) * 100);
 
-  let tier, explanation, advice, vibe;
+  // Profiles (same tone, more custom, less AI)
+  const profiles = [
+    {
+      max: 25,
+      tier: "Low overthinking",
+      vibe: "🧊 Ice Queen (Calm Brain)",
+      explain1: "You’re honestly pretty grounded. Even if something feels off, you don’t let one text control your whole mood. You’re good at not jumping to conclusions and you don’t need constant reassurance to feel okay.",
+      explain2: "You notice things, but you don’t spiral. You’re more like “I’ll see what happens” instead of stressing yourself out. That’s a flex tbh.",
+      advice: "Keep trusting patterns, not one message. If you’re confused, ask once and keep it moving.",
+      why: "You’ve probably learned that overthinking doesn’t actually fix anything, so you don’t waste energy on it."
+    },
+    {
+      max: 50,
+      tier: "Mild overthinking",
+      vibe: "🌙 Soft Thinker",
+      explain1: "You’re actually pretty emotionally aware. When things aren’t clear, you just feel it more. If the vibe changes or replies get slower, your brain automatically starts connecting dots.",
+      explain2: "You don’t jump straight to worst-case scenarios, but you do replay things and reread messages, wondering if you messed something up. It’s not drama — you just want clarity so you can relax again. This really just means you care and you’re sensitive to changes. You’re not delulu. You just need clear communication to feel settled.",
+      advice: "When you feel yourself starting to think too much, pause and ask: “Do I have proof or just vibes?” Then send ONE calm message if you need to.",
+      why: "You’re the type who reads the room fast, so when the room is confusing, your brain tries to fill in the missing parts."
+    },
+    {
+      max: 75,
+      tier: "High overthinking",
+      vibe: "🦋 Butterfly (Sensitive + Deep)",
+      explain1: "Okay butterfly… you feel everything. If someone replies dry, takes longer than usual, or the vibe changes even a little, you notice it right away. Your brain doesn’t do “wait and see” — it does “wait and panic” 😭",
+      explain2: "You care a lot, so you start trying to figure out what they meant, what you did, and what’s gonna happen next. It’s not because you’re crazy — it’s because you don’t like feeling unsure and you want things to be okay.",
+      advice: "Do not react in the moment. Put your phone down for 10–20 minutes, then come back. If you still feel weird, ask something simple like “Are we good?” and stop there.",
+      why: "You’re probably really loyal once you care, so your brain treats uncertainty like a threat."
+    },
+    {
+      max: 100,
+      tier: "Very high overthinking",
+      vibe: "🔥 Delulu Detective (Spiral Mode)",
+      explain1: "Not gonna lie… your brain turns into a whole detective sometimes. One “ok” can feel like a breakup. If someone’s energy changes, you start replaying everything, checking timing, and trying to figure out the “real meaning.”",
+      explain2: "When you don’t get clarity fast, your thoughts get loud. You might over-explain, double text, or keep checking if they’re mad — not because you’re weak, but because you’re anxious and you want the tension to go away.",
+      advice: "Emergency rule: don’t text when you’re panicking. Calm down first (water, breathe, walk, anything). Then send ONE clear message like “Are we good?” and leave it.",
+      why: "You probably hate not knowing where you stand, so your brain tries to solve it instantly… even when it can’t."
+    }
+  ];
 
-  if (percentage <= 25) {
-    tier = "Low overthinking";
-    explanation = "You usually read things pretty realistically. You don’t spiral off one message.";
-    advice = "Keep trusting patterns over one text. If something feels off, ask once and move on.";
-    vibe = "🧊 Calm Queen/King energy";
-  } else if (percentage <= 50) {
-    tier = "Mild overthinking";
-    explanation = "You’re mostly fine, but uncertainty can make you over-analyze little details.";
-    advice = "When you feel triggered, pause. Ask: “Do I have proof or just vibes?” Then act on proof.";
-    vibe = "🌙 Soft thinker energy";
-  } else if (percentage <= 75) {
-    tier = "High overthinking";
-    explanation = "You often mind-read and assume meanings that might not be there (especially in texts).";
-    advice = "Try a 10-minute delay before reacting. Focus more on actions than the exact wording.";
-    vibe = "🦋 Butterfly brain (sensitive + deep)";
-  } else {
-    tier = "Very high overthinking";
-    explanation = "Your brain is basically doing detective work 24/7. A text can flip your mood fast.";
-    advice = "If you’re spiraling, step away from the chat, breathe, and ask for clarity (not reassurance).";
-    vibe = "🔥 Delulu Detective (intense edition)";
-  }
+  const p = profiles.find(x => percentage <= x.max) || profiles[profiles.length - 1];
 
+  // Save result (keep old fields too so your other pages won't break)
   const data = getData();
   data.quizResult = {
-    percentage, tier, explanation, advice, vibe,
+    percentage,
+    tier: p.tier,
+    vibe: p.vibe,
+
+    // NEW: richer, less-AI copy
+    explain1: p.explain1,
+    explain2: p.explain2,
+    advice: p.advice,
+    why: p.why,
+
+    // Backwards compat (some pages might read "explanation")
+    explanation: p.explain1,
+
     at: new Date().toISOString()
   };
   setData(data);
