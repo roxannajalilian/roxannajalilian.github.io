@@ -1,25 +1,56 @@
-<div class="card center">
-  <div class="split">
-    <h2>Your Score</h2>
-    <button id="toMenu" class="secondary">Menu</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Results • Delulu Detector</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav>
+  <div class="brand">
+    <div class="logo">DD</div>
+    <div>
+      <div class="title">Results</div>
+      <div class="sub">Your score + bestie explanation</div>
+    </div>
   </div>
-
-  <div id="percent" class="big-number">—%</div>
-  <div id="tier" class="pill">—</div>
-
-  <hr>
-
-  <p id="bestieText" class="friend"></p>
-
-  <div class="notice">
-    <b>Why might you feel this way?</b>
-    <div class="chips" id="whyChips" style="margin-top:.6rem;"></div>
-    <div class="muted small" style="margin-top:.5rem;">Pick 1–2 that match you. It’ll adjust the advice.</div>
+  <div class="nav-right">
+    <a class="navlink" href="menu.html">Menu</a>
+    <a class="navlink" href="quiz.html">Quiz</a>
+    <a class="navlink" href="plan.html">Plan</a>
+    <a class="navlink" href="history.html">History</a>
   </div>
+</nav>
 
-  <div class="row" style="margin-top:1rem;">
-    <button id="toPlan" class="primary">Action Plan</button>
-    <button id="redo" class="secondary">Change answers</button>
-    <button id="save" class="secondary">Save to History</button>
+<div class="container">
+  <div class="card center">
+    <div class="row" style="justify-content:space-between;align-items:flex-start;">
+      <div>
+        <h2>Your Delulu Score</h2>
+        <p class="muted small" id="stamp"></p>
+      </div>
+      <button class="secondary" id="saveBtn" type="button">Save</button>
+    </div>
+
+    <div class="score-wrap" style="margin:1rem 0;">
+      <div class="score-circle">
+        <div class="score-num" id="pct">--%</div>
+        <div class="muted small" id="tier">—</div>
+      </div>
+    </div>
+
+    <div class="notice" id="explainBox"></div>
+
+    <div class="row" style="margin-top:1rem;">
+      <button class="primary" type="button" onclick="location.href='plan.html'">See my plan</button>
+      <button class="secondary" type="button" onclick="location.href='menu.html'">Back</button>
+      <button class="secondary" type="button" onclick="location.href='quiz.html'">Retake</button>
+    </div>
   </div>
 </div>
+
+<script src="result.js"></script>
+</body>
+</html>
