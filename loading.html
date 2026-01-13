@@ -2,35 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Calculating… • Delulu Detector</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delulu Detector • Loading</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <nav>
-  <div class="brand">
-    <div class="logo">DD</div>
-    <div>
-      <div class="title">Calculating…</div>
-      <div class="sub">Hang on bestie</div>
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div>
+        <div class="title">Analyzing…</div>
+        <div class="sub">One sec</div>
+      </div>
     </div>
-  </div>
-  <div class="nav-right">
-    <a class="navlink" href="menu.html">Menu</a>
-    <a class="navlink" href="quiz.html">Quiz</a>
+    <div class="nav-right">
+      <a class="navlink" href="menu.html">Menu</a>
+    </div>
   </div>
 </nav>
 
 <div class="container">
-  <div class="card center" style="text-align:center;">
-    <h2>Analyzing your answers…</h2>
-    <div class="ring"></div>
-    <p class="muted">Doing the math + decoding the delulu 😭</p>
+  <div class="card center">
+    <h1>Reading the vibes…</h1>
+    <p class="muted">Calculating your Delulu % and matching advice.</p>
+
+    <div class="circleWrap">
+      <div class="circle">
+        <div>
+          <div class="big" id="num">0%</div>
+          <div class="label">Loading</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:16px;">
+      <button class="secondary" onclick="location.href='menu.html'">Back to Menu</button>
+    </div>
   </div>
 </div>
 
-<script>
-  setTimeout(() => location.href = "results.html", 1400);
-</script>
+<script src="storage.js"></script>
+<script src="results.js"></script>
 </body>
 </html>
