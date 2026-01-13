@@ -1,51 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Quiz • Delulu Detector</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delulu Detector • Quiz</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <nav>
-  <div class="brand">
-    <div class="logo">DD</div>
-    <div>
-      <div class="title">Quiz</div>
-      <div class="sub">~2 minutes</div>
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div>
+        <div class="title">Delulu Quiz</div>
+        <div class="sub">Answer honestly (it’s for fun)</div>
+      </div>
     </div>
-  </div>
-  <div class="nav-right">
-    <a class="navlink" href="menu.html">Menu</a>
-    <a class="navlink active" href="quiz.html">Quiz</a>
-    <a class="navlink" href="scan.html">Analyze</a>
-    <a class="navlink" href="result.html">Results</a>
+    <div class="nav-right">
+      <a class="navlink" href="menu.html">Menu</a>
+      <a class="navlink" href="policy.html">Policy</a>
+    </div>
   </div>
 </nav>
 
 <div class="container">
-  <div class="card center">
-    <h2>Overthinking Questionnaire</h2>
+  <div class="card">
+    <div class="row spread">
+      <div class="muted" id="progressText">Question --</div>
+      <div class="pill" id="pillSave">Not saved yet</div>
+    </div>
 
-    <div id="progressText" class="muted"></div>
-    <div class="progress-bar"><div id="progressFill"></div></div>
+    <div class="progress" style="margin-top:10px;">
+      <div id="progressFill"></div>
+    </div>
 
-    <p id="questionText" class="muted" style="font-size:1.1rem;font-weight:800;margin:.2rem 0 1rem 0;"></p>
+    <h2 id="questionText" style="margin-top:16px;">Loading…</h2>
 
     <div class="answers">
-      <button class="answer" type="button" data-value="0">No</button>
-      <button class="answer" type="button" data-value="1">Sometimes</button>
-      <button class="answer" type="button" data-value="2">Yes</button>
-      <button class="answer" type="button" data-value="3">All the time</button>
+      <button class="answer" data-value="0">No</button>
+      <button class="answer" data-value="1">Sometimes</button>
+      <button class="answer" data-value="2">Yes</button>
+      <button class="answer" data-value="3">All the time</button>
     </div>
 
-    <div class="row" style="justify-content:space-between;margin-top:1rem;">
-      <button id="backBtn" class="secondary" type="button">Return</button>
-      <button id="nextBtn" class="primary" type="button">Next</button>
+    <hr/>
+
+    <div class="row spread">
+      <button class="secondary" id="backBtn">Return</button>
+      <button class="primary" id="nextBtn">Next</button>
     </div>
+
+    <div id="warn" class="notice" style="display:none;"></div>
   </div>
 </div>
 
+<div class="footer">Tip: you can’t skip a question • “Return” goes back one question</div>
+
+<script src="storage.js"></script>
 <script src="quiz.js"></script>
 </body>
 </html>
