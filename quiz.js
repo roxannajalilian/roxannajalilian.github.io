@@ -1,107 +1,134 @@
-const KEY="delulu_data_v1";
+const KEY = "delulu_data_v1";
 
+const questions = [
+  "I reread texts to find hidden meaning.",
+  "If someone replies late, I assume something is wrong.",
+  "I overthink emojis, punctuation, or short replies.",
+  "I imagine worst-case scenarios before having proof.",
+  "My mood depends on how fast someone texts back.",
+  "I check my phone repeatedly waiting for a reply.",
+  "I overanalyze one message instead of the whole conversation.",
+  "I assume tone or intention without asking.",
+  "I feel anxious if I don’t get reassurance.",
+  "I replay conversations in my head.",
+  "I read into what someone didn’t say.",
+  "I assume silence means something negative.",
+  "I want to double-text when anxious.",
+  "I focus more on texts than real-life actions.",
+  "I struggle to sit with uncertainty.",
+  "I overthink even when nothing is clearly wrong."
+];
+
+let current = 0;
+let answers = new Array(questions.length).fill(null);
+
+const qText = document.getElementById("questionText");
+const progressText = document.getElementById("progressText");
+const progressFill = document.getElementById("progressFill");
+const answerButtons = document.querySelectorAll(".answer");
+const backBtn = document.getElementById("backBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+// ---- storage helpers (only save final result, NOT answers) ----
 function getData(){
-  try{ return JSON.parse(localStorage.getItem(KEY) || "{}"); }
+  try { return JSON.parse(localStorage.getItem(KEY) || "{}"); }
   catch(e){ return {}; }
 }
 function setData(d){
   localStorage.setItem(KEY, JSON.stringify(d));
 }
 
-const pctEl = document.getElementById("pct");
-const tierEl = document.getElementById("tier");
-const box = document.getElementById("explainBox");
-const stamp = document.getElementById("stamp");
-const saveBtn = document.getElementById("saveBtn");
+// ---- quiz UI ----
+function renderQuestion() {
+  qText.textContent = questions[current];
+  progressText.textContent = `Question ${current + 1} of ${questions.length}`;
+  progressFill.style.width = `${((current + 1) / questions.length) * 100}%`;
 
-const d = getData();
-const r = d.quizResult;
+  // highlight selected
+  answerButtons.forEach(btn => {
+    btn.classList.remove("selected");
+    if (Number(btn.dataset.value) === answers[current]) {
+      btn.classList.add("selected");
+    }
+  });
 
-function buildText(percentage){
-  let tier, paragraph, why, advice;
+  backBtn.disabled = current === 0;
+  nextBtn.textContent = current === questions.length - 1 ? "Finish" : "Next";
+}
 
-  if(percentage <= 25){
-    tier="Low overthinking";
-    paragraph="You’re pretty grounded. You usually don’t jump to conclusions from one message, and you’re better at reading the bigger pattern.";
-    why=[
-      "You don’t rely on texting tone as ‘proof.’",
-      "You can sit with uncertainty better than most."
-    ];
-    advice=[
-      "Keep trusting patterns over single texts.",
-      "If you feel doubt: ask one calm question, then stop."
-    ];
-  } else if(percentage <= 50){
-    tier="Mild overthinking";
-    paragraph="You sometimes spiral, usually when things feel unclear or the vibe shifts. It’s not extreme — it’s your brain trying to get certainty.";
-    why=[
-      "Short replies can feel personal even when they aren’t.",
-      "Waiting for replies gives your brain time to imagine worst-case stories."
-    ];
-    advice=[
-      "Before reacting, ask: ‘evidence or assumption?’",
-      "Focus on actions + consistency, not texting style."
-    ];
-  } else if(percentage <= 75){
-    tier="High overthinking";
-    paragraph="You often read into messages, tone, or timing. When you’re anxious, your brain treats guesses like facts, which makes the spiral worse.";
-    why=[
-      "Your mind fills gaps with negative meanings.",
-      "Reassurance-seeking temporarily helps but fuels anxiety long-term."
-    ];
-    advice=[
-      "Don’t double-text while emotional — wait 20–30 mins.",
-      "Ask ONE direct clarity question instead of rereading."
-    ];
-  } else {
-    tier="Very high overthinking";
-    paragraph="This is giving ‘anxiety is driving.’ You’re reacting to uncertainty like it’s danger. You’re not crazy — you just need calm first, then clarity.";
-    why=[
-      "Uncertainty feels unbearable, so your mind makes up stories.",
-      "Rereading + checking your phone keeps your nervous system activated."
-    ];
-    advice=[
-      "Mute notifications for 30 minutes and ground yourself.",
-      "If it matters: ask for clarity once, then protect your peace."
-    ];
+answerButtons.forEach(btn => {
+  btn.onclick = () => {
+    answers[current] = Number(btn.dataset.value);
+    answerButtons.forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+  };
+});
+
+backBtn.onclick = () => {
+  if (current > 0) {
+    current--;
+    renderQuestion();
+  }
+};
+
+nextBtn.onclick = () => {
+  if (answers[current] === null) {
+    alert("Please select an answer before continuing.");
+    return;
   }
 
-  return {tier, paragraph, why, advice};
+  if (current < questions.length - 1) {
+    current++;
+    renderQuestion();
+  } else {
+    finishQuiz();
+  }
+};
+
+// ---- fun personality type ----
+function funTypeFromPercent(p){
+  if (p <= 25) return { name:"Butterfly Brain 🦋", blurb:"You’re chill and grounded — you notice details, but you don’t spiral hard." };
+  if (p <= 50) return { name:"Glow-Worm Thinker ✨", blurb:"You overthink sometimes, usually when things feel uncertain. You’re sensitive, not dramatic." };
+  if (p <= 75) return { name:"Detective Mode 🔎", blurb:"You read between the lines a LOT. Your brain wants answers immediately." };
+  return { name:"Storm Cloud Spiral ⛈️", blurb:"When you’re anxious, your mind fills in the blanks with worst-case stories. You need calm first." };
 }
 
-if(!r || typeof r.percentage !== "number"){
-  pctEl.textContent="--%";
-  tierEl.textContent="No result yet";
-  stamp.textContent="Take the quiz first.";
-  box.innerHTML = "Go to <b>Quiz</b>, finish it, then you’ll see your results here.";
-  saveBtn.disabled = true;
-} else {
-  const percentage = r.percentage;
-  const t = buildText(percentage);
+// ---- final scoring + save ONLY summary ----
+function finishQuiz() {
+  const totalScore = answers.reduce((a, b) => a + b, 0);
+  const maxScore = questions.length * 3;
+  const percentage = Math.round((totalScore / maxScore) * 100);
 
-  pctEl.textContent = `${percentage}%`;
-  tierEl.textContent = t.tier;
-  stamp.textContent = `Calculated: ${new Date().toLocaleString()}`;
+  let tier;
+  if (percentage <= 25) tier = "Low overthinking";
+  else if (percentage <= 50) tier = "Mild overthinking";
+  else if (percentage <= 75) tier = "High overthinking";
+  else tier = "Very high overthinking";
 
-  box.innerHTML = `
-    <b>Explanation:</b><br>${t.paragraph}<br><br>
-    <b>Why it rated you this way:</b><br>
-    • ${t.why.join("<br>• ")}<br><br>
-    <b>Bestie advice:</b><br>
-    • ${t.advice.join("<br>• ")}
-  `;
+  const fun = funTypeFromPercent(percentage);
 
-  saveBtn.onclick = () => {
-    const dd = getData();
-    dd.saved = Array.isArray(dd.saved) ? dd.saved : [];
-    dd.saved.unshift({
-      score: percentage,
-      tier: t.tier,
-      savedAt: new Date().toISOString()
-    });
-    dd.saved = dd.saved.slice(0, 30);
-    setData(dd);
-    alert("Saved ✅");
-    location.href = "loading.html";
+  const data = getData();
+  data.quizResult = {
+    percentage,
+    tier,
+    funType: fun.name,
+    funBlurb: fun.blurb,
+    savedAt: new Date().toISOString()
   };
+  setData(data);
+
+  // IMPORTANT: clear in-memory answers so if they come back it's fresh
+  current = 0;
+  answers = new Array(questions.length).fill(null);
+
+  // go to loading -> results
+  location.href = "loading.html";
 }
+
+// ---- ALWAYS reset when opening quiz page ----
+function resetQuizFresh(){
+  current = 0;
+  answers = new Array(questions.length).fill(null);
+}
+resetQuizFresh();
+renderQuestion();
