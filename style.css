@@ -190,3 +190,9 @@ button, a, input { position:relative; z-index:10; pointer-events:auto !important
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 
+.answer.selected{
+  border-color: rgba(83,255,214,.9);
+  box-shadow: 0 0 20px rgba(83,255,214,.25);
+  transform: translateY(-1px);
+}
+
