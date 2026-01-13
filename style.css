@@ -195,4 +195,12 @@ button, a, input { position:relative; z-index:10; pointer-events:auto !important
   box-shadow: 0 0 20px rgba(83,255,214,.25);
   transform: translateY(-1px);
 }
+/* === CLICK FIX: prevents invisible layers blocking buttons === */
+.container, .card, .notice, nav, .nav-right { position: relative; z-index: 1; }
+button, .answer, a, input, textarea { position: relative; z-index: 5; pointer-events: auto; }
+
+/* If you have a background overlay element, make it ignore clicks */
+.bg, .glow, .overlay, .blur, .backdrop {
+  pointer-events: none !important;
+}
 
