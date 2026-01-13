@@ -214,3 +214,10 @@ button, .answer, a, input, textarea { position: relative; z-index: 5; pointer-ev
   box-shadow: 0 0 18px rgba(83,255,214,.22);
   color: #dffff4;
 }
+/* Highlight Plan button on menu */
+.navlink.planLink{
+  border-color: rgba(83,255,214,.6);
+  box-shadow: 0 0 18px rgba(83,255,214,.25);
+  color: #dffff4;
+}
+
