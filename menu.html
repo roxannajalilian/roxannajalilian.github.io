@@ -1,73 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Menu • Delulu Detector</title>
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Delulu Detector - Menu</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<nav>
+<nav class="nav">
   <div class="brand">
     <div class="logo">DD</div>
-    <div>
-      <div class="title">Menu</div>
-      <div class="sub">Pick a section</div>
+    <div class="brand-text">
+      <div class="title">Delulu Detector</div>
+      <div class="sub">Menu</div>
     </div>
   </div>
 
-  <div class="nav-right">
+  <div class="nav-actions">
     <a class="navlink active" href="menu.html">Menu</a>
     <a class="navlink" href="quiz.html">Quiz</a>
-    <a class="navlink" href="scan.html">Analyze</a>
-    <a class="navlink" href="game.html">Mini Game</a>
-    <a class="navlink planLink" href="plan.html">Plan</a>
-    <a class="navlink" href="policy.html">Policy</a>
+
+    <!-- PLAN button with badge -->
+    <a class="navlink planlink" href="plan.html">
+      <span class="plan-ico" aria-hidden="true">◎</span>
+      <span>Plan</span>
+      <span id="planBadge" class="badge" title="Latest score">–</span>
+    </a>
   </div>
 </nav>
 
-<div class="container">
-  <div class="card center">
+<main class="container">
+  <section class="card">
+    <h1>What do you want to do?</h1>
+    <p class="muted">Take a quiz, then check your plan + advice.</p>
 
-    <div class="notice">
-      <h3>Analyze</h3>
-      <p class="muted">Paste messages → signals + score.</p>
-      <button class="primary" type="button" onclick="location.href='scan.html'">Open</button>
+    <div class="grid">
+      <a class="btn btn-primary" href="quiz.html">Start Quiz</a>
+      <a class="btn btn-secondary" href="plan.html">My Plan</a>
     </div>
 
-    <div class="notice" style="margin-top:1rem;">
-      <h3>Quiz</h3>
-      <p class="muted">~2 mins • accurate % • bestie advice at the end</p>
-      <button class="primary" type="button" onclick="location.href='quiz.html'">Open</button>
+    <hr class="hr"/>
+
+    <div class="tiny muted">
+      Tip: Your latest score saves automatically, so the Plan badge updates.
     </div>
+  </section>
+</main>
 
-
-<div class="notice" style="margin-top:1rem;">
-  <h3>Plan</h3>
-  <p class="muted">Personal plan based on your quiz score.</p>
-  <button class="secondary" type="button" onclick="location.href='plan.html'">Open</button>
-</div>
-
-    
-    <div class="notice" style="margin-top:1rem;">
-      <h3>Mini Game</h3>
-      <p class="muted">Delulu Dash (tap to jump)</p>
-      <button class="primary" type="button" onclick="location.href='game.html'">Play</button>
-    </div>
-    
-    <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:1rem 0;">
-
-    <div class="row" style="justify-content:space-between;flex-wrap:wrap;">
-      <button class="secondary" type="button" onclick="history.back()">Back</button>
-      <button class="secondary" type="button"
-        onclick="localStorage.removeItem('delulu_data_v1'); alert('Reset ✅'); location.href='index.html';">
-        Reset data
-      </button>
-    </div>
-
-  </div>
-</div>
-
+<script src="app.js"></script>
 </body>
 </html>
