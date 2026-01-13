@@ -350,3 +350,49 @@ document.addEventListener("DOMContentLoaded", () => {
     planLink.classList.add("is-active-plan");
   }
 });
+ // ===== AGE + PRIVACY LOGIC =====
+document.addEventListener("DOMContentLoaded", () => {
+  const ageInput = document.getElementById("ageInput");
+  const agreeBox = document.getElementById("agreeBox");
+  const continueBtn = document.getElementById("continueBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const ageMsg = document.getElementById("ageMsg");
+
+  if (!ageInput || !agreeBox || !continueBtn) return;
+
+  function updateButtonState(){
+    continueBtn.disabled = !agreeBox.checked;
+  }
+
+  agreeBox.addEventListener("change", updateButtonState);
+
+  continueBtn.addEventListener("click", () => {
+    const age = Number(ageInput.value);
+
+    if (!age){
+      ageMsg.textContent = "Please enter your age.";
+      return;
+    }
+
+    if (age < 18){
+      ageMsg.textContent = "Sorry, you must be 18 or older to continue.";
+      return;
+    }
+
+    ageMsg.style.color = "#4fe3d1";
+    ageMsg.textContent = "Approved. Redirecting…";
+
+    setTimeout(() => {
+      window.location.href = "menu.html";
+    }, 900);
+  });
+
+  resetBtn.addEventListener("click", () => {
+    ageInput.value = "";
+    agreeBox.checked = false;
+    ageMsg.textContent = "";
+    updateButtonState();
+  });
+
+  updateButtonState();
+});
