@@ -2,105 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delulu Detector</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Delulu Detector - Age</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<!-- SIMPLE NAV (NO MENU, NO BACK) -->
-<nav>
+<nav class="nav">
   <div class="brand">
     <div class="logo">DD</div>
-    <div>
+    <div class="brand-text">
       <div class="title">Delulu Detector</div>
       <div class="sub">Age verification</div>
     </div>
   </div>
 </nav>
 
-<div class="container">
-  <div class="card center">
+<main class="container">
+  <section class="card center">
     <h1>Start</h1>
-    <p class="muted">
-      Enter your age to continue. You must be 18 or older.
-    </p>
+    <p class="muted">Enter your age to continue. You must be 18 or older.</p>
 
-    <!-- AGE INPUT -->
-    <div class="field">
-      <label class="muted">Your age (18+)</label>
-      <input
-        id="ageInput"
-        type="number"
-        min="18"
-        max="120"
-        placeholder="e.g., 19"
-      />
-    </div>
-
-    <!-- TERMS -->
     <div class="row">
-      <label class="muted">
-        <input id="agreeChk" type="checkbox" />
-        I agree to the <a href="policy.html">Terms & Privacy</a>
-      </label>
+      <input id="ageInput" class="input" type="number" min="1" max="120" placeholder="Your age" />
+      <button id="ageBtn" class="btn btn-primary">Continue</button>
     </div>
 
-    <!-- BUTTONS (NO BACK) -->
-    <div class="row" style="margin-top:1rem;">
-      <button class="primary" type="button" onclick="startApp()">Continue</button>
-      <button class="secondary" type="button" onclick="resetApp()">Reset</button>
-    </div>
+    <p id="ageMsg" class="msg"></p>
 
-    <div id="msg" class="notice" style="display:none;"></div>
-  </div>
-</div>
+    <a class="link" href="menu.html">Skip (for testing)</a>
+  </section>
+</main>
 
-<div class="footer">
- Delulu Detector fun quiz, game and analyzer for friends!
-</div>
-
-<script>
-  const KEY = "delulu_data_v1";
-
-  function startApp(){
-    const age = Number(document.getElementById("ageInput").value);
-    const agree = document.getElementById("agreeChk").checked;
-    const msg = document.getElementById("msg");
-
-    msg.style.display = "none";
-
-    if (!agree) {
-      msg.textContent = "Please accept the Terms & Privacy.";
-      msg.style.display = "block";
-      return;
-    }
-
-    if (!age || age < 18) {
-      msg.textContent = "You must be 18 or older to use this app.";
-      msg.style.display = "block";
-      return;
-    }
-
-    let data = {};
-    try {
-      data = JSON.parse(localStorage.getItem(KEY) || "{}");
-    } catch (e) {
-      data = {};
-    }
-
-    data.age = age;
-    localStorage.setItem(KEY, JSON.stringify(data));
-
-    // GO TO REAL HOME (MENU)
-    location.href = "menu.html";
-  }
-
-  function resetApp(){
-    localStorage.removeItem(KEY);
-    alert("App reset.");
-  }
-</script>
-
+<script src="app.js"></script>
 </body>
 </html>
