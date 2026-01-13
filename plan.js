@@ -18,8 +18,8 @@ function planFor(p){
       <b>Grounded Plan (Low overthinking)</b><br><br>
       • Keep doing what you’re doing: trust patterns, not one text.<br>
       • If you feel doubt: write 1 sentence “What facts do I have?” then stop.<br>
-      • Don’t reread — skim once, then move on.<br><br>
-      <b>Mini goal:</b> Wait 10 minutes before replying when you feel anxious.
+      • Don’t reread try and skim once, then move on.<br><br>
+      <b>Mini goal:</b> Wait 5-10 minutes before replying when you feel anxious.
     `;
   }
   if(p <= 50){
@@ -43,10 +43,10 @@ function planFor(p){
   return `
     <b>Reset Plan (Very high overthinking)</b><br><br>
     • Your brain is treating uncertainty like danger. Calm first, then interpret.<br>
-    • Do a 60-second reset: breathe in 4, hold 4, out 6 (x5).<br>
+    • Do a 60-second reset when overthinking breathe in 4, hold 4, out 6 (x5).<br>
     • Stop rereading. One read only. Then do something physical (water, walk, shower).<br>
-    • If it’s serious: ask for clarity once. If they avoid it, protect your peace.<br><br>
-    <b>Mini goal:</b> No checking texts for 45 minutes after you feel triggered.
+    • If it’s serious: ask for clarity once regarding the issue. If they avoid it, protect your peace!<br><br>
+    <b>Mini goal:</b> No checking texts for 45 minutes after you feel triggered or upset.
   `;
 }
 
