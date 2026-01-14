@@ -3,318 +3,113 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Analysis</title>
-
-  <!-- ✅ Cache-bust CSS so GitHub Pages updates immediately -->
-  <link rel="stylesheet" href="style.css?v=7" />
+  <title>Delulu Detector • Age Check</title>
+  <link rel="stylesheet" href="style.css?v=8" />
 </head>
 <body>
-  <nav>
-    <div class="brand">
-      <div class="logo">DD</div>
-      <div>
-        <div class="title">Delulu Detector</div>
-        <div class="sub">Text + Photo Analyzer</div>
-      </div>
-    </div>
 
-    <div class="nav-actions">
-      <a class="btn ghost" href="start.html">Start</a>
-      <a class="btn" href="menu.html">Menu</a>
-      <a class="btn ghost" href="quiz.html">Quiz</a>
-      <a class="btn ghost" href="plan.html">Plan</a>
-      <a class="btn ghost" href="game.html">Game</a>
-    </div>
-  </nav>
+  <!-- NO NAV ON PURPOSE (LOCKED PAGE) -->
 
   <div class="container">
-    <div class="card">
+    <div class="card" style="max-width:520px; margin:60px auto;">
+      
+      <div style="display:flex; gap:14px; align-items:center; margin-bottom:14px;">
+        <div class="logo">DD</div>
+        <div>
+          <h1 style="margin:0;">Delulu Detector</h1>
+          <p class="muted" style="margin:2px 0 0;">18+ only</p>
+        </div>
+      </div>
+
+      <p class="muted">
+        This app contains relationship and emotional analysis intended for adults.
+        You must confirm you are <b>18 or older</b> to continue.
+      </p>
+
       <div class="section">
-        <h1 style="margin:0 0 6px;">Scan a convo</h1>
-        <p class="muted" style="margin:0;">
-          Paste text OR upload a screenshot/photo. (Photo is preview + your note — no OCR.)
-        </p>
+        <label for="ageInput">Enter your age</label>
+        <input
+          id="ageInput"
+          type="number"
+          min="18"
+          placeholder="18+ only"
+        />
       </div>
 
-      <div class="section grid-2">
-        <!-- LEFT -->
-        <div class="tile">
-          <label for="textInput">Paste messages (optional)</label>
-          <textarea id="textInput" rows="9" placeholder="Paste your convo here…"></textarea>
+      <p class="muted" id="errorText" style="display:none; color:#ff7a7a;">
+        You must be 18 or older to use this app.
+      </p>
 
-          <div class="hr"></div>
-
-          <label for="imgInput">Upload a screenshot/photo (optional)</label>
-
-          <!-- ✅ Visible input = most reliable (mobile + desktop) -->
-          <input
-            id="imgInput"
-            type="file"
-            accept="image/*"
-            style="width:100%; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.18); color:white;"
-          />
-
-          <div id="imgWrap" style="display:none; margin-top:12px;">
-            <div class="muted" style="margin:0 0 8px;">Preview</div>
-            <img
-              id="imgPreview"
-              alt="Uploaded preview"
-              style="width:100%; border-radius:16px; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.18);"
-            />
-
-            <label for="imgNote" style="margin-top:12px;">Photo note (optional)</label>
-            <input id="imgNote" type="text" placeholder='Example: "He left me on read for 6 hours"'>
-            <div class="row" style="margin-top:10px;">
-              <button class="btn ghost" id="removeImgBtn" type="button">Remove photo</button>
-            </div>
-          </div>
-
-          <div class="row" style="margin-top:14px;">
-            <button class="btn primary" id="analyzeBtn" type="button">Analyze</button>
-            <button class="btn" id="clearBtn" type="button">Clear</button>
-          </div>
-
-          <!-- ✅ Debug tells you EXACTLY what happened -->
-          <p class="muted" id="debug" style="margin:10px 0 0;"></p>
-        </div>
-
-        <!-- RIGHT -->
-        <div class="tile">
-          <h3 style="margin:0 0 8px;">Result</h3>
-
-          <div class="progress"><div id="bar"></div></div>
-          <h2 id="scoreText" style="margin:12px 0 6px;">—%</h2>
-          <p class="muted" id="summaryText" style="margin:0;">Run an analysis to see results.</p>
-
-          <div class="hr"></div>
-
-          <h3 style="margin:0 0 8px;">What it detected</h3>
-          <ul id="notes" style="margin:0; padding-left:18px;">
-            <li class="muted">No scan yet.</li>
-          </ul>
-
-          <div id="usedPhotoBox" style="display:none; margin-top:14px;">
-            <div class="hr"></div>
-            <h3 style="margin:0 0 8px;">Photo used</h3>
-            <p class="muted" id="photoNoteOut" style="margin:0 0 10px;"></p>
-            <img
-              id="photoOut"
-              alt="Photo used"
-              style="width:100%; border-radius:16px; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.18);"
-            />
-          </div>
-        </div>
+      <div class="row" style="margin-top:14px;">
+        <button class="btn primary" id="continueBtn" type="button">
+          Continue
+        </button>
       </div>
+
+      <div class="hr"></div>
+
+      <p class="muted" style="font-size:13px;">
+        Your age is stored only to verify access. No personal data is shared.
+      </p>
+
     </div>
   </div>
 
-  <!-- ✅ Cache-bust script too -->
   <script>
-    (() => {
-      const APP_KEY = "dd_app_v1";
-      function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
+    const APP_KEY = "dd_app_v1";
 
-      // 18+ gate
-      const data = getAppData();
-      if (!data.age || Number(data.age) < 18) {
-        // (this will redirect; if you keep getting kicked, it means age never saved)
-        window.location.replace("start.html");
+    function getAppData(){
+      try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); }
+      catch { return {}; }
+    }
+    function setAppData(data){
+      localStorage.setItem(APP_KEY, JSON.stringify(data));
+    }
+
+    const ageInput = document.getElementById("ageInput");
+    const continueBtn = document.getElementById("continueBtn");
+    const errorText = document.getElementById("errorText");
+
+    // 🔒 HARD LOCK: do NOT auto-redirect anywhere
+    // User MUST click Continue
+
+    continueBtn.addEventListener("click", () => {
+      const age = Number(ageInput.value);
+
+      // No input
+      if (!age) {
+        errorText.textContent = "Please enter your age.";
+        errorText.style.display = "block";
         return;
       }
 
-      const textInput = document.getElementById("textInput");
-      const imgInput = document.getElementById("imgInput");
-      const imgWrap = document.getElementById("imgWrap");
-      const imgPreview = document.getElementById("imgPreview");
-      const imgNote = document.getElementById("imgNote");
-      const removeImgBtn = document.getElementById("removeImgBtn");
-      const analyzeBtn = document.getElementById("analyzeBtn");
-      const clearBtn = document.getElementById("clearBtn");
-
-      const bar = document.getElementById("bar");
-      const scoreText = document.getElementById("scoreText");
-      const summaryText = document.getElementById("summaryText");
-      const notesEl = document.getElementById("notes");
-
-      const usedPhotoBox = document.getElementById("usedPhotoBox");
-      const photoNoteOut = document.getElementById("photoNoteOut");
-      const photoOut = document.getElementById("photoOut");
-
-      const debug = document.getElementById("debug");
-
-      let photoDataUrl = "";
-      let objectUrl = "";
-
-      function setNotes(items){
-        notesEl.innerHTML = items.map(x => `<li>${x}</li>`).join("");
-      }
-      function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
-
-      function resetPhoto(){
-        if (objectUrl) {
-          try { URL.revokeObjectURL(objectUrl); } catch {}
-          objectUrl = "";
-        }
-        imgInput.value = "";
-        imgWrap.style.display = "none";
-        imgPreview.src = "";
-        imgNote.value = "";
-        photoDataUrl = "";
-        usedPhotoBox.style.display = "none";
-        photoOut.src = "";
-        photoNoteOut.textContent = "";
+      // Under 18
+      if (age < 18) {
+        errorText.textContent = "Sorry — this app is 18+ only.";
+        errorText.style.display = "block";
+        return;
       }
 
-      // ✅ photo upload
-      imgInput.addEventListener("change", () => {
-        const file = imgInput.files && imgInput.files[0];
-        if (!file) {
-          debug.textContent = "No file chosen.";
-          return;
-        }
+      // ✅ Passed age check
+      errorText.style.display = "none";
 
-        debug.textContent = `Picked: ${file.name} (${Math.round(file.size/1024)} KB)`;
+      const data = getAppData();
+      data.age = age;
+      data.ageVerifiedAt = Date.now();
+      setAppData(data);
 
-        // image only
-        if (!file.type || !file.type.startsWith("image/")) {
-          debug.textContent = "That’s not an image file. Choose a screenshot/photo.";
-          resetPhoto();
-          return;
-        }
+      // Only NOW allow entry
+      window.location.href = "menu.html";
+    });
 
-        // ✅ MOST RELIABLE preview method
-        try {
-          if (objectUrl) URL.revokeObjectURL(objectUrl);
-          objectUrl = URL.createObjectURL(file);
-          imgPreview.src = objectUrl;
-          photoDataUrl = objectUrl; // we’ll reuse the same URL
-          imgWrap.style.display = "block";
-          debug.textContent = "Photo loaded ✅";
-          return;
-        } catch {}
-
-        // fallback: FileReader
-        const reader = new FileReader();
-        reader.onload = () => {
-          photoDataUrl = String(reader.result || "");
-          imgPreview.src = photoDataUrl;
-          imgWrap.style.display = "block";
-          debug.textContent = "Photo loaded ✅";
-        };
-        reader.onerror = () => {
-          debug.textContent = "Couldn’t read image. If you’re on iPhone, try a screenshot (PNG) instead of HEIC.";
-        };
-        reader.readAsDataURL(file);
-      });
-
-      removeImgBtn.addEventListener("click", () => {
-        resetPhoto();
-        debug.textContent = "Photo removed.";
-      });
-
-      function analyzeText(raw, note){
-        const t = (raw || "").trim();
-        const noteClean = (note || "").trim();
-
-        if (!t && !photoDataUrl) {
-          return { score: 0, summary: "Paste text or upload a photo first.", notes: ["Nothing to analyze yet."] };
-        }
-
-        const lower = t.toLowerCase();
-        const lines = t ? t.split(/\n+/).map(s => s.trim()).filter(Boolean) : [];
-
-        const signals = [];
-        const shutdown = ["k","kk","ok","okay","sure","fine","idk","nvm","whatever","seen","left on read","lol","nah","mhm","i guess"];
-        const hotWords = ["leave me alone","stop texting","i’m done","im done","blocked","unfollow","dont talk to me","forget it"];
-
-        const shortReplies = lines.filter(l => l.length <= 3).length;
-        const seenHits = (lower.match(/\bseen\b/g) || []).length + (lower.match(/left on read/g) || []).length;
-        const punctHits = (lower.match(/\.\.\./g) || []).length + (lower.match(/\?\?\?/g) || []).length + (lower.match(/!!+/g) || []).length;
-
-        let shutdownHits = 0;
-        shutdown.forEach(w => { if (lower.includes(w)) shutdownHits++; });
-
-        let hotHits = 0;
-        hotWords.forEach(w => { if (lower.includes(w)) hotHits++; });
-
-        let score = 0;
-        score += shortReplies * 6;
-        score += shutdownHits * 10;
-        score += seenHits * 14;
-        score += punctHits * 3;
-        score += hotHits * 16;
-
-        if (lines.length >= 18) score += 10;
-        if (lines.length >= 30) score += 10;
-
-        if (photoDataUrl) {
-          signals.push("Screenshot uploaded (used for context).");
-          score += 10;
-          if (noteClean) {
-            signals.push(`Photo note: “${noteClean}”.`);
-            score += 8;
-          } else {
-            signals.push("No photo note added (optional).");
-          }
-        }
-
-        score = clamp(Math.round(score), 0, 100);
-
-        if (t) {
-          if (shortReplies > 0) signals.push(`Short replies detected (${shortReplies}).`);
-          if (shutdownHits > 0) signals.push(`Dry/shutdown wording detected.`);
-          if (seenHits > 0) signals.push(`“Seen/left on read” detected.`);
-          if (punctHits > 0) signals.push(`Heavy punctuation detected.`);
-          if (hotHits > 0) signals.push(`Conflict/shutdown phrases detected.`);
-          if (signals.length === 0) signals.push("No obvious patterns detected from this text alone.");
-        } else {
-          signals.push("No text pasted — analysis based on screenshot + note only.");
-        }
-
-        const summary =
-          score >= 80 ? "High delulu risk 🚨 — protect your peace, don’t chase, get clarity once." :
-          score >= 60 ? "Moderate-high — mixed signals/dry energy present. Keep boundaries." :
-          score >= 40 ? "Medium — a few triggers. Focus on patterns, not one message." :
-          score >= 20 ? "Low — not many signals. Stay calm + direct." :
-                        "Very low — looks normal.";
-
-        return { score, summary, notes: signals };
+    // Prevent Enter key bypass
+    ageInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        continueBtn.click();
       }
-
-      function renderResult(result){
-        bar.style.width = `${result.score}%`;
-        scoreText.textContent = `${result.score}%`;
-        summaryText.textContent = result.summary;
-        setNotes(result.notes);
-
-        if (photoDataUrl) {
-          usedPhotoBox.style.display = "block";
-          photoOut.src = photoDataUrl;
-          photoNoteOut.textContent = imgNote.value.trim()
-            ? `Note: ${imgNote.value.trim()}`
-            : "No note was added for the photo.";
-        } else {
-          usedPhotoBox.style.display = "none";
-          photoOut.src = "";
-          photoNoteOut.textContent = "";
-        }
-      }
-
-      analyzeBtn.addEventListener("click", () => {
-        const result = analyzeText(textInput.value, imgNote.value);
-        renderResult(result);
-      });
-
-      clearBtn.addEventListener("click", () => {
-        textInput.value = "";
-        bar.style.width = "0%";
-        scoreText.textContent = "—%";
-        summaryText.textContent = "Run an analysis to see results.";
-        setNotes(["No scan yet."]);
-        resetPhoto();
-        debug.textContent = "";
-      });
-    })();
+    });
   </script>
+
 </body>
 </html>
