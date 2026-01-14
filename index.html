@@ -18,6 +18,7 @@
     <div class="nav-actions">
       <a class="btn" href="privacy.html">Privacy</a>
       <a class="btn ghost" href="menu.html">Menu</a>
+      <button class="btn ghost" id="resetAllTop" type="button">Reset App</button>
     </div>
   </nav>
 
@@ -47,7 +48,7 @@
         </div>
 
         <p class="muted" style="margin-top:12px;">
-          Tip: If your index keeps redirecting, open <b>index.html?stay=1</b>
+          If your site keeps opening the menu, click <b>Start</b> or use <b>index.html?stay=1</b>.
         </p>
       </div>
 
@@ -67,22 +68,22 @@
     const agreeBox = document.getElementById("agreeBox");
     const continueBtn = document.getElementById("continueBtn");
     const resetBtn = document.getElementById("resetBtn");
+    const resetAllTop = document.getElementById("resetAllTop");
     const errorText = document.getElementById("errorText");
     const lockBox = document.getElementById("lockBox");
     const lockMsg = document.getElementById("lockMsg");
 
-    function showError(msg){ errorText.style.display = "block"; errorText.textContent = msg; }
-    function clearError(){ errorText.style.display = "none"; errorText.textContent = ""; }
+    function showError(msg){ errorText.style.display="block"; errorText.textContent=msg; }
+    function clearError(){ errorText.style.display="none"; errorText.textContent=""; }
 
-    // enable continue only if agreed
     agreeBox.addEventListener("change", () => {
       continueBtn.disabled = !agreeBox.checked;
     });
 
-    // ✅ FIX: only auto-skip to menu if NOT forcing stay
+    // ✅ FIX: do NOT auto-skip when stay=1
     (function autoSkip(){
       const params = new URLSearchParams(window.location.search);
-      const stay = params.get("stay") === "1"; // open index.html?stay=1 to stay here
+      const stay = params.get("stay") === "1";
       if (stay) return;
 
       const data = getAppData();
@@ -95,7 +96,7 @@
       clearError();
       const age = Number(ageInput.value);
 
-      if(!age || age < 1 || age > 120){
+      if (!age || age < 1 || age > 120) {
         showError("Enter a valid age (1–120).");
         return;
       }
@@ -104,7 +105,7 @@
       data.age = age;
       setAppData(data);
 
-      if(age < 18){
+      if (age < 18) {
         lockBox.style.display = "block";
         lockMsg.textContent = "Sorry — you must be 18 or older to use this app. Redirecting…";
         setTimeout(() => window.location.href = "https://www.google.com", 1200);
@@ -114,22 +115,13 @@
       window.location.href = "menu.html";
     });
 
-    ageInput.addEventListener("keydown", (e) => {
-      if(e.key === "Enter" && !continueBtn.disabled) continueBtn.click();
-    });
-
-    resetBtn.addEventListener("click", () => {
+    function resetAll(){
       localStorage.removeItem(APP_KEY);
-      ageInput.value = "";
-      agreeBox.checked = false;
-      continueBtn.disabled = true;
-      clearError();
-      lockBox.style.display = "none";
-      // keep you on the start page
-      if (!window.location.search.includes("stay=1")) {
-        window.location.href = "index.html?stay=1";
-      }
-    });
+      window.location.replace("index.html?stay=1");
+    }
+
+    resetBtn.addEventListener("click", resetAll);
+    resetAllTop.addEventListener("click", resetAll);
   </script>
 </body>
 </html>
