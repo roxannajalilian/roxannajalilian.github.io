@@ -12,7 +12,7 @@
       <div class="logo">DD</div>
       <div>
         <div class="title">Delulu Detector</div>
-        <div class="sub">Age verification</div>
+        <div class="sub">Start</div>
       </div>
     </div>
     <div class="nav-actions">
@@ -46,10 +46,6 @@
           <button class="btn primary" id="continueBtn" type="button" disabled>Continue</button>
           <button class="btn ghost" id="resetBtn" type="button">Reset</button>
         </div>
-
-        <p class="muted" style="margin-top:12px;">
-          If your site keeps opening the menu, click <b>Start</b> or use <b>index.html?stay=1</b>.
-        </p>
       </div>
 
       <div class="section item" id="lockBox" style="display:none;">
@@ -80,23 +76,11 @@
       continueBtn.disabled = !agreeBox.checked;
     });
 
-    // ✅ FIX: do NOT auto-skip when stay=1
-    (function autoSkip(){
-      const params = new URLSearchParams(window.location.search);
-      const stay = params.get("stay") === "1";
-      if (stay) return;
-
-      const data = getAppData();
-      if (data && Number(data.age) >= 18) {
-        window.location.href = "menu.html";
-      }
-    })();
-
     continueBtn.addEventListener("click", () => {
       clearError();
       const age = Number(ageInput.value);
 
-      if (!age || age < 1 || age > 120) {
+      if(!age || age < 1 || age > 120){
         showError("Enter a valid age (1–120).");
         return;
       }
@@ -105,7 +89,7 @@
       data.age = age;
       setAppData(data);
 
-      if (age < 18) {
+      if(age < 18){
         lockBox.style.display = "block";
         lockMsg.textContent = "Sorry — you must be 18 or older to use this app. Redirecting…";
         setTimeout(() => window.location.href = "https://www.google.com", 1200);
@@ -117,7 +101,11 @@
 
     function resetAll(){
       localStorage.removeItem(APP_KEY);
-      window.location.replace("index.html?stay=1");
+      ageInput.value = "";
+      agreeBox.checked = false;
+      continueBtn.disabled = true;
+      clearError();
+      lockBox.style.display = "none";
     }
 
     resetBtn.addEventListener("click", resetAll);
