@@ -30,11 +30,12 @@
       <div class="section">
         <h1 style="margin:0 0 6px;">Scan a convo</h1>
         <p class="muted" style="margin:0;">
-          Paste the convo OR upload a screenshot. (Screenshot is for preview + notes — not real OCR.)
+          Paste text or add a screenshot/photo. (Photo is preview + notes only — not real OCR.)
         </p>
       </div>
 
       <div class="section grid-2">
+
         <!-- LEFT -->
         <div class="tile">
           <label for="textInput">Paste messages (optional)</label>
@@ -42,18 +43,31 @@
 
           <div class="hr"></div>
 
-          <label for="imgInput">Add a screenshot/photo (optional)</label>
-          <input id="imgInput" type="file" accept="image/*" />
+          <label>Screenshot / Photo (optional)</label>
 
-          <div id="imgWrap" style="display:none; margin-top:10px;">
+          <!-- Hidden file input (more reliable) -->
+          <input
+            id="imgInput"
+            type="file"
+            accept="image/*"
+            capture="environment"
+            style="display:none;"
+          />
+
+          <div class="row" style="margin-top:10px;">
+            <button class="btn primary" id="pickPhotoBtn" type="button">Choose Photo</button>
+            <button class="btn ghost" id="removeImgBtn" type="button" style="display:none;">Remove</button>
+          </div>
+
+          <div id="imgWrap" style="display:none; margin-top:12px;">
             <div class="muted" style="margin:0 0 8px;">Preview</div>
-            <img id="imgPreview" alt="Uploaded preview"
-                 style="width:100%; border-radius:16px; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.18);" />
-            <div class="row" style="margin-top:10px;">
-              <button class="btn ghost" id="removeImgBtn" type="button">Remove photo</button>
-            </div>
+            <img
+              id="imgPreview"
+              alt="Uploaded preview"
+              style="width:100%; border-radius:16px; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.18);"
+            />
 
-            <label for="imgNote" style="margin-top:12px;">Photo note (what should the app “notice”?)</label>
+            <label for="imgNote" style="margin-top:12px;">Photo note (optional)</label>
             <input id="imgNote" type="text" placeholder='Example: "He left me on read for 6 hours"'>
           </div>
 
@@ -62,8 +76,9 @@
             <button class="btn" id="clearBtn" type="button">Clear</button>
           </div>
 
-          <p class="muted" style="margin:10px 0 0;">
-            Tip: If you upload a screenshot, add a “Photo note” so it looks more realistic in your project.
+          <p class="muted" id="photoHelp" style="margin:10px 0 0;">
+            If nothing happens when you click “Choose Photo”, you’re probably opening the file locally.
+            Open it through GitHub Pages (or a live server).
           </p>
         </div>
 
@@ -71,10 +86,7 @@
         <div class="tile">
           <h3 style="margin:0 0 8px;">Result</h3>
 
-          <div class="progress" aria-label="score bar">
-            <div id="bar"></div>
-          </div>
-
+          <div class="progress"><div id="bar"></div></div>
           <h2 id="scoreText" style="margin:12px 0 6px;">—%</h2>
           <p class="muted" id="summaryText" style="margin:0;">Run an analysis to see results.</p>
 
@@ -89,14 +101,217 @@
             <div class="hr"></div>
             <h3 style="margin:0 0 8px;">Photo used</h3>
             <p class="muted" id="photoNoteOut" style="margin:0 0 10px;"></p>
-            <img id="photoOut" alt="Photo used"
-                 style="width:100%; border-radius:16px; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.18);" />
+            <img
+              id="photoOut"
+              alt="Photo used"
+              style="width:100%; border-radius:16px; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.18);"
+            />
           </div>
+
+          <p class="muted" id="debug" style="margin-top:12px;"></p>
         </div>
+
       </div>
     </div>
   </div>
 
-  <script src="scan.js?v=2"></script>
+  <script>
+    (() => {
+      const APP_KEY = "dd_app_v1";
+      function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
+
+      const data = getAppData();
+      if (!data.age || Number(data.age) < 18) {
+        window.location.replace("start.html");
+        return;
+      }
+
+      const textInput = document.getElementById("textInput");
+      const imgInput = document.getElementById("imgInput");
+      const pickPhotoBtn = document.getElementById("pickPhotoBtn");
+      const removeImgBtn = document.getElementById("removeImgBtn");
+      const imgWrap = document.getElementById("imgWrap");
+      const imgPreview = document.getElementById("imgPreview");
+      const imgNote = document.getElementById("imgNote");
+      const analyzeBtn = document.getElementById("analyzeBtn");
+      const clearBtn = document.getElementById("clearBtn");
+
+      const bar = document.getElementById("bar");
+      const scoreText = document.getElementById("scoreText");
+      const summaryText = document.getElementById("summaryText");
+      const notesEl = document.getElementById("notes");
+      const usedPhotoBox = document.getElementById("usedPhotoBox");
+      const photoNoteOut = document.getElementById("photoNoteOut");
+      const photoOut = document.getElementById("photoOut");
+      const debug = document.getElementById("debug");
+
+      let photoDataUrl = "";
+
+      function setNotes(items){
+        notesEl.innerHTML = items.map(x => `<li>${x}</li>`).join("");
+      }
+
+      function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+
+      // Button triggers file picker reliably
+      pickPhotoBtn.addEventListener("click", () => {
+        debug.textContent = "";
+        imgInput.click();
+      });
+
+      // When file chosen
+      imgInput.addEventListener("change", () => {
+        const file = imgInput.files && imgInput.files[0];
+        if (!file) {
+          debug.textContent = "No file selected.";
+          return;
+        }
+
+        // Safety: image only
+        if (!file.type.startsWith("image/")) {
+          debug.textContent = "That file isn’t an image. Choose a photo/screenshot.";
+          imgInput.value = "";
+          return;
+        }
+
+        // Read and preview
+        const reader = new FileReader();
+        reader.onload = () => {
+          photoDataUrl = String(reader.result || "");
+          imgPreview.src = photoDataUrl;
+          imgWrap.style.display = "block";
+          removeImgBtn.style.display = "inline-flex";
+          debug.textContent = "Photo added ✅";
+        };
+        reader.onerror = () => {
+          debug.textContent = "Couldn’t read that image. Try a different one.";
+        };
+        reader.readAsDataURL(file);
+      });
+
+      removeImgBtn.addEventListener("click", () => {
+        imgInput.value = "";
+        imgWrap.style.display = "none";
+        imgPreview.src = "";
+        imgNote.value = "";
+        photoDataUrl = "";
+        removeImgBtn.style.display = "none";
+        usedPhotoBox.style.display = "none";
+        debug.textContent = "Photo removed.";
+      });
+
+      function analyzeText(raw, photoNoteText){
+        const t = (raw || "").trim();
+        const photoNoteClean = (photoNoteText || "").trim();
+
+        if (!t && !photoDataUrl) {
+          return { score: 0, summary: "Paste text or add a photo first.", notes: ["Nothing to analyze yet."] };
+        }
+
+        const lower = t.toLowerCase();
+        const lines = t ? t.split(/\n+/).map(s => s.trim()).filter(Boolean) : [];
+
+        const signals = [];
+        const shutdown = ["k","kk","ok","okay","sure","fine","idk","nvm","whatever","seen","left on read","lol","nah","mhm","i guess"];
+        const hotWords = ["leave me alone","stop texting","i’m done","im done","blocked","unfollow","dont talk to me","forget it"];
+
+        const shortReplies = lines.filter(l => l.length <= 3).length;
+        const seenHits = (lower.match(/\bseen\b/g) || []).length + (lower.match(/left on read/g) || []).length;
+        const punctHits = (lower.match(/\.\.\./g) || []).length + (lower.match(/\?\?\?/g) || []).length + (lower.match(/!!+/g) || []).length;
+
+        let shutdownHits = 0;
+        shutdown.forEach(w => { if (lower.includes(w)) shutdownHits++; });
+
+        let hotHits = 0;
+        hotWords.forEach(w => { if (lower.includes(w)) hotHits++; });
+
+        let score = 0;
+        score += shortReplies * 6;
+        score += shutdownHits * 10;
+        score += seenHits * 14;
+        score += punctHits * 3;
+        score += hotHits * 16;
+
+        if (lines.length >= 18) score += 10;
+        if (lines.length >= 30) score += 10;
+
+        if (photoDataUrl) {
+          signals.push("Screenshot uploaded (used for context).");
+          score += 10;
+          if (photoNoteClean) {
+            signals.push(`Photo note: “${photoNoteClean}”.`);
+            score += 8;
+          } else {
+            signals.push("No photo note added (optional).");
+          }
+        }
+
+        score = clamp(Math.round(score), 0, 100);
+
+        if (t) {
+          if (shortReplies > 0) signals.push(`Short replies detected (${shortReplies}).`);
+          if (shutdownHits > 0) signals.push(`Dry/shutdown wording detected.`);
+          if (seenHits > 0) signals.push(`“Seen/left on read” detected.`);
+          if (punctHits > 0) signals.push(`Heavy punctuation detected.`);
+          if (hotHits > 0) signals.push(`Conflict/shutdown phrases detected.`);
+          if (signals.length === 0) signals.push("No obvious patterns detected from this text alone.");
+        } else {
+          signals.push("No text pasted — analysis based on screenshot + note only.");
+        }
+
+        const summary =
+          score >= 80 ? "High delulu risk 🚨 — protect your peace, don’t chase, get clarity once." :
+          score >= 60 ? "Moderate-high — mixed signals/dry energy present. Keep boundaries." :
+          score >= 40 ? "Medium — a few triggers. Focus on patterns, not one message." :
+          score >= 20 ? "Low — not many signals. Stay calm + direct." :
+                        "Very low — looks normal.";
+
+        return { score, summary, notes: signals };
+      }
+
+      function renderResult(result){
+        bar.style.width = `${result.score}%`;
+        scoreText.textContent = `${result.score}%`;
+        summaryText.textContent = result.summary;
+        setNotes(result.notes);
+
+        if (photoDataUrl) {
+          usedPhotoBox.style.display = "block";
+          photoOut.src = photoDataUrl;
+          photoNoteOut.textContent = imgNote.value.trim()
+            ? `Note: ${imgNote.value.trim()}`
+            : "No note was added for the photo.";
+        } else {
+          usedPhotoBox.style.display = "none";
+          photoOut.src = "";
+          photoNoteOut.textContent = "";
+        }
+      }
+
+      analyzeBtn.addEventListener("click", () => {
+        const result = analyzeText(textInput.value, imgNote.value);
+        renderResult(result);
+      });
+
+      clearBtn.addEventListener("click", () => {
+        textInput.value = "";
+        bar.style.width = "0%";
+        scoreText.textContent = "—%";
+        summaryText.textContent = "Run an analysis to see results.";
+        setNotes(["No scan yet."]);
+
+        imgInput.value = "";
+        imgWrap.style.display = "none";
+        imgPreview.src = "";
+        imgNote.value = "";
+        photoDataUrl = "";
+        removeImgBtn.style.display = "none";
+        usedPhotoBox.style.display = "none";
+        photoOut.src = "";
+        photoNoteOut.textContent = "";
+        debug.textContent = "";
+      });
+    })();
+  </script>
 </body>
 </html>
