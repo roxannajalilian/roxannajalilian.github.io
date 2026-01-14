@@ -1,45 +1,45 @@
-import { getData, setData, lockOut } from "./gate.js";
+const APP_KEY = "dd_app_v1";
 
-const ageEl = document.getElementById("age");
-const agreeEl = document.getElementById("agree");
-const msg = document.getElementById("msg");
-const continueBtn = document.getElementById("continueBtn");
-const resetBtn = document.getElementById("resetBtn");
-const readBtn = document.getElementById("readBtn");
-
-readBtn?.addEventListener("click", () => {
-  msg.textContent = "Read aloud coming soon.";
-});
-
-function show(m) {
-  msg.textContent = m;
+function getAppData(){
+  try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); }
+  catch { return {}; }
 }
 
-// index.html is main page: do NOT auto-redirect on load
+function requireVerifiedOrGoStart(){
+  const d = getAppData();
+  if (!d.age || Number(d.age) < 18) {
+    window.location.replace("index.html?stay=1");
+  }
+}
 
-continueBtn.addEventListener("click", () => {
-  const age = Number(ageEl.value);
+function wireReset(){
+  const btn = document.getElementById("resetAll");
+  if (!btn) return;
 
-  if (!agreeEl.checked) return show("Please agree to the Terms & Privacy.");
-  if (!Number.isFinite(age) || age < 1 || age > 120) return show("Enter a valid age.");
+  btn.addEventListener("click", () => {
+    localStorage.removeItem(APP_KEY);
+    window.location.replace("index.html?stay=1");
+  });
+}
 
-  if (age < 18) {
-    lockOut("Sorry — you must be 18 or older to use this app.");
+function showLastScore(){
+  const el = document.getElementById("lastScore");
+  if (!el) return;
+
+  const d = getAppData();
+  const last = d.lastQuiz;
+
+  if (!last) {
+    el.textContent = "No quiz score yet — take the quiz to generate a plan.";
     return;
   }
 
-  const data = getData();
-  data.age = age;
-  data.lockedOut = false;
-  data.lockReason = "";
-  setData(data);
+  const when = new Date(last.savedAt || Date.now());
+  const dateText = isNaN(when.getTime()) ? "" : ` • saved ${when.toLocaleString()}`;
 
-  window.location.replace("menu.html");
-});
+  el.textContent = `Last quiz: ${last.percent}%${dateText}`;
+}
 
-resetBtn.addEventListener("click", () => {
-  setData({});
-  ageEl.value = "";
-  agreeEl.checked = false;
-  show("Reset.");
-});
+requireVerifiedOrGoStart();
+wireReset();
+showLastScore();
