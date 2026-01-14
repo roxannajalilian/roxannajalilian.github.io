@@ -4,238 +4,242 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Quiz</title>
-  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* BASIC RESET */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: linear-gradient(135deg, #2b0f4a, #101020 45%, #083b5e);
+      color: #fff;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+      background: rgba(0,0,0,.3);
+      backdrop-filter: blur(10px);
+    }
+    .brand { display: flex; gap: 10px; align-items: center; }
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.1);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+    .title { font-weight: 800; }
+    .sub { font-size: 12px; opacity: .7; }
+
+    .btn {
+      border: 1px solid rgba(255,255,255,.2);
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    /* LAYOUT */
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 16px;
+    }
+    .card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .badges { display: flex; gap: 8px; margin-bottom: 12px; }
+    .badge {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.08);
+      font-size: 13px;
+    }
+
+    h2 { margin: 0 0 6px; }
+    .muted { opacity: .7; }
+
+    /* CHOICES */
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+    @media (max-width: 700px) {
+      .choice-grid { grid-template-columns: 1fr; }
+    }
+
+    .choice {
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.06);
+      cursor: pointer;
+      transition: transform .12s ease;
+    }
+    .choice b { display: block; }
+    .choice span { font-size: 13px; opacity: .7; }
+
+    /* RESULT */
+    .progress {
+      height: 14px;
+      background: rgba(255,255,255,.1);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+    .progress div {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #7c4dff, #5ae6a0);
+    }
+  </style>
 </head>
+
 <body>
-  <nav>
-    <div class="brand">
-      <div class="logo">DD</div>
-      <div>
-        <div class="title">Delulu Detector</div>
-        <div class="sub">Quiz</div>
-      </div>
-    </div>
 
-    <div class="nav-actions">
-      <a class="btn ghost" href="start.html">Start</a>
-      <a class="btn" href="menu.html">Menu</a>
-      <a class="btn ghost" href="plan.html">Plan</a>
-    </div>
-  </nav>
-
-  <div class="container">
-    <div class="card">
-      <div class="toolbar">
-        <div class="toolbar-left">
-          <span class="badge" id="qCount">Question …</span>
-          <span class="badge" id="progressBadge">…</span>
-          <span class="badge" id="jsStatus">JS OK ✅</span>
-        </div>
-        <div class="toolbar-right">
-          <button class="btn ghost" id="prevBtn" type="button">Previous</button>
-          <button class="btn ghost" id="restartBtn" type="button">Restart</button>
-        </div>
-      </div>
-
-      <div class="quiz-wrap section">
-        <div class="quiz-question">
-          <h2 id="questionText" style="margin:0 0 6px;">Loading…</h2>
-          <p class="muted" id="questionHint" style="margin:0;">Tap a choice.</p>
-        </div>
-
-        <div class="choice-grid">
-          <button class="btn choice primary" data-val="3" type="button">
-            <b>Yes (a lot)</b><span>Strong signal</span>
-          </button>
-          <button class="btn choice" data-val="2" type="button">
-            <b>Sometimes</b><span>Not always</span>
-          </button>
-          <button class="btn choice" data-val="1" type="button">
-            <b>Rarely</b><span>Once in a while</span>
-          </button>
-          <button class="btn choice ghost" data-val="0" type="button">
-            <b>No</b><span>Doesn’t apply</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="section" id="resultArea" style="display:none;">
-        <h2 style="margin:0 0 8px;">Your Result</h2>
-        <div class="progress" style="margin:10px 0;"><div id="bar"></div></div>
-        <h3 id="percentText" style="margin:0 0 6px;">0%</h3>
-        <p class="muted" id="adviceText" style="margin:0;"></p>
-
-        <div class="row" style="margin-top:14px;">
-          <a class="btn primary" href="plan.html">Go to Plan</a>
-          <a class="btn" href="menu.html">Back to Menu</a>
-        </div>
-      </div>
-
-      <p class="muted" id="debug" style="margin-top:14px; display:none;"></p>
+<nav>
+  <div class="brand">
+    <div class="logo">DD</div>
+    <div>
+      <div class="title">Delulu Detector</div>
+      <div class="sub">Quiz</div>
     </div>
   </div>
+  <div>
+    <a class="btn" href="menu.html">Menu</a>
+  </div>
+</nav>
 
-  <script>
-    const APP_KEY="dd_app_v1";
-    function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY)||"{}"); } catch { return {}; } }
-    function setAppData(d){ localStorage.setItem(APP_KEY, JSON.stringify(d)); }
+<div class="container">
+  <div class="card">
 
-    // age gate
-    const u=getAppData();
-    if(!u.age || Number(u.age) < 18) location.replace("start.html");
+    <div class="badges">
+      <div class="badge" id="qCount">Question 1/10</div>
+      <div class="badge" id="progress">0%</div>
+    </div>
 
-    const questions=[
-      {q:"Do you reread texts to find hidden meaning?",h:"Searching for clues in one word."},
-      {q:"Do you assume silence means they’re mad?",h:"No reply = panic."},
-      {q:"Do you overthink punctuation (… / lol / k)?",h:"Dot dot dot trauma."},
-      {q:"Do you check activity for hints?",h:"Detective mode."},
-      {q:"Do you type/delete/retype a reply a lot?",h:"Pressure to be perfect."},
-      {q:"Do you double-text because you feel ignored?",h:"Chase mode."},
-      {q:"Do you replay the convo in your head for hours?",h:"Looping thoughts."},
-      {q:"Do you ignore signs because you want it to work?",h:"Hope goggles."},
-      {q:"Does your mood depend on their reply?",h:"High/low based on texts."},
-      {q:"Do you excuse disrespect (dry/rude/disappearing)?",h:"Bare minimum defense."}
-    ];
+    <h2 id="questionText">Loading…</h2>
+    <p class="muted" id="questionHint"></p>
 
-    let idx=0;
-    const answers=new Array(questions.length).fill(null);
+    <div class="choice-grid">
+      <div class="choice" data-val="3"><b>Yes (a lot)</b><span>Strong signal</span></div>
+      <div class="choice" data-val="2"><b>Sometimes</b><span>Not always</span></div>
+      <div class="choice" data-val="1"><b>Rarely</b><span>Once in a while</span></div>
+      <div class="choice" data-val="0"><b>No</b><span>Doesn’t apply</span></div>
+    </div>
 
-    const qCount=document.getElementById("qCount");
-    const progressBadge=document.getElementById("progressBadge");
-    const questionText=document.getElementById("questionText");
-    const questionHint=document.getElementById("questionHint");
-    const prevBtn=document.getElementById("prevBtn");
-    const restartBtn=document.getElementById("restartBtn");
+    <div id="result" style="display:none; margin-top:20px;">
+      <h2>Your Result</h2>
+      <div class="progress"><div id="bar"></div></div>
+      <h3 id="percent">0%</h3>
+      <p class="muted" id="advice"></p>
+      <a class="btn" href="plan.html">Go to Plan</a>
+    </div>
 
-    const resultArea=document.getElementById("resultArea");
-    const bar=document.getElementById("bar");
-    const percentText=document.getElementById("percentText");
-    const adviceText=document.getElementById("adviceText");
-    const debug=document.getElementById("debug");
+  </div>
+</div>
 
-    const choiceButtons = Array.from(document.querySelectorAll("button[data-val]"));
+<script>
+  const APP_KEY = "dd_app_v1";
+  const data = JSON.parse(localStorage.getItem(APP_KEY) || "{}");
+  if (!data.age || data.age < 18) location.href = "start.html";
 
-    function showDebug(msg){ debug.style.display="block"; debug.textContent=msg; }
-    function hideDebug(){ debug.style.display="none"; debug.textContent=""; }
+  const questions = [
+    ["Do you reread texts to find hidden meaning?", "Searching for clues in one word."],
+    ["Do you assume silence means they’re mad?", "No reply = panic."],
+    ["Do you overthink punctuation?", "Dot dot dot trauma."],
+    ["Do you check activity for hints?", "Detective mode."],
+    ["Do you rewrite replies multiple times?", "Pressure to be perfect."],
+    ["Do you double text?", "Chase mode."],
+    ["Do you replay convos in your head?", "Looping thoughts."],
+    ["Do you ignore red flags?", "Hope goggles."],
+    ["Does your mood depend on replies?", "High/low emotions."],
+    ["Do you excuse disrespect?", "Bare minimum defense."]
+  ];
 
-    function answeredCount(){ return answers.filter(v=>v!==null).length; }
-    function scoreNow(){ return answers.reduce((s,v)=>s+(v??0),0); }
+  let i = 0;
+  let score = 0;
 
-    function clearChoiceClasses(btn){
-      btn.classList.remove("selected","sel-0","sel-1","sel-2","sel-3","tap");
-    }
+  const qCount = document.getElementById("qCount");
+  const progress = document.getElementById("progress");
+  const qText = document.getElementById("questionText");
+  const qHint = document.getElementById("questionHint");
+  const choices = document.querySelectorAll(".choice");
+  const result = document.getElementById("result");
+  const bar = document.getElementById("bar");
+  const percent = document.getElementById("percent");
+  const advice = document.getElementById("advice");
 
-    function highlightSelected(){
-      // remove highlight from all
-      choiceButtons.forEach(clearChoiceClasses);
+  function render() {
+    qCount.textContent = `Question ${i + 1}/${questions.length}`;
+    progress.textContent = `${Math.round((i / questions.length) * 100)}%`;
+    qText.textContent = questions[i][0];
+    qHint.textContent = questions[i][1];
 
-      // highlight current choice (if answered)
-      const v = answers[idx];
-      if(v === null) return;
-
-      const match = choiceButtons.find(b => Number(b.dataset.val) === v);
-      if(!match) return;
-
-      match.classList.add("selected", `sel-${v}`);
-    }
-
-    function render(){
-      qCount.textContent=`Question ${idx+1}/${questions.length}`;
-      progressBadge.textContent=`${Math.round((answeredCount()/questions.length)*100)}% done`;
-      questionText.textContent=questions[idx].q;
-      questionHint.textContent=questions[idx].h;
-
-      prevBtn.disabled = idx===0;
-
-      // hide results while answering
-      resultArea.style.display="none";
-
-      // keep highlight when going back
-      highlightSelected();
-    }
-
-    function finish(){
-      const max=3*questions.length;
-      const percent=Math.round((scoreNow()/max)*100);
-
-      const advice =
-        percent>=80 ? "MAX delulu 🚨 — stop chasing, watch actions." :
-        percent>=60 ? "High delulu — pause before replying, don’t double-text." :
-        percent>=40 ? "Half-delulu 😭 — ask once then step back." :
-        percent>=20 ? "Slight overthink — focus on patterns." :
-                      "Super grounded ✅ — keep standards.";
-
-      const data=getAppData();
-      data.lastQuiz={ percent, answers:[...answers], savedAt:Date.now() };
-      setAppData(data);
-
-      resultArea.style.display="block";
-      bar.style.width=`${percent}%`;
-      percentText.textContent=`${percent}%`;
-      adviceText.textContent=advice;
-
-      highlightSelected();
-    }
-
-    function next(){
-      // if last question, only finish if none skipped
-      if(idx >= questions.length-1){
-        const firstUnanswered=answers.findIndex(v=>v===null);
-        if(firstUnanswered!==-1){
-          idx=firstUnanswered;
-          render();
-          showDebug("Answer the skipped question before finishing.");
-          return;
-        }
-        hideDebug();
-        finish();
-        return;
-      }
-
-      idx++;
-      render();
-    }
-
-    // CLICK HANDLERS (this is the part that makes it COLOR)
-    choiceButtons.forEach(btn=>{
-      btn.addEventListener("click", ()=>{
-        hideDebug();
-
-        const val = Number(btn.dataset.val);
-        answers[idx]=val;
-
-        // reset all, then tap+select this one
-        choiceButtons.forEach(clearChoiceClasses);
-        btn.classList.add("tap");
-
-        // tiny delay, then apply the colored selected style
-        setTimeout(() => {
-          btn.classList.remove("tap");
-          btn.classList.add("selected", `sel-${val}`);
-
-          // delay so you actually see the color before next question
-          setTimeout(() => next(), 180);
-        }, 40);
-      });
+    // reset visuals
+    choices.forEach(c => {
+      c.style.background = "rgba(255,255,255,.06)";
+      c.style.boxShadow = "";
+      c.style.transform = "";
     });
+  }
 
-    prevBtn.addEventListener("click", ()=>{
-      hideDebug();
-      if(idx>0){ idx--; render(); }
-    });
+  function finish() {
+    const pct = Math.round((score / (questions.length * 3)) * 100);
+    bar.style.width = pct + "%";
+    percent.textContent = pct + "%";
+    advice.textContent =
+      pct >= 70 ? "High delulu — stop chasing." :
+      pct >= 40 ? "Half delulu — ground yourself." :
+                  "Pretty grounded.";
 
-    restartBtn.addEventListener("click", ()=>{
-      for(let k=0;k<answers.length;k++) answers[k]=null;
-      idx=0;
-      hideDebug();
-      bar.style.width="0%";
-      percentText.textContent="0%";
-      adviceText.textContent="";
-      resultArea.style.display="none";
-      render();
-    });
+    data.lastQuiz = { percent: pct, savedAt: Date.now() };
+    localStorage.setItem(APP_KEY, JSON.stringify(data));
+    result.style.display = "block";
+  }
 
-    render();
-  </script>
+  choices.forEach(choice => {
+    choice.onclick = () => {
+      const v = Number(choice.dataset.val);
+      score += v;
+
+      // FORCE COLOR
+      const colors = {
+        3: ["#ff4b7d", "#ff8c5a"],
+        2: ["#ffb347", "#ffe27a"],
+        1: ["#b59cff", "#78aaff"],
+        0: ["#5ae6a0", "#46a0ff"]
+      };
+
+      choice.style.background = `linear-gradient(135deg, ${colors[v][0]}, ${colors[v][1]})`;
+      choice.style.boxShadow = "0 12px 30px rgba(0,0,0,.35)";
+      choice.style.transform = "scale(1.03)";
+
+      setTimeout(() => {
+        i++;
+        if (i >= questions.length) finish();
+        else render();
+      }, 300);
+    };
+  });
+
+  render();
+</script>
+
 </body>
 </html>
