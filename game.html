@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Mini Game</title>
+  <title>Delulu Detector • Game</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,12 +12,15 @@
       <div class="logo">DD</div>
       <div>
         <div class="title">Delulu Dodge</div>
-        <div class="sub">Avoid the red flags and survive</div>
+        <div class="sub">Avoid the red flags</div>
       </div>
     </div>
 
     <div class="nav-actions">
       <a class="btn" href="menu.html">Menu</a>
+      <a class="btn ghost" href="quiz.html">Quiz</a>
+      <a class="btn ghost" href="plan.html">Plan</a>
+      <a class="btn ghost" href="scan.html">Analysis</a>
     </div>
   </nav>
 
@@ -32,9 +35,10 @@
         <canvas id="c" width="900" height="440"></canvas>
       </div>
 
-      <p class="muted" style="margin-top:12px;">
-        Tip: Don’t let the red flags hit you.
-      </p>
+      <div class="row section">
+        <button class="btn ghost" id="restartInline">Restart</button>
+        <a class="btn" href="menu.html">Back to Menu</a>
+      </div>
     </div>
   </div>
 
