@@ -1,109 +1,107 @@
+requireAdult("game.html");
+
 const canvas = document.getElementById("c");
 const ctx = canvas.getContext("2d");
 
-const scoreBadge = document.getElementById("scoreBadge");
+const restartBtn = document.getElementById("restartGame");
 const overlay = document.getElementById("loseOverlay");
-const restartBtn = document.getElementById("restartBtn");
-const restartInline = document.getElementById("restartInline");
+const overlayRestart = document.getElementById("overlayRestart");
 
+let keys = {};
 let running = true;
 
-const player = { x: canvas.width/2, y: canvas.height-40, w: 46, h: 14, speed: 10 };
-let score = 0;
-let ticks = 0;
-let hazards = [];
+let player, flags, t, speed, score;
+
+function reset() {
+  player = { x: canvas.width / 2, y: canvas.height - 40, w: 44, h: 14 };
+  flags = [];
+  t = 0;
+  speed = 2.4;
+  score = 0;
+  running = true;
+  overlay.style.display = "none";
+}
+
+function spawnFlag() {
+  const w = 18 + Math.random() * 26;
+  flags.push({
+    x: Math.random() * (canvas.width - w),
+    y: -30,
+    w,
+    h: 16 + Math.random() * 24,
+    vy: speed + Math.random() * 1.8
+  });
+}
 
 function rectHit(a,b){
-  return (a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y);
+  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 }
 
-function spawnHazard(){
-  const s = 18 + Math.random()*18;
-  hazards.push({
-    x: Math.random()*(canvas.width - s),
-    y: -s,
-    s,
-    v: 3 + Math.random()*3
-  });
-}
-
-const keys = { left:false, right:false };
-addEventListener("keydown", e => { if(e.key==="ArrowLeft") keys.left=true; if(e.key==="ArrowRight") keys.right=true; });
-addEventListener("keyup", e => { if(e.key==="ArrowLeft") keys.left=false; if(e.key==="ArrowRight") keys.right=false; });
-
-function showLose(){
+function lose() {
   running = false;
-  overlay.classList.remove("hidden");
+  overlay.style.display = "block";
 }
 
-function hideLose(){
-  overlay.classList.add("hidden");
-}
-
-function resetGame(){
-  running = true;
-  score = 0;
-  ticks = 0;
-  hazards = [];
-  player.x = canvas.width/2;
-  scoreBadge.textContent = `Score: ${score}`;
-  hideLose();
-}
-
-restartBtn.addEventListener("click", resetGame);
-restartInline.addEventListener("click", resetGame);
-
-function update(){
-  if(!running) return;
-  ticks++;
-
-  if(keys.left) player.x -= player.speed;
-  if(keys.right) player.x += player.speed;
-  player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
-
-  if(ticks % 18 === 0) spawnHazard();
-
-  for(const h of hazards) h.y += h.v;
-
-  hazards = hazards.filter(h => {
-    if(h.y > canvas.height + h.s){
-      score++;
-      scoreBadge.textContent = `Score: ${score}`;
-      return false;
-    }
-    return true;
-  });
-
-  const pRect = { x: player.x, y: player.y, w: player.w, h: player.h };
-  for(const h of hazards){
-    const hRect = { x: h.x, y: h.y, w: h.s, h: h.s };
-    if(rectHit(pRect, hRect)){ showLose(); break; }
-  }
-}
-
-function draw(){
+function step() {
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  ctx.fillStyle = "rgba(255,255,255,.9)";
-  ctx.fillRect(player.x, player.y, player.w, player.h);
+  // background glow
+  const g = ctx.createLinearGradient(0,0,canvas.width,canvas.height);
+  g.addColorStop(0, "rgba(124,77,255,.10)");
+  g.addColorStop(1, "rgba(60,200,255,.10)");
+  ctx.fillStyle = g;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  ctx.fillStyle = "rgba(255,80,110,.85)";
-  for(const h of hazards){
-    ctx.beginPath();
-    ctx.rect(h.x, h.y, h.s, h.s);
-    ctx.fill();
+  // movement
+  const left = keys["ArrowLeft"] || keys["a"];
+  const right = keys["ArrowRight"] || keys["d"];
+  if (running) {
+    if (left) player.x -= 6.2;
+    if (right) player.x += 6.2;
+  }
+  player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
+
+  // spawn
+  if (running) {
+    t++;
+    if (t % 28 === 0) spawnFlag();
+    if (t % 420 === 0) speed += 0.35;
   }
 
-  ctx.fillStyle = "rgba(255,255,255,.65)";
-  ctx.font = "14px system-ui";
-  ctx.fillText("Avoid the red flags", 16, 24);
+  // flags update
+  for (let i = flags.length - 1; i >= 0; i--) {
+    const f = flags[i];
+    if (running) f.y += f.vy;
+
+    // draw flags (red)
+    ctx.fillStyle = "rgba(255,60,120,.85)";
+    ctx.fillRect(f.x, f.y, f.w, f.h);
+
+    if (rectHit(player, f) && running) lose();
+
+    if (f.y > canvas.height + 40) {
+      flags.splice(i, 1);
+      if (running) score++;
+    }
+  }
+
+  // player
+  ctx.fillStyle = "rgba(90,230,160,.90)";
+  ctx.fillRect(player.x, player.y, player.w, player.h);
+
+  // HUD
+  ctx.fillStyle = "rgba(255,255,255,.85)";
+  ctx.font = "16px system-ui";
+  ctx.fillText(`Score: ${score}`, 16, 28);
+
+  requestAnimationFrame(step);
 }
 
-function loop(){
-  update();
-  draw();
-  requestAnimationFrame(loop);
-}
+window.addEventListener("keydown", (e) => keys[e.key] = true);
+window.addEventListener("keyup", (e) => keys[e.key] = false);
 
-resetGame();
-loop();
+restartBtn.addEventListener("click", reset);
+overlayRestart.addEventListener("click", reset);
+
+reset();
+step();
