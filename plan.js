@@ -1,66 +1,63 @@
-// plan.js
-requireAdultOrRedirect();
+const APP_KEY = "dd_app_v1";
 
-const data = getData();
-const r = data.quizResult;
+function getAppData(){
+  try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); }
+  catch { return {}; }
+}
 
-const planTitle = document.getElementById("planTitle");
-const planPct = document.getElementById("planPct");
-const planBody = document.getElementById("planBody");
+const box = document.getElementById("planOut");
+const data = getAppData();
+const last = data.lastQuiz;
 
-if (!r) {
-  planTitle.textContent = "No plan yet";
-  planPct.textContent = "Take quiz";
-  planBody.innerHTML = `
-    <p>You haven’t taken the quiz yet, so I can’t personalize your plan.</p>
-    <p><b>Do this:</b> go back to Menu → start the quiz → then come back here.</p>
+function li(text){ return `<li>${text}</li>`; }
+
+if(!last){
+  box.innerHTML = `
+    <h2>No saved quiz result yet</h2>
+    <p class="muted">Take the quiz first so I can build your plan.</p>
+    <div class="row" style="margin-top:12px;">
+      <a class="btn primary" href="quiz.html">Take Quiz</a>
+      <a class="btn" href="menu.html">Menu</a>
+    </div>
   `;
 } else {
-  planTitle.textContent = "Your anti-spiral plan";
-  planPct.textContent = r.percentage + "%";
+  const p = last.percent;
 
-  const p = r.percentage;
+  let headline =
+    p >= 75 ? "Damage-control plan" :
+    p >= 45 ? "Clarity + boundaries plan" :
+              "Stay-grounded plan";
 
-  let steps = [];
-  if (p <= 25) {
-    steps = [
-      "Keep your balance: don’t over-check the chat.",
-      "If something feels off, ask once calmly — then move on.",
-      "Protect your peace: don’t create stories from one message."
-    ];
-  } else if (p <= 50) {
-    steps = [
-      "Use the 3-question reset: (1) what’s the proof? (2) what’s the story? (3) what’s the simplest explanation?",
-      "Wait 10 minutes before sending a stressed message.",
-      "Replace double-texting with one clear question."
-    ];
-  } else if (p <= 75) {
-    steps = [
-      "No reacting in the moment: put phone down for 15 minutes.",
-      "Switch from mind-reading to clarity: one direct question, not paragraphs.",
-      "Track patterns: actions > texting tone."
-    ];
-  } else {
-    steps = [
-      "Emergency rule: if you feel panic, do NOT text for 20 minutes.",
-      "Do a reality check: ask a trusted friend what they think the message means.",
-      "Use clarity scripts: “Hey are we good? I’m reading into it.”",
-      "If it’s constant anxiety, take a break from the convo and ground yourself."
-    ];
-  }
+  let vibe =
+    p >= 75 ? "You’re in overthink mode. We’re stopping the spiral and protecting your dignity." :
+    p >= 45 ? "You’re not fully delulu, but you’re doing too much. This plan makes you calm + clear." :
+              "You’re mostly fine. This plan keeps you consistent and unbothered.";
 
-  planBody.innerHTML = `
-    <p><b>Your vibe:</b> ${r.vibe || ""}</p>
-    <p>${r.explanation}</p>
-    <hr/>
-    <p><b>Plan steps (do these in order):</b></p>
-    <ol>
-      ${steps.map(s => `<li>${s}</li>`).join("")}
-    </ol>
-    <hr/>
-    <p><b>Quick script you can use:</b></p>
-    <p style="margin:0;">
-      “Hey, I might be overthinking. Just checking — are we good?”
-    </p>
-  `;
-}
+  const steps = (
+    p >= 75 ? [
+      "No replying when emotional. Wait 30–60 minutes minimum.",
+      "Send ONE clear message. No essays, no spam.",
+      "If they’re dry: stop explaining. Match energy.",
+      "If they disappear: don’t chase. Let them come to you.",
+      "If you need clarity: ask directly once, then watch actions."
+    ] :
+    p >= 45 ? [
+      "Before you text: ask “what do I want?” (clarity or comfort?)",
+      "Don’t double-text. If you already sent it, stop.",
+      "Keep replies short + confident.",
+      "If they’re inconsistent: detach a bit. Don’t reward it.",
+      "Pick a boundary: “I like consistent communication.”"
+    ] : [
+      "Don’t assume tone from one word.",
+      "If something feels off: ask calmly once.",
+      "Keep your routine — don’t revolve around replies.",
+      "Watch patterns, not promises.",
+      "Stay respectful, but don’t accept disrespect."
+    ]
+  );
+
+  box.innerHTML = `
+    <div class="row" style="justify-content:space-between; margin-bottom:10px;">
+      <h2>${headline}</h2>
+      <div class="badge">Saved score: ${p}%</div>
+    </div>
