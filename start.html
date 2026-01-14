@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Age Check</title>
-  <link rel="stylesheet" href="style.css?v=11" />
-  <script src="shared.js?v=11"></script>
+  <link rel="stylesheet" href="style.css?v=12" />
+  <script src="shared.js?v=12"></script>
 </head>
 <body>
-  <!-- NO NAVBAR ON PURPOSE -->
+  <!-- NO NAVBAR ON PURPOSE (so they can't leave before verifying) -->
 
   <div class="container">
     <div class="card" style="max-width:520px; margin:60px auto;">
@@ -25,8 +25,16 @@
       </p>
 
       <div class="section">
-        <label for="ageInput">Enter your age</label>
-        <input id="ageInput" type="number" inputmode="numeric" min="18" placeholder="18+ only" />
+        <label for="ageInput">Enter your age (18+)</label>
+        <input
+          id="ageInput"
+          type="number"
+          inputmode="numeric"
+          min="18"
+          max="120"
+          placeholder="18+ only"
+          autocomplete="off"
+        />
       </div>
 
       <p id="errorText" style="display:none; margin:8px 0 0; color:#ff8a8a; font-weight:800;"></p>
@@ -44,7 +52,12 @@
   </div>
 
   <script>
-    const NEXT = safeNextFromURL();
+    // If already verified, skip start and go where they wanted
+    const current = getAppData();
+    if (current?.age && Number(current.age) >= 18) {
+      window.location.replace(safeNextFromURL() || "menu.html");
+    }
+
     const ageInput = document.getElementById("ageInput");
     const continueBtn = document.getElementById("continueBtn");
     const errorText = document.getElementById("errorText");
@@ -54,9 +67,11 @@
       errorText.style.display = "block";
     }
 
-    continueBtn.addEventListener("click", () => {
+    function handleContinue(){
       const age = Number(ageInput.value);
-      if (!age) return showError("Enter your age first.");
+
+      if (!ageInput.value.trim()) return showError("Enter your age first.");
+      if (!Number.isFinite(age)) return showError("Enter a valid number.");
       if (age < 18) return showError("Sorry — this app is 18+ only.");
 
       errorText.style.display = "none";
@@ -66,13 +81,16 @@
       data.ageVerifiedAt = Date.now();
       setAppData(data);
 
-      window.location.href = NEXT; // ✅ returns to the page you wanted
-    });
+      const next = safeNextFromURL() || "menu.html";
+      window.location.replace(next);
+    }
+
+    continueBtn.addEventListener("click", handleContinue);
 
     ageInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
-        continueBtn.click();
+        handleContinue();
       }
     });
   </script>
