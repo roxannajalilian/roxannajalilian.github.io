@@ -1,37 +1,19 @@
-// quiz.js (FULL FILE) — colored selection + tap animation + saves for plan
-
 (() => {
   const APP_KEY = "dd_app_v1";
 
-  function getAppData() {
-    try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); }
-    catch { return {}; }
-  }
-  function setAppData(d) {
-    localStorage.setItem(APP_KEY, JSON.stringify(d));
-  }
-
+  function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
+  function setAppData(d){ localStorage.setItem(APP_KEY, JSON.stringify(d)); }
   const $ = (id) => document.getElementById(id);
 
-  // Status + debug
   const jsStatus = $("jsStatus");
   const debugMsg = $("debugMsg");
-  function debug(text) {
-    if (!debugMsg) return;
-    debugMsg.style.display = "block";
-    debugMsg.textContent = text;
-  }
+  function debug(t){ if(!debugMsg) return; debugMsg.style.display="block"; debugMsg.textContent=t; }
 
   if (jsStatus) jsStatus.textContent = "JS OK ✅";
 
-  // Age gate
   const user = getAppData();
-  if (!user.age || Number(user.age) < 18) {
-    window.location.replace("start.html");
-    return;
-  }
+  if (!user.age || Number(user.age) < 18) { window.location.replace("start.html"); return; }
 
-  // Required DOM
   const qCount = $("qCount");
   const progressBadge = $("progressBadge");
   const questionText = $("questionText");
@@ -46,13 +28,8 @@
   const adviceText = $("adviceText");
 
   const choiceButtons = Array.from(document.querySelectorAll("button[data-val]"));
-
-  if (
-    !qCount || !progressBadge || !questionText || !questionHint ||
-    !prevBtn || !restartBtnTop || !resultArea || !bar ||
-    !percentText || !adviceText || choiceButtons.length === 0
-  ) {
-    debug("Missing quiz HTML elements. Paste quiz.html exactly.");
+  if (!qCount || !progressBadge || !questionText || !questionHint || !prevBtn || !restartBtnTop || !resultArea || !bar || !percentText || !adviceText || choiceButtons.length === 0) {
+    debug("Quiz HTML missing elements. Paste quiz.html exactly.");
     if (jsStatus) jsStatus.textContent = "JS ERROR ❌";
     return;
   }
@@ -73,45 +50,33 @@
   let idx = 0;
   const answers = new Array(questions.length).fill(null);
 
-  function answeredCount() {
-    return answers.filter(v => v !== null).length;
+  function answeredCount(){ return answers.filter(v => v !== null).length; }
+  function scoreNow(){ return answers.reduce((s,v)=> s + (v ?? 0), 0); }
+
+  function clearSelection(){
+    choiceButtons.forEach(b => b.classList.remove("selected","sel-0","sel-1","sel-2","sel-3","tap"));
   }
-  function scoreNow() {
-    return answers.reduce((s, v) => s + (v ?? 0), 0);
+  function highlight(){
+    clearSelection();
+    const v = answers[idx];
+    if (v === null) return;
+    const match = choiceButtons.find(b => Number(b.dataset.val) === v);
+    if (match) match.classList.add("selected", `sel-${v}`);
   }
 
-  function clearSelectionClasses() {
-    choiceButtons.forEach(btn => {
-      btn.classList.remove("selected", "sel-0", "sel-1", "sel-2", "sel-3", "tap");
-    });
-  }
-
-  function highlightSelectedForCurrentQuestion() {
-    clearSelectionClasses();
-    const val = answers[idx];
-    if (val === null) return;
-    const match = choiceButtons.find(b => Number(b.dataset.val) === val);
-    if (match) {
-      match.classList.add("selected", `sel-${val}`);
-    }
-  }
-
-  function render() {
+  function render(){
     const done = answeredCount();
-    qCount.textContent = `Question ${idx + 1}/${questions.length}`;
-    progressBadge.textContent = `${Math.round((done / questions.length) * 100)}% done`;
-
+    qCount.textContent = `Question ${idx+1}/${questions.length}`;
+    progressBadge.textContent = `${Math.round((done/questions.length)*100)}% done`;
     questionText.textContent = questions[idx].q;
     questionHint.textContent = questions[idx].h;
-
-    prevBtn.disabled = (idx === 0);
+    prevBtn.disabled = idx === 0;
     resultArea.style.display = "none";
-
-    highlightSelectedForCurrentQuestion();
-    if (debugMsg) debugMsg.style.display = "none";
+    highlight();
+    if (debugMsg) debugMsg.style.display="none";
   }
 
-  function finish() {
+  function finish(){
     const max = 3 * questions.length;
     const percent = Math.round((scoreNow() / max) * 100);
 
@@ -126,55 +91,39 @@
     data.lastQuiz = { percent, answers, savedAt: Date.now() };
     setAppData(data);
 
-    clearSelectionClasses();
-
+    clearSelection();
     resultArea.style.display = "block";
     bar.style.width = `${percent}%`;
     percentText.textContent = `${percent}%`;
     adviceText.textContent = advice;
   }
 
-  function next() {
-    if (idx >= questions.length - 1) {
-      const firstUnanswered = answers.findIndex(v => v === null);
-      if (firstUnanswered !== -1) {
-        idx = firstUnanswered;
-        render();
-        debug("Answer the skipped question before finishing.");
-        return;
-      }
-      finish();
-      return;
-    }
+  function next(){
+    if (idx >= questions.length - 1) return finish();
     idx++;
     render();
   }
 
-  // Click: select + tap animation + tiny delay then next
   choiceButtons.forEach(btn => {
     btn.addEventListener("click", () => {
-      const val = Number(btn.dataset.val);
-      answers[idx] = val;
+      const v = Number(btn.dataset.val);
+      answers[idx] = v;
 
-      clearSelectionClasses();
-      btn.classList.add("selected", `sel-${val}`, "tap");
-      setTimeout(() => btn.classList.remove("tap"), 160);
+      clearSelection();
+      btn.classList.add("selected", `sel-${v}`, "tap");
+      setTimeout(() => btn.classList.remove("tap"), 140);
 
       setTimeout(next, 220);
     });
   });
 
-  prevBtn.addEventListener("click", () => {
-    if (idx > 0) idx--;
-    render();
-  });
+  prevBtn.addEventListener("click", () => { if (idx>0) idx--; render(); });
 
-  function restartAll() {
-    for (let k = 0; k < answers.length; k++) answers[k] = null;
+  function restartAll(){
+    for (let k=0;k<answers.length;k++) answers[k] = null;
     idx = 0;
     render();
   }
-
   restartBtnTop.addEventListener("click", restartAll);
   if (restartQuiz) restartQuiz.addEventListener("click", restartAll);
 
