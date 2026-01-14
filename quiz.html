@@ -17,6 +17,7 @@
     </div>
 
     <div class="nav-actions">
+      <button class="btn ghost" id="backBtn" type="button">Back</button>
       <a class="btn" href="menu.html">Menu</a>
       <a class="btn ghost" href="plan.html">Plan</a>
       <a class="btn ghost" href="scan.html">Analysis</a>
@@ -43,7 +44,7 @@
       </div>
 
       <div class="section" id="resultArea" style="display:none;">
-        <h2 id="resultTitle">Your Result</h2>
+        <h2>Your Result</h2>
         <div class="progress" style="margin:10px 0 10px;">
           <div id="bar"></div>
         </div>
@@ -53,11 +54,25 @@
         <div class="row" style="margin-top:12px;">
           <a class="btn primary" href="plan.html">See Your Plan</a>
           <a class="btn" href="menu.html">Menu</a>
-          <button class="btn ghost" id="restartQuiz">Restart Quiz</button>
+          <button class="btn ghost" id="restartQuiz" type="button">Restart Quiz</button>
         </div>
       </div>
     </div>
   </div>
+
+  <script>
+    // Back button fix
+    document.getElementById("backBtn").addEventListener("click", () => {
+      if (history.length > 1) history.back();
+      else window.location.href = "menu.html";
+    });
+
+    // Age gate protection
+    const APP_KEY="dd_app_v1";
+    function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
+    const d=getAppData();
+    if(!d.age || Number(d.age) < 18) window.location.href="index.html";
+  </script>
 
   <script src="quiz.js"></script>
 </body>
