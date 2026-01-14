@@ -20,8 +20,6 @@
       <a class="btn ghost" href="start.html">Start</a>
       <a class="btn" href="menu.html">Menu</a>
       <a class="btn ghost" href="plan.html">Plan</a>
-      <a class="btn ghost" href="scan.html">Analysis</a>
-      <a class="btn ghost" href="game.html">Game</a>
     </div>
   </nav>
 
@@ -29,13 +27,13 @@
     <div class="card">
       <div class="toolbar">
         <div class="toolbar-left">
-          <span class="badge" id="qCount">Question 1/10</span>
-          <span class="badge" id="progressBadge">0% done</span>
-          <span class="badge" id="jsStatus">JS: …</span>
+          <span class="badge" id="qCount">Question …</span>
+          <span class="badge" id="progressBadge">…</span>
+          <span class="badge" id="jsStatus">JS OK ✅</span>
         </div>
         <div class="toolbar-right">
           <button class="btn ghost" id="prevBtn" type="button">Previous</button>
-          <button class="btn ghost" id="restartBtnTop" type="button">Restart</button>
+          <button class="btn ghost" id="restartBtn" type="button">Restart</button>
         </div>
       </div>
 
@@ -45,7 +43,7 @@
           <p class="muted" id="questionHint" style="margin:0;">Tap a choice.</p>
         </div>
 
-        <div class="choice-grid" id="choices">
+        <div class="choice-grid">
           <button class="btn choice primary" data-val="3" type="button"><b>Yes (a lot)</b><span>Strong signal</span></button>
           <button class="btn choice" data-val="2" type="button"><b>Sometimes</b><span>Not always</span></button>
           <button class="btn choice" data-val="1" type="button"><b>Rarely</b><span>Once in a while</span></button>
@@ -62,111 +60,93 @@
         <div class="row" style="margin-top:14px;">
           <a class="btn primary" href="plan.html">Go to Plan</a>
           <a class="btn" href="menu.html">Back to Menu</a>
-          <button class="btn ghost" id="restartQuiz" type="button">Restart Quiz</button>
         </div>
       </div>
 
-      <p class="muted" id="debugMsg" style="margin-top:14px; display:none;"></p>
+      <p class="muted" id="debug" style="margin-top:14px; display:none;"></p>
     </div>
   </div>
 
   <script>
-    // --- storage ---
-    const APP_KEY = "dd_app_v1";
-    function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
+    const APP_KEY="dd_app_v1";
+    function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY)||"{}"); } catch { return {}; } }
     function setAppData(d){ localStorage.setItem(APP_KEY, JSON.stringify(d)); }
 
-    // --- show JS is running ---
-    const jsStatus = document.getElementById("jsStatus");
-    jsStatus.textContent = "JS: RUNNING ✅";
+    // age gate
+    const u=getAppData();
+    if(!u.age || Number(u.age) < 18) location.replace("start.html");
 
-    // --- age gate ---
-    const user = getAppData();
-    if (!user.age || Number(user.age) < 18) window.location.replace("start.html");
-
-    // --- questions ---
-    const questions = [
-      { q: "Do you reread texts to find hidden meaning?", h: "Searching for clues in one word." },
-      { q: "Do you assume silence means they’re mad or losing interest?", h: "No reply = panic." },
-      { q: "Do you overthink punctuation (… / lol / k)?", h: "Dot dot dot trauma." },
-      { q: "Do you check activity for hints?", h: "Detective mode." },
-      { q: "Do you type/delete/retype replies a lot?", h: "Pressure to be perfect." },
-      { q: "Do you double-text because you feel ignored?", h: "Chase mode." },
-      { q: "Do you replay the convo for hours?", h: "Looping thoughts." },
-      { q: "Do you ignore signs because you want it to work?", h: "Hope goggles." },
-      { q: "Does your mood depend on their reply?", h: "High/low based on texts." },
-      { q: "Do you excuse disrespect?", h: "Bare minimum defense." }
+    const questions=[
+      {q:"Do you reread texts to find hidden meaning?",h:"Searching for clues in one word."},
+      {q:"Do you assume silence means they’re mad?",h:"No reply = panic."},
+      {q:"Do you overthink punctuation (… / lol / k)?",h:"Dot dot dot trauma."},
+      {q:"Do you check activity for hints?",h:"Detective mode."},
+      {q:"Do you type/delete/retype a reply a lot?",h:"Pressure to be perfect."},
+      {q:"Do you double-text because you feel ignored?",h:"Chase mode."},
+      {q:"Do you replay the convo in your head for hours?",h:"Looping thoughts."},
+      {q:"Do you ignore signs because you want it to work?",h:"Hope goggles."},
+      {q:"Does your mood depend on their reply?",h:"High/low based on texts."},
+      {q:"Do you excuse disrespect (dry/rude/disappearing)?",h:"Bare minimum defense."}
     ];
 
-    // --- state ---
-    let idx = 0;
-    const answers = new Array(questions.length).fill(null);
+    let idx=0;
+    const answers=new Array(questions.length).fill(null);
 
-    // --- dom ---
-    const qCount = document.getElementById("qCount");
-    const progressBadge = document.getElementById("progressBadge");
-    const questionText = document.getElementById("questionText");
-    const questionHint = document.getElementById("questionHint");
-    const prevBtn = document.getElementById("prevBtn");
-    const restartBtnTop = document.getElementById("restartBtnTop");
-    const restartQuiz = document.getElementById("restartQuiz");
-    const resultArea = document.getElementById("resultArea");
-    const bar = document.getElementById("bar");
-    const percentText = document.getElementById("percentText");
-    const adviceText = document.getElementById("adviceText");
-    const debugMsg = document.getElementById("debugMsg");
+    const qCount=document.getElementById("qCount");
+    const progressBadge=document.getElementById("progressBadge");
+    const questionText=document.getElementById("questionText");
+    const questionHint=document.getElementById("questionHint");
+    const prevBtn=document.getElementById("prevBtn");
+    const restartBtn=document.getElementById("restartBtn");
 
-    function showDebug(msg){
-      debugMsg.style.display = "block";
-      debugMsg.textContent = msg;
-    }
+    const resultArea=document.getElementById("resultArea");
+    const bar=document.getElementById("bar");
+    const percentText=document.getElementById("percentText");
+    const adviceText=document.getElementById("adviceText");
+    const debug=document.getElementById("debug");
 
-    function answeredCount(){
-      return answers.filter(v => v !== null).length;
-    }
+    function showDebug(msg){ debug.style.display="block"; debug.textContent=msg; }
 
-    function scoreNow(){
-      return answers.reduce((s,v)=> s + (v ?? 0), 0);
-    }
+    function answeredCount(){ return answers.filter(v=>v!==null).length; }
+    function scoreNow(){ return answers.reduce((s,v)=>s+(v??0),0); }
 
     function render(){
-      const done = answeredCount();
-      qCount.textContent = `Question ${idx+1}/${questions.length}`;
-      progressBadge.textContent = `${Math.round((done/questions.length)*100)}% done`;
-      questionText.textContent = questions[idx].q;
-      questionHint.textContent = questions[idx].h;
-      prevBtn.disabled = idx === 0;
-      resultArea.style.display = "none";
+      qCount.textContent=`Question ${idx+1}/${questions.length}`;
+      progressBadge.textContent=`${Math.round((answeredCount()/questions.length)*100)}% done`;
+      questionText.textContent=questions[idx].q;
+      questionHint.textContent=questions[idx].h;
+      prevBtn.disabled = idx===0;
+      resultArea.style.display="none";
     }
 
     function finish(){
-      const max = 3 * questions.length;
-      const percent = Math.round((scoreNow() / max) * 100);
+      const max=3*questions.length;
+      const percent=Math.round((scoreNow()/max)*100);
 
       const advice =
-        percent >= 80 ? "MAX delulu 🚨 — stop chasing, watch actions, protect your peace." :
-        percent >= 60 ? "High delulu — pause before replying, don’t double-text." :
-        percent >= 40 ? "Half-delulu 😭 — ask once, then step back." :
-        percent >= 20 ? "Slight overthink — focus on patterns, not one message." :
-                        "Super grounded ✅ — keep your standards.";
+        percent>=80 ? "MAX delulu 🚨 — stop chasing, watch actions." :
+        percent>=60 ? "High delulu — pause before replying, don’t double-text." :
+        percent>=40 ? "Half-delulu 😭 — ask once then step back." :
+        percent>=20 ? "Slight overthink — focus on patterns." :
+                      "Super grounded ✅ — keep standards.";
 
-      const data = getAppData();
-      data.lastQuiz = { percent, answers, savedAt: Date.now() };
+      const data=getAppData();
+      data.lastQuiz={ percent, answers, savedAt:Date.now() };
       setAppData(data);
 
-      resultArea.style.display = "block";
-      bar.style.width = `${percent}%`;
-      percentText.textContent = `${percent}%`;
-      adviceText.textContent = advice;
+      resultArea.style.display="block";
+      bar.style.width=`${percent}%`;
+      percentText.textContent=`${percent}%`;
+      adviceText.textContent=advice;
     }
 
     function next(){
-      if (idx >= questions.length - 1){
-        const firstUnanswered = answers.findIndex(v => v === null);
-        if (firstUnanswered !== -1) {
-          idx = firstUnanswered;
+      if(idx >= questions.length-1){
+        const firstUnanswered=answers.findIndex(v=>v===null);
+        if(firstUnanswered!==-1){
+          idx=firstUnanswered;
           render();
-          showDebug("You skipped a question — answer it before finishing.");
+          showDebug("Answer the skipped question before finishing.");
           return;
         }
         finish();
@@ -176,31 +156,22 @@
       render();
     }
 
-    // wire choices
-    document.querySelectorAll("button[data-val]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const val = Number(btn.dataset.val);
-        answers[idx] = val;
+    document.querySelectorAll("button[data-val]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        answers[idx]=Number(btn.dataset.val);
         next();
       });
     });
 
-    prevBtn.addEventListener("click", () => {
-      if (idx > 0) idx--;
+    prevBtn.addEventListener("click", ()=>{ if(idx>0){ idx--; render(); } });
+
+    restartBtn.addEventListener("click", ()=>{
+      for(let k=0;k<answers.length;k++) answers[k]=null;
+      idx=0;
+      debug.style.display="none";
       render();
     });
 
-    function restartAll(){
-      for(let k=0;k<answers.length;k++) answers[k] = null;
-      idx = 0;
-      debugMsg.style.display = "none";
-      render();
-    }
-
-    restartBtnTop.addEventListener("click", restartAll);
-    restartQuiz.addEventListener("click", restartAll);
-
-    // start
     render();
   </script>
 </body>
