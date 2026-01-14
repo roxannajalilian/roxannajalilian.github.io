@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
+  <div class="cursorGlow"></div>
+
   <nav>
     <div class="brand">
       <div class="logo">DD</div>
@@ -32,6 +34,7 @@
     </div>
   </main>
 
+  <script src="./glow.js"></script>
   <script type="module">
     import { getData, setData } from "./gate.js";
 
@@ -39,7 +42,7 @@
     document.getElementById("reason").textContent =
       data?.lockReason || "Sorry — you must be 18 or older to use this app.";
 
-    // Prevent going "back" into the app
+    // Block back navigation
     history.pushState(null, "", location.href);
     window.addEventListener("popstate", () => {
       history.pushState(null, "", location.href);
