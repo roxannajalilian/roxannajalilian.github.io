@@ -1,4 +1,4 @@
-// quiz.js (FULL FILE) — FIXED selected highlight sticking
+// quiz.js (FULL FILE) — colored selection + tap animation + saves for plan
 
 (() => {
   const APP_KEY = "dd_app_v1";
@@ -13,6 +13,7 @@
 
   const $ = (id) => document.getElementById(id);
 
+  // Status + debug
   const jsStatus = $("jsStatus");
   const debugMsg = $("debugMsg");
   function debug(text) {
@@ -21,7 +22,7 @@
     debugMsg.textContent = text;
   }
 
-  if (jsStatus) jsStatus.textContent = "JS: LOADED ✅";
+  if (jsStatus) jsStatus.textContent = "JS OK ✅";
 
   // Age gate
   const user = getAppData();
@@ -51,8 +52,8 @@
     !prevBtn || !restartBtnTop || !resultArea || !bar ||
     !percentText || !adviceText || choiceButtons.length === 0
   ) {
-    debug("Quiz page HTML is missing required elements. Paste quiz.html exactly.");
-    if (jsStatus) jsStatus.textContent = "JS: ERROR ❌";
+    debug("Missing quiz HTML elements. Paste quiz.html exactly.");
+    if (jsStatus) jsStatus.textContent = "JS ERROR ❌";
     return;
   }
 
@@ -75,28 +76,28 @@
   function answeredCount() {
     return answers.filter(v => v !== null).length;
   }
-
   function scoreNow() {
     return answers.reduce((s, v) => s + (v ?? 0), 0);
   }
 
-  // ✅ always clear highlights first
-  function clearHighlights() {
-    choiceButtons.forEach(btn => btn.classList.remove("selected"));
+  function clearSelectionClasses() {
+    choiceButtons.forEach(btn => {
+      btn.classList.remove("selected", "sel-0", "sel-1", "sel-2", "sel-3", "tap");
+    });
   }
 
-  // ✅ then highlight ONLY if current question has an answer
   function highlightSelectedForCurrentQuestion() {
-    clearHighlights();
+    clearSelectionClasses();
     const val = answers[idx];
     if (val === null) return;
     const match = choiceButtons.find(b => Number(b.dataset.val) === val);
-    if (match) match.classList.add("selected");
+    if (match) {
+      match.classList.add("selected", `sel-${val}`);
+    }
   }
 
   function render() {
     const done = answeredCount();
-
     qCount.textContent = `Question ${idx + 1}/${questions.length}`;
     progressBadge.textContent = `${Math.round((done / questions.length) * 100)}% done`;
 
@@ -106,10 +107,7 @@
     prevBtn.disabled = (idx === 0);
     resultArea.style.display = "none";
 
-    // ✅ IMPORTANT: fix sticky highlight
     highlightSelectedForCurrentQuestion();
-
-    if (jsStatus) jsStatus.textContent = "JS: RUNNING ✅";
     if (debugMsg) debugMsg.style.display = "none";
   }
 
@@ -128,15 +126,12 @@
     data.lastQuiz = { percent, answers, savedAt: Date.now() };
     setAppData(data);
 
-    // when showing results, no need for answer highlight
-    clearHighlights();
+    clearSelectionClasses();
 
     resultArea.style.display = "block";
     bar.style.width = `${percent}%`;
     percentText.textContent = `${percent}%`;
     adviceText.textContent = advice;
-
-    if (jsStatus) jsStatus.textContent = "JS: DONE ✅";
   }
 
   function next() {
@@ -155,17 +150,17 @@
     render();
   }
 
-  // Click handler: set answer, show highlight, then go next
+  // Click: select + tap animation + tiny delay then next
   choiceButtons.forEach(btn => {
     btn.addEventListener("click", () => {
       const val = Number(btn.dataset.val);
       answers[idx] = val;
 
-      // ✅ show correct highlight right away
-      highlightSelectedForCurrentQuestion();
+      clearSelectionClasses();
+      btn.classList.add("selected", `sel-${val}`, "tap");
+      setTimeout(() => btn.classList.remove("tap"), 160);
 
-      // small delay so you SEE it
-      setTimeout(next, 180);
+      setTimeout(next, 220);
     });
   });
 
