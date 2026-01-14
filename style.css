@@ -687,4 +687,131 @@ canvas{
 h1, h2{
   text-shadow: 0 0 18px rgba(120,220,255,.25);
 }
+/* =========================
+   AI GLOW + SCAN EFFECT
+   (paste at bottom)
+========================= */
+
+/* Floating background glow */
+body::before{
+  content:"";
+  position:fixed;
+  inset:-25%;
+  background:
+    radial-gradient(700px 500px at 18% 18%, rgba(120,220,255,.20), transparent 62%),
+    radial-gradient(800px 520px at 82% 28%, rgba(155,120,255,.20), transparent 66%),
+    radial-gradient(600px 500px at 50% 82%, rgba(90,255,200,.14), transparent 70%);
+  z-index:-2;
+  filter: blur(42px);
+  animation: floatGlow 16s ease-in-out infinite alternate;
+}
+
+@keyframes floatGlow{
+  from{ transform: translateY(0) translateX(0) scale(1); }
+  to{ transform: translateY(-36px) translateX(18px) scale(1.03); }
+}
+
+/* Subtle scanlines */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,.035) 0px,
+    rgba(255,255,255,.035) 1px,
+    transparent 2px,
+    transparent 6px
+  );
+  opacity:.14;
+  mix-blend-mode: overlay;
+}
+
+/* Stronger AI glass panels */
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.02));
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.12),
+    0 25px 85px rgba(0,0,0,.60),
+    inset 0 0 0 1px rgba(255,255,255,.06);
+}
+
+/* Neon hover edge for cards */
+.card:hover{
+  box-shadow:
+    0 0 0 1px rgba(120,220,255,.55),
+    0 30px 95px rgba(0,0,0,.62),
+    0 0 55px rgba(120,220,255,.18);
+}
+
+/* Headline glow */
+h1,h2{
+  text-shadow: 0 0 22px rgba(120,220,255,.24);
+}
+
+/* Primary button = neon */
+.btn.primary{
+  background: linear-gradient(90deg, rgba(120,220,255,.96), rgba(155,120,255,.96));
+  color:#050612;
+  border-color: transparent;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.18),
+    0 14px 55px rgba(120,220,255,.32);
+}
+
+.btn.primary:hover{
+  box-shadow:
+    0 0 0 1px rgba(120,220,255,.62),
+    0 0 34px rgba(120,220,255,.62),
+    0 22px 70px rgba(155,120,255,.32);
+}
+
+/* Pills + ghost glow */
+.pill, .btn.ghost{
+  backdrop-filter: blur(12px);
+}
+
+.pill:hover, .btn.ghost:hover{
+  box-shadow: 0 0 26px rgba(120,220,255,.22);
+}
+
+/* Inputs glow */
+.input:focus{
+  border-color: rgba(120,220,255,.85);
+  box-shadow: 0 0 0 4px rgba(120,220,255,.14), 0 0 26px rgba(120,220,255,.18);
+}
+
+/* Choice tiles glow */
+.choice.selected{
+  border-color: rgba(120,220,255,.85);
+  box-shadow: 0 0 0 4px rgba(120,220,255,.12), 0 0 28px rgba(120,220,255,.16);
+}
+
+/* Canvas glow */
+canvas{
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.18),
+    0 0 55px rgba(120,220,255,.22);
+}
+
+/* ===== Cursor glow (requires JS to update variables) ===== */
+:root{
+  --mx: 50vw;
+  --my: 50vh;
+}
+
+.cursorGlow{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background:
+    radial-gradient(260px 260px at var(--mx) var(--my), rgba(120,220,255,.14), transparent 60%),
+    radial-gradient(320px 320px at var(--mx) var(--my), rgba(155,120,255,.10), transparent 65%);
+  mix-blend-mode: screen;
+  opacity:.9;
+}
+
 
