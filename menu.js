@@ -1,69 +1,88 @@
-import { requireAdultOrRedirect, getData, setData } from "./gate.js";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Delulu Detector • Menu</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav>
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div>
+        <div class="title">Delulu Detector</div>
+        <div class="sub">Menu</div>
+      </div>
+    </div>
 
-requireAdultOrRedirect();
+    <div class="nav-actions">
+      <a class="btn" href="quiz.html">Quiz</a>
+      <a class="btn" href="plan.html">Plan</a>
+      <a class="btn" href="scan.html">Analysis</a>
+      <a class="btn" href="game.html">Game</a>
+      <button class="btn ghost" id="resetAll" type="button">Reset App</button>
+    </div>
+  </nav>
 
-const welcomeTag = document.getElementById("welcomeTag");
-const lastQuiz = document.getElementById("lastQuiz");
-const lastQuizSub = document.getElementById("lastQuizSub");
-const lastScan = document.getElementById("lastScan");
-const lastScanSub = document.getElementById("lastScanSub");
-const lastGame = document.getElementById("lastGame");
-const lastGameSub = document.getElementById("lastGameSub");
-const msg = document.getElementById("msg");
+  <div class="container">
+    <div class="card">
+      <h2>Choose a mode</h2>
+      <p class="muted">You can always come back here from the top buttons.</p>
 
-const resetBtn = document.getElementById("resetBtn");
-const readBtn = document.getElementById("readBtn");
-const readBtn2 = document.getElementById("readBtn2");
+      <div class="section">
+        <div class="item">
+          <h3>📝 Quiz</h3>
+          <p class="muted">Get your delulu % and save it for your plan.</p>
+          <div class="row" style="margin-top:12px;">
+            <a class="btn primary" href="quiz.html">Start Quiz</a>
+          </div>
+        </div>
 
-function setText(el, text){ if (el) el.textContent = text; }
+        <div class="item" style="margin-top:14px;">
+          <h3>📌 Plan</h3>
+          <p class="muted">Uses your last quiz result to make a plan.</p>
+          <div class="row" style="margin-top:12px;">
+            <a class="btn" href="plan.html">Open Plan</a>
+          </div>
+        </div>
 
-readBtn?.addEventListener("click", () => {
-  if (msg) msg.textContent = "Read aloud coming soon.";
-});
+        <div class="item" style="margin-top:14px;">
+          <h3>🔎 Text Analysis</h3>
+          <p class="muted">Paste a convo and get “signals” + a score.</p>
+          <div class="row" style="margin-top:12px;">
+            <a class="btn" href="scan.html">Open Analysis</a>
+          </div>
+        </div>
 
-readBtn2?.addEventListener("click", () => {
-  if (msg) msg.textContent = "Read aloud coming soon.";
-});
+        <div class="item" style="margin-top:14px;">
+          <h3>🎮 Game</h3>
+          <p class="muted">Delulu Dodge: avoid red flags.</p>
+          <div class="row" style="margin-top:12px;">
+            <a class="btn" href="game.html">Play</a>
+          </div>
+        </div>
+      </div>
 
-function loadStats(){
-  const data = getData();
+      <div class="row section">
+        <a class="btn ghost" href="index.html?stay=1">Back to Start</a>
+      </div>
+    </div>
+  </div>
 
-  // Header tag
-  const age = data?.age ? `${data.age}+` : "—";
-  setText(welcomeTag, `Age: ${age} • Saved`);
+  <script>
+    const APP_KEY="dd_app_v1";
+    function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
 
-  // Quiz
-  if (typeof data?.lastQuizScore === "number") {
-    setText(lastQuiz, `${data.lastQuizScore}%`);
-    setText(lastQuizSub, `Saved result`);
-  } else {
-    setText(lastQuiz, "—");
-    setText(lastQuizSub, "No quiz yet");
-  }
+    // Age gate protection (keeps under-18 from staying inside)
+    const d=getAppData();
+    if(!d.age || Number(d.age) < 18) window.location.href="index.html?stay=1";
 
-  // Scan
-  if (typeof data?.lastScanScore === "number") {
-    setText(lastScan, `${data.lastScanScore}%`);
-    setText(lastScanSub, `Saved result`);
-  } else {
-    setText(lastScan, "—");
-    setText(lastScanSub, "No scan yet");
-  }
-
-  // Game
-  if (typeof data?.lastGameScore === "number") {
-    setText(lastGame, `${data.lastGameScore}`);
-    setText(lastGameSub, `Saved score`);
-  } else {
-    setText(lastGame, "—");
-    setText(lastGameSub, "No game yet");
-  }
-}
-
-resetBtn?.addEventListener("click", () => {
-  setData({});
-  loadStats();
-  if (msg) msg.textContent = "Reset done.";
-});
-
-loadStats();
+    // ✅ reset button always works
+    document.getElementById("resetAll").addEventListener("click", () => {
+      localStorage.removeItem(APP_KEY);
+      window.location.href = "index.html?stay=1";
+    });
+  </script>
+</body>
+</html>
