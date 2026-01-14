@@ -29,7 +29,7 @@
   <div class="container">
     <div class="card">
       <h2>Choose a mode</h2>
-      <p class="muted">If you aren’t verified, you’ll be sent back to Start.</p>
+      <p class="muted" id="lastScore">Loading score…</p>
 
       <div class="section">
         <div class="item">
@@ -67,21 +67,6 @@
     </div>
   </div>
 
-  <script>
-    const APP_KEY="dd_app_v1";
-    function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
-
-    // ✅ FIX: if not verified, force Start page
-    const d = getAppData();
-    if (!d.age || Number(d.age) < 18) {
-      window.location.replace("index.html?stay=1");
-    }
-
-    // Reset always works
-    document.getElementById("resetAll").addEventListener("click", () => {
-      localStorage.removeItem(APP_KEY);
-      window.location.replace("index.html?stay=1");
-    });
-  </script>
+  <script src="menu.js"></script>
 </body>
 </html>
