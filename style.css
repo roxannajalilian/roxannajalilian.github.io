@@ -244,3 +244,49 @@ canvas{
   border:1px solid rgba(255,255,255,.12);
   background: rgba(10,12,22,.35);
 }
+
+/* --- QUIZ / PLAN polish --- */
+.quiz-wrap{
+  display:grid;
+  gap:14px;
+}
+
+.quiz-question{
+  padding:16px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(10,12,22,.28);
+}
+
+.choice-grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap:10px;
+}
+@media (max-width: 640px){
+  .choice-grid{ grid-template-columns: 1fr; }
+}
+
+.choice{
+  text-align:left;
+  border-radius:18px;
+  padding:14px;
+  line-height:1.2;
+}
+.choice b{ display:block; margin-bottom:6px; }
+.choice span{ color: rgba(255,255,255,.70); font-size: 13px; }
+
+.toolbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+}
+.toolbar-left, .toolbar-right{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
