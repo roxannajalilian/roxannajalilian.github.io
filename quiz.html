@@ -2,60 +2,101 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Quiz</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="quiz.js" defer></script>
 </head>
-
 <body>
-
-  <!-- TOP NAV -->
-  <nav class="topnav">
+  <nav>
     <div class="brand">
       <div class="logo">DD</div>
-      <div class="brandText">
-        <div class="brandTitle">Delulu Quiz</div>
-        <div class="brandSub">Answer honestly</div>
+      <div>
+        <div class="title">Delulu Detector</div>
+        <div class="sub">Quiz</div>
       </div>
     </div>
 
-    <div class="navBtns">
-      <button class="navBtn" id="btnBack" type="button">Back</button>
-      <button class="navBtn" id="btnMenu" type="button">Menu</button>
-      <button class="navBtn" id="btnPlan" type="button">Plan</button>
-      <button class="navBtn" id="btnAnalysis" type="button">Analysis</button>
-      <button class="navBtn" id="btnGame" type="button">Game</button>
+    <div class="nav-actions">
+      <a class="btn ghost" href="start.html">Start</a>
+      <a class="btn" href="menu.html">Menu</a>
+      <a class="btn ghost" href="plan.html">Plan</a>
+      <a class="btn ghost" href="scan.html">Analysis</a>
+      <a class="btn ghost" href="game.html">Game</a>
     </div>
   </nav>
 
-  <!-- MAIN -->
-  <main class="page">
-    <section class="card quizCard">
-
-      <div class="pillRow">
-        <div class="pill" id="qCounter">Question 1/10</div>
+  <div class="container">
+    <div class="card">
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <span class="badge" id="qCount">Question 1/10</span>
+          <span class="badge" id="progressBadge">0% done</span>
+        </div>
+        <div class="toolbar-right">
+          <button class="btn ghost" id="prevBtn" type="button">Previous</button>
+          <button class="btn ghost" id="restartBtnTop" type="button">Restart</button>
+        </div>
       </div>
 
-      <h1 class="qTitle" id="qText">Loading...</h1>
-      <p class="muted" id="qHint">Tap a choice.</p>
+      <div class="quiz-wrap section">
+        <div class="quiz-question">
+          <h2 id="questionText" style="margin:0 0 6px;">Loading…</h2>
+          <p class="muted" id="questionHint" style="margin:0;">Tap a choice.</p>
+        </div>
 
-      <div class="answers" id="answers">
-        <button class="choice" data-value="3" type="button">Yes (a lot)</button>
-        <button class="choice" data-value="2" type="button">Sometimes</button>
-        <button class="choice" data-value="1" type="button">Rarely</button>
-        <button class="choice" data-value="0" type="button">No</button>
+        <div class="choice-grid">
+          <button class="btn choice primary" data-val="3" type="button">
+            <b>Yes (a lot)</b>
+            <span>Strong signal / you do this often</span>
+          </button>
+
+          <button class="btn choice" data-val="2" type="button">
+            <b>Sometimes</b>
+            <span>It happens, but not always</span>
+          </button>
+
+          <button class="btn choice" data-val="1" type="button">
+            <b>Rarely</b>
+            <span>Only once in a while</span>
+          </button>
+
+          <button class="btn choice ghost" data-val="0" type="button">
+            <b>No</b>
+            <span>Not really / doesn’t apply</span>
+          </button>
+        </div>
       </div>
 
-      <hr class="divider" />
+      <div class="section" id="resultArea" style="display:none;">
+        <h2 style="margin:0 0 8px;">Your Result</h2>
 
-      <div class="quizFooter">
-        <div class="mutedSmall" id="progressText">Progress: 0%</div>
-        <button class="secondaryBtn" id="btnRestart" type="button">Restart</button>
+        <div class="progress" style="margin:10px 0;">
+          <div id="bar"></div>
+        </div>
+
+        <h3 id="percentText" style="margin:0 0 6px;">0%</h3>
+        <p class="muted" id="adviceText" style="margin:0;"></p>
+
+        <p class="muted" id="rangeLabel" style="margin-top:10px;"></p>
+        <div class="item" id="examplesBox" style="margin-top:12px;"></div>
+
+        <div class="row" style="margin-top:14px;">
+          <a class="btn primary" href="plan.html">Go to Plan</a>
+          <a class="btn" href="menu.html">Back to Menu</a>
+          <button class="btn ghost" id="restartQuiz" type="button">Restart Quiz</button>
+        </div>
       </div>
+    </div>
+  </div>
 
-    </section>
-  </main>
+  <script>
+    // Age gate
+    const APP_KEY="dd_app_v1";
+    function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
+    const d=getAppData();
+    if(!d.age || Number(d.age) < 18) window.location.replace("start.html");
+  </script>
 
+  <script src="quiz.js"></script>
 </body>
 </html>
