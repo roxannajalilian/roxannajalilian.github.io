@@ -1,12 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Delulu Detector • Start</title>
-  <link rel="stylesheet" href="./style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delulu Detector • Age Check</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
   <nav>
     <div class="brand">
@@ -18,41 +17,109 @@
     </div>
 
     <div class="nav-actions">
-      <a class="pill" href="policy.html">Policy</a>
-      <button class="pill" id="readBtn" type="button">🔊 Read aloud</button>
+      <a class="btn" href="menu.html">Menu</a>
     </div>
   </nav>
 
-  <main class="container">
-    <div class="card center" style="max-width: 900px; margin: 0 auto;">
-      <h1 style="margin: 6px 0 10px;">Start</h1>
-      <p class="muted" style="margin-top:0;">
-        Enter your age to continue. You must be <b>18+</b>.
-      </p>
+  <div class="container">
+    <div class="card" style="max-width:720px;margin:0 auto;">
+      <h1 style="margin-bottom:6px;">Start</h1>
+      <p class="muted">Enter your age to continue. You must be 18 or older.</p>
 
-      <div style="max-width: 460px; margin: 18px auto 0; text-align:left;">
-        <label class="muted tiny" for="age">Your age (18+)</label>
-        <input id="age" class="input" type="number" inputmode="numeric" placeholder="e.g., 18" />
+      <div class="section">
+        <label class="muted" for="ageInput" style="display:block;margin-bottom:8px;">Your age</label>
+        <input id="ageInput" type="number" inputmode="numeric" min="1" max="120" placeholder="18" />
+        <p class="muted" id="errorText" style="margin-top:10px; display:none;"></p>
 
-        <label class="checkRow" style="margin-top:14px;">
-          <input id="agree" type="checkbox" />
-          <span>I agree to the <a href="policy.html">Terms & Privacy</a></span>
-        </label>
-
-        <p class="tiny muted" id="msg" style="margin:10px 0 0;"></p>
-
-        <div class="row" style="margin-top:16px;">
+        <div class="row" style="margin-top:14px;">
+          <!-- IMPORTANT: type="button" so it doesn't act weird like a form submit -->
           <button class="btn primary" id="continueBtn" type="button">Continue</button>
-          <button class="btn ghost" id="resetBtn" type="button">Reset</button>
+          <button class="btn ghost" id="resetBtn" type="button">Reset Age</button>
         </div>
       </div>
+
+      <div class="section item" id="lockBox" style="display:none;">
+        <h2 style="margin:0 0 6px;">Sorry — 18+ only</h2>
+        <p class="muted" id="lockMsg" style="margin:0;">
+          You will be redirected.
+        </p>
+      </div>
     </div>
+  </div>
 
-    <p class="tiny muted centerText" style="margin-top:14px;">
-      Delulu Detector: quiz + analyzer and mini-game for friends!
-    </p>
-  </main>
+  <script>
+    const APP_KEY = "dd_app_v1";
 
-  <script type="module" src="./index.js"></script>
+    function getAppData(){
+      try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); }
+      catch { return {}; }
+    }
+    function setAppData(data){
+      localStorage.setItem(APP_KEY, JSON.stringify(data));
+    }
+
+    const ageInput = document.getElementById("ageInput");
+    const continueBtn = document.getElementById("continueBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const errorText = document.getElementById("errorText");
+    const lockBox = document.getElementById("lockBox");
+    const lockMsg = document.getElementById("lockMsg");
+
+    // If already verified, skip
+    (function(){
+      const data = getAppData();
+      if (data && data.age >= 18){
+        window.location.href = "menu.html";
+      }
+    })();
+
+    function showError(msg){
+      errorText.style.display = "block";
+      errorText.textContent = msg;
+    }
+    function clearError(){
+      errorText.style.display = "none";
+      errorText.textContent = "";
+    }
+
+    function lockOut(msg){
+      lockBox.style.display = "block";
+      lockMsg.textContent = msg;
+
+      // kick them out of your site after a second
+      setTimeout(() => {
+        window.location.href = "https://www.google.com";
+      }, 1200);
+    }
+
+    continueBtn.addEventListener("click", () => {
+      clearError();
+
+      const age = Number(ageInput.value);
+
+      if (!age || age < 1 || age > 120){
+        showError("Enter a valid age (1–120).");
+        return;
+      }
+
+      const data = getAppData();
+      data.age = age;
+      setAppData(data);
+
+      if (age < 18){
+        lockOut("Sorry — you must be 18 or older to use this app.");
+        return;
+      }
+
+      window.location.href = "menu.html";
+    });
+
+    resetBtn.addEventListener("click", () => {
+      localStorage.removeItem(APP_KEY);
+      ageInput.value = "";
+      clearError();
+      lockBox.style.display = "none";
+    });
+  </script>
 </body>
 </html>
