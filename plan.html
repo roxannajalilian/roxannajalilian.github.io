@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Plan</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=11" />
+  <script src="shared.js?v=11"></script>
+  <script>requireAdult("plan.html");</script>
 </head>
 <body>
   <nav>
@@ -15,10 +17,8 @@
         <div class="sub">Your Plan</div>
       </div>
     </div>
-
     <div class="nav-actions">
-      <a class="btn ghost" href="start.html">Start</a>
-      <a class="btn" href="menu.html">Menu</a>
+      <a class="btn ghost" href="menu.html">Menu</a>
       <a class="btn ghost" href="quiz.html">Quiz</a>
       <a class="btn ghost" href="scan.html">Analysis</a>
       <a class="btn ghost" href="game.html">Game</a>
@@ -27,64 +27,38 @@
 
   <div class="container">
     <div class="card">
-      <div id="loadingWrap" class="plan-loading">
+      <div id="loadingBox" class="loading-row">
         <div class="spinner"></div>
         <div>
-          <h2 style="margin:0 0 6px;">Building your plan…</h2>
-          <p class="muted" style="margin:0;">Reading your quiz result and generating advice.</p>
+          <div style="font-weight:900;">Generating your plan…</div>
+          <div class="muted small">Using your saved quiz score</div>
         </div>
       </div>
 
-      <div id="emptyWrap" class="section" style="display:none;">
-        <h2 style="margin:0 0 6px;">No quiz result yet</h2>
-        <p class="muted" style="margin:0 0 14px;">Take the quiz first so I can build your plan.</p>
-        <div class="row">
-          <a class="btn primary" href="quiz.html">Start Quiz</a>
-          <a class="btn" href="menu.html">Back to Menu</a>
-        </div>
-      </div>
+      <div id="planContent" style="display:none;">
+        <h2 style="margin:14px 0 6px;">Your Plan</h2>
+        <p class="muted" id="planMeta" style="margin:0 0 12px;"></p>
 
-      <div id="resultWrap" style="display:none;">
-        <div class="row" style="justify-content:space-between; align-items:flex-start;">
-          <div>
-            <h2 style="margin:0 0 6px;">Your Plan</h2>
-            <p class="muted" id="savedAtText" style="margin:0;"></p>
-          </div>
-          <span class="badge" id="scoreBadge">—%</span>
-        </div>
-
-        <div class="section">
-          <div class="progress"><div id="planBar"></div></div>
-        </div>
+        <div class="progress"><div id="planBar"></div></div>
+        <h3 id="planPercent" style="margin:10px 0 6px;"></h3>
 
         <div class="grid-2 section">
           <div class="tile">
-            <h3 style="margin:0 0 8px;">What your score means</h3>
-            <p class="muted" id="meaningText" style="margin:0;"></p>
+            <h3>Do this next</h3>
+            <p class="muted" id="nextSteps"></p>
           </div>
           <div class="tile">
-            <h3 style="margin:0 0 8px;">Your main rule</h3>
-            <p class="muted" id="ruleText" style="margin:0;"></p>
+            <h3>Texting rule</h3>
+            <p class="muted" id="rule"></p>
           </div>
         </div>
 
-        <div class="grid-2 section">
-          <div class="tile">
-            <h3 style="margin:0 0 10px;">Do this today</h3>
-            <ul id="todayList" style="margin:0; padding-left:18px;"></ul>
-          </div>
-          <div class="tile">
-            <h3 style="margin:0 0 10px;">Texting boundaries</h3>
-            <ul id="boundariesList" style="margin:0; padding-left:18px;"></ul>
-          </div>
+        <div class="tile section">
+          <h3>Reality check</h3>
+          <p class="muted" id="reality"></p>
         </div>
 
-        <div class="section tile">
-          <h3 style="margin:0 0 10px;">Copy-paste lines</h3>
-          <div class="plan-quotes" id="linesBox"></div>
-        </div>
-
-        <div class="row section">
+        <div class="row" style="margin-top:12px;">
           <a class="btn primary" href="quiz.html">Retake Quiz</a>
           <a class="btn" href="menu.html">Back to Menu</a>
         </div>
@@ -92,6 +66,6 @@
     </div>
   </div>
 
-  <script src="plan.js?v=1"></script>
+  <script src="plan.js?v=11"></script>
 </body>
 </html>
