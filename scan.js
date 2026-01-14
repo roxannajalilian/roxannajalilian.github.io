@@ -1,178 +1,114 @@
-(() => {
-  const APP_KEY = "dd_app_v1";
-  function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
+requireAdult("scan.html");
 
-  // 18+ gate
-  const data = getAppData();
-  if (!data.age || Number(data.age) < 18) {
-    window.location.replace("start.html");
+const textBox = document.getElementById("textBox");
+const photoInput = document.getElementById("photoInput");
+const preview = document.getElementById("preview");
+const previewImg = document.getElementById("previewImg");
+const photoNote = document.getElementById("photoNote");
+
+const analyzeBtn = document.getElementById("analyzeBtn");
+const clearBtn = document.getElementById("clearBtn");
+
+const resultBox = document.getElementById("resultBox");
+const scanBar = document.getElementById("scanBar");
+const scanPercent = document.getElementById("scanPercent");
+const scanSummary = document.getElementById("scanSummary");
+const signalsEl = document.getElementById("signals");
+
+let hasPhoto = false;
+
+photoInput.addEventListener("change", () => {
+  const file = photoInput.files && photoInput.files[0];
+  if (!file) {
+    hasPhoto = false;
+    preview.style.display = "none";
+    photoNote.textContent = "";
     return;
   }
 
-  const textInput = document.getElementById("textInput");
-  const imgInput = document.getElementById("imgInput");
-  const imgWrap = document.getElementById("imgWrap");
-  const imgPreview = document.getElementById("imgPreview");
-  const removeImgBtn = document.getElementById("removeImgBtn");
-  const imgNote = document.getElementById("imgNote");
-
-  const analyzeBtn = document.getElementById("analyzeBtn");
-  const clearBtn = document.getElementById("clearBtn");
-
-  const bar = document.getElementById("bar");
-  const scoreText = document.getElementById("scoreText");
-  const summaryText = document.getElementById("summaryText");
-  const notesEl = document.getElementById("notes");
-
-  const usedPhotoBox = document.getElementById("usedPhotoBox");
-  const photoNoteOut = document.getElementById("photoNoteOut");
-  const photoOut = document.getElementById("photoOut");
-
-  let photoDataUrl = ""; // stores image preview for output
-
-  function setNotes(items){
-    notesEl.innerHTML = items.map(x => `<li>${x}</li>`).join("");
+  if (!file.type.startsWith("image/")) {
+    hasPhoto = false;
+    preview.style.display = "none";
+    photoNote.textContent = "That file is not an image.";
+    return;
   }
 
-  function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+  hasPhoto = true;
+  const url = URL.createObjectURL(file);
+  previewImg.src = url;
+  preview.style.display = "block";
+  photoNote.textContent = "Photo attached ✅ (preview shown)";
+});
 
-  // Handle image upload preview
-  imgInput.addEventListener("change", () => {
-    const file = imgInput.files && imgInput.files[0];
-    if (!file) return;
+function addSignal(list, text){
+  const li = document.createElement("li");
+  li.textContent = text;
+  list.appendChild(li);
+}
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      photoDataUrl = String(reader.result || "");
-      imgPreview.src = photoDataUrl;
-      imgWrap.style.display = "block";
-    };
-    reader.readAsDataURL(file);
+function analyzeText(raw){
+  const t = (raw || "").toLowerCase();
+
+  let score = 0;
+  const signals = [];
+
+  const checks = [
+    { re: /\bseen\b|\bread\b|\bon delivered\b/, pts: 10, msg: "Mentions of ‘seen/read/delivered’ = tracking replies." },
+    { re: /\bok\b|\bk\b|\bkk\b|\blol\b|\b?\?\?+\b/, pts: 10, msg: "Dry replies / ‘k/ok/??’ patterns." },
+    { re: /\.{3,}|…/, pts: 10, msg: "Ellipsis ‘…’ / dot dot dot = ambiguity trigger." },
+    { re: /\bwhy (did|do) (you|u)\b|\banswer\b|\breply\b/, pts: 10, msg: "Chasing clarity / asking why they didn’t reply." },
+    { re: /\bsorry\b|\bmy fault\b|\bi shouldn’t\b/, pts: 8, msg: "Apology language (even when you didn’t do anything)." },
+    { re: /\bi miss you\b|\bdo you even\b|\byou don’t care\b/, pts: 12, msg: "Emotional pressure phrases." },
+    { re: /\bblocking\b|\bunfollow\b|\bremove\b/, pts: 10, msg: "Threat-style actions (block/unfollow/remove)." }
+  ];
+
+  checks.forEach(c => {
+    if (c.re.test(t)) {
+      score += c.pts;
+      signals.push(c.msg);
+    }
   });
 
-  removeImgBtn.addEventListener("click", () => {
-    imgInput.value = "";
-    imgWrap.style.display = "none";
-    imgPreview.src = "";
-    imgNote.value = "";
-    photoDataUrl = "";
-  });
-
-  function analyzeText(raw, photoNoteText){
-    const t = (raw || "").trim();
-    const photoNoteClean = (photoNoteText || "").trim();
-
-    if (!t && !photoDataUrl) {
-      return { score: 0, summary: "Paste text or upload a photo first.", notes: ["Nothing to analyze yet."] };
-    }
-
-    const lower = t.toLowerCase();
-    const lines = t ? t.split(/\n+/).map(s => s.trim()).filter(Boolean) : [];
-
-    const signals = [];
-
-    // signals lists
-    const shutdown = ["k","kk","ok","okay","sure","fine","idk","nvm","whatever","seen","left on read","lol","nah","mhm","i guess"];
-    const hotWords = ["leave me alone","stop texting","i’m done","blocked","unfollow","dont talk to me","forget it"];
-
-    // counts
-    const shortReplies = lines.filter(l => l.length <= 3).length;
-    const seenHits = (lower.match(/\bseen\b/g) || []).length + (lower.match(/left on read/g) || []).length;
-    const punctHits = (lower.match(/\.\.\./g) || []).length + (lower.match(/\?\?\?/g) || []).length + (lower.match(/!!+/g) || []).length;
-
-    let shutdownHits = 0;
-    shutdown.forEach(w => { if (lower.includes(w)) shutdownHits++; });
-
-    let hotHits = 0;
-    hotWords.forEach(w => { if (lower.includes(w)) hotHits++; });
-
-    // base score
-    let score = 0;
-    score += shortReplies * 6;
-    score += shutdownHits * 10;
-    score += seenHits * 14;
-    score += punctHits * 3;
-    score += hotHits * 16;
-
-    if (lines.length >= 18) score += 10;
-    if (lines.length >= 30) score += 10;
-
-    // photo note adds “realism” and small score influence
-    if (photoDataUrl) {
-      signals.push("Screenshot uploaded (used for context).");
-      score += 10;
-      if (photoNoteClean) {
-        signals.push(`Photo note: “${photoNoteClean}”.`);
-        score += 8;
-      } else {
-        signals.push("No photo note added (optional).");
-      }
-    }
-
-    score = clamp(Math.round(score), 0, 100);
-
-    // notes from text
-    if (t) {
-      if (shortReplies > 0) signals.push(`Short replies detected (${shortReplies}).`);
-      if (shutdownHits > 0) signals.push(`Dry/shutdown wording detected.`);
-      if (seenHits > 0) signals.push(`“Seen/left on read” detected.`);
-      if (punctHits > 0) signals.push(`Heavy punctuation detected (can trigger overthinking).`);
-      if (hotHits > 0) signals.push(`Conflict / shutdown phrases detected.`);
-      if (signals.length === 0) signals.push("No obvious patterns detected from this text alone.");
-    } else {
-      signals.push("No text pasted — analysis based on screenshot context + note only.");
-    }
-
-    // summary
-    const summary =
-      score >= 80 ? "High delulu risk 🚨 — protect your peace, don’t chase, get clarity once." :
-      score >= 60 ? "Moderate-high — mixed signals/dry energy present. Keep boundaries." :
-      score >= 40 ? "Medium — a few triggers. Focus on patterns, not one message." :
-      score >= 20 ? "Low — not many signals. Stay calm + direct." :
-                    "Very low — looks normal.";
-
-    return { score, summary, notes: signals };
+  if (t.length > 350) {
+    score += 6;
+    signals.push("Long convo pasted — more room for overthinking.");
   }
 
-  function renderResult(result){
-    bar.style.width = `${result.score}%`;
-    scoreText.textContent = `${result.score}%`;
-    summaryText.textContent = result.summary;
-    setNotes(result.notes);
-
-    if (photoDataUrl) {
-      usedPhotoBox.style.display = "block";
-      photoOut.src = photoDataUrl;
-      photoNoteOut.textContent = imgNote.value.trim()
-        ? `Note: ${imgNote.value.trim()}`
-        : "No note was added for the photo.";
-    } else {
-      usedPhotoBox.style.display = "none";
-      photoOut.src = "";
-      photoNoteOut.textContent = "";
-    }
+  if (hasPhoto) {
+    score += 8;
+    signals.push("Screenshot added — usually means you’re collecting evidence.");
   }
 
-  analyzeBtn.addEventListener("click", () => {
-    const result = analyzeText(textInput.value, imgNote.value);
-    renderResult(result);
-  });
+  score = Math.min(100, score);
 
-  clearBtn.addEventListener("click", () => {
-    textInput.value = "";
-    bar.style.width = "0%";
-    scoreText.textContent = "—%";
-    summaryText.textContent = "Run an analysis to see results.";
-    setNotes(["No scan yet."]);
+  let summary =
+    score >= 75 ? "High overthink signals. Pause + don’t chase. Watch actions." :
+    score >= 45 ? "Medium signals. Get clarity once, then step back." :
+                  "Low signals. You’re mostly reading it normally.";
 
-    // clear photo
-    imgInput.value = "";
-    imgWrap.style.display = "none";
-    imgPreview.src = "";
-    imgNote.value = "";
-    photoDataUrl = "";
-    usedPhotoBox.style.display = "none";
-    photoOut.src = "";
-    photoNoteOut.textContent = "";
-  });
-})();
+  if (signals.length === 0) signals.push("No obvious red-flag patterns detected from the text you pasted.");
+
+  return { score, summary, signals };
+}
+
+analyzeBtn.addEventListener("click", () => {
+  const raw = textBox.value.trim();
+  const res = analyzeText(raw);
+
+  resultBox.style.display = "block";
+  scanBar.style.width = `${res.score}%`;
+  scanPercent.textContent = `${res.score}%`;
+  scanSummary.textContent = res.summary;
+
+  signalsEl.innerHTML = "";
+  res.signals.forEach(s => addSignal(signalsEl, s));
+});
+
+clearBtn.addEventListener("click", () => {
+  textBox.value = "";
+  photoInput.value = "";
+  hasPhoto = false;
+  preview.style.display = "none";
+  photoNote.textContent = "";
+  resultBox.style.display = "none";
+});
