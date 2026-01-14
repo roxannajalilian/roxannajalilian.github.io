@@ -1,14 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delulu Detector • Quiz</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Delulu Quiz</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<nav>
-  <div class="nav-inner">
+  <nav>
     <div class="brand">
       <div class="logo">DD</div>
       <div>
@@ -16,47 +15,66 @@
         <div class="sub">Answer honestly (it’s for fun)</div>
       </div>
     </div>
-    <div class="nav-right">
-      <a class="navlink" href="menu.html">Menu</a>
-      <a class="navlink" href="policy.html">Policy</a>
+
+    <div class="nav-actions">
+      <button class="pill" id="menuBtn">Menu</button>
+      <button class="pill" id="policyBtn">Policy</button>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<div class="container">
-  <div class="card">
-    <div class="row spread">
-      <div class="muted" id="progressText">Question --</div>
-      <div class="pill" id="pillSave">Not saved yet</div>
+  <main class="container">
+    <div class="card">
+      <div class="topline">
+        <div id="qCount" class="muted">Question 1 of 20</div>
+        <div class="pill subtle" id="saveStatus">Not saved yet</div>
+      </div>
+
+      <div class="progress">
+        <div class="bar" id="bar"></div>
+      </div>
+
+      <h2 id="questionText">…</h2>
+
+      <div class="answers">
+        <button class="choice" data-val="0">No</button>
+        <button class="choice" data-val="1">Sometimes</button>
+        <button class="choice" data-val="2">Yes</button>
+        <button class="choice" data-val="3">All the time</button>
+      </div>
+
+      <div class="bottomRow">
+        <button class="btn ghost" id="returnBtn">Return</button>
+        <button class="btn primary" id="nextBtn">Next</button>
+      </div>
+
+      <p class="tiny muted centerText">Tip: you can’t skip a question • “Return” goes back one question</p>
     </div>
 
-    <div class="progress" style="margin-top:10px;">
-      <div id="progressFill"></div>
+    <div class="card hidden" id="resultCard">
+      <div class="resultGrid">
+        <div>
+          <h1 id="resultTitle">Your result</h1>
+          <p class="muted" id="resultSubtitle"></p>
+          <p id="resultPara"></p>
+          <div class="row">
+            <button class="btn ghost" id="restartBtn">Restart</button>
+            <a class="btn primary" href="scan.html">Try Text Analyzer</a>
+          </div>
+        </div>
+
+        <div class="circleWrap">
+          <div class="circle" id="resultCircle">
+            <div class="circleInner">
+              <div class="big" id="resultPct">--%</div>
+              <div class="muted tiny">delulu score</div>
+            </div>
+          </div>
+          <div class="tiny muted centerText" id="modeTag"></div>
+        </div>
+      </div>
     </div>
+  </main>
 
-    <h2 id="questionText" style="margin-top:16px;">Loading…</h2>
-
-    <div class="answers">
-      <button class="answer" data-value="0">No</button>
-      <button class="answer" data-value="1">Sometimes</button>
-      <button class="answer" data-value="2">Yes</button>
-      <button class="answer" data-value="3">All the time</button>
-    </div>
-
-    <hr/>
-
-    <div class="row spread">
-      <button class="secondary" id="backBtn">Return</button>
-      <button class="primary" id="nextBtn">Next</button>
-    </div>
-
-    <div id="warn" class="notice" style="display:none;"></div>
-  </div>
-</div>
-
-<div class="footer">Tip: you can’t skip a question • “Return” goes back one question</div>
-
-<script src="storage.js"></script>
-<script src="quiz.js"></script>
+  <script type="module" src="quiz.js"></script>
 </body>
 </html>
