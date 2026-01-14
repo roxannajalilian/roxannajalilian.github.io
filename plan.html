@@ -27,65 +27,60 @@
 
   <div class="container">
     <div class="card">
-      <!-- LOADING -->
       <div id="loadingWrap" class="plan-loading">
-        <div class="spinner" aria-hidden="true"></div>
+        <div class="spinner"></div>
         <div>
           <h2 style="margin:0 0 6px;">Building your plan…</h2>
           <p class="muted" style="margin:0;">Reading your quiz result and generating advice.</p>
         </div>
       </div>
 
-      <!-- EMPTY STATE -->
       <div id="emptyWrap" class="section" style="display:none;">
         <h2 style="margin:0 0 6px;">No quiz result yet</h2>
-        <p class="muted" style="margin:0 0 14px;">Take the quiz first so I can make a plan for you.</p>
+        <p class="muted" style="margin:0 0 14px;">Take the quiz first so I can build your plan.</p>
         <div class="row">
           <a class="btn primary" href="quiz.html">Start Quiz</a>
           <a class="btn" href="menu.html">Back to Menu</a>
         </div>
       </div>
 
-      <!-- RESULTS -->
       <div id="resultWrap" style="display:none;">
-        <div class="plan-head">
+        <div class="row" style="justify-content:space-between; align-items:flex-start;">
           <div>
             <h2 style="margin:0 0 6px;">Your Plan</h2>
             <p class="muted" id="savedAtText" style="margin:0;"></p>
           </div>
-          <div class="badge" id="scoreBadge">—%</div>
+          <span class="badge" id="scoreBadge">—%</span>
         </div>
 
-        <div class="progress" style="margin:12px 0 14px;">
-          <div id="planBar"></div>
+        <div class="section">
+          <div class="progress"><div id="planBar"></div></div>
         </div>
 
-        <div class="grid-2">
-          <div class="item">
+        <div class="grid-2 section">
+          <div class="tile">
             <h3 style="margin:0 0 8px;">What your score means</h3>
             <p class="muted" id="meaningText" style="margin:0;"></p>
           </div>
-
-          <div class="item">
+          <div class="tile">
             <h3 style="margin:0 0 8px;">Your main rule</h3>
             <p class="muted" id="ruleText" style="margin:0;"></p>
           </div>
         </div>
 
-        <div class="section grid-2">
-          <div class="item">
+        <div class="grid-2 section">
+          <div class="tile">
             <h3 style="margin:0 0 10px;">Do this today</h3>
             <ul id="todayList" style="margin:0; padding-left:18px;"></ul>
           </div>
-
-          <div class="item">
+          <div class="tile">
             <h3 style="margin:0 0 10px;">Texting boundaries</h3>
             <ul id="boundariesList" style="margin:0; padding-left:18px;"></ul>
           </div>
         </div>
 
-        <div class="section item">
-          <h3 style="margin:0 0 10px;">Copy-paste lines (so you don’t spiral)</h3>
+        <div class="section tile">
+          <h3 style="margin:0 0 10px;">Copy-paste lines</h3>
           <div class="plan-quotes" id="linesBox"></div>
         </div>
 
@@ -100,4 +95,3 @@
   <script src="plan.js?v=1"></script>
 </body>
 </html>
-
