@@ -44,10 +44,18 @@
         </div>
 
         <div class="choice-grid">
-          <button class="btn choice primary" data-val="3" type="button"><b>Yes (a lot)</b><span>Strong signal</span></button>
-          <button class="btn choice" data-val="2" type="button"><b>Sometimes</b><span>Not always</span></button>
-          <button class="btn choice" data-val="1" type="button"><b>Rarely</b><span>Once in a while</span></button>
-          <button class="btn choice ghost" data-val="0" type="button"><b>No</b><span>Doesn’t apply</span></button>
+          <button class="btn choice primary" data-val="3" type="button">
+            <b>Yes (a lot)</b><span>Strong signal</span>
+          </button>
+          <button class="btn choice" data-val="2" type="button">
+            <b>Sometimes</b><span>Not always</span>
+          </button>
+          <button class="btn choice" data-val="1" type="button">
+            <b>Rarely</b><span>Once in a while</span>
+          </button>
+          <button class="btn choice ghost" data-val="0" type="button">
+            <b>No</b><span>Doesn’t apply</span>
+          </button>
         </div>
       </div>
 
@@ -105,18 +113,45 @@
     const adviceText=document.getElementById("adviceText");
     const debug=document.getElementById("debug");
 
+    const choiceButtons = Array.from(document.querySelectorAll("button[data-val]"));
+
     function showDebug(msg){ debug.style.display="block"; debug.textContent=msg; }
+    function hideDebug(){ debug.style.display="none"; debug.textContent=""; }
 
     function answeredCount(){ return answers.filter(v=>v!==null).length; }
     function scoreNow(){ return answers.reduce((s,v)=>s+(v??0),0); }
+
+    function clearChoiceClasses(btn){
+      btn.classList.remove("selected","sel-0","sel-1","sel-2","sel-3","tap");
+    }
+
+    function highlightSelected(){
+      // remove highlight from all
+      choiceButtons.forEach(clearChoiceClasses);
+
+      // highlight current choice (if answered)
+      const v = answers[idx];
+      if(v === null) return;
+
+      const match = choiceButtons.find(b => Number(b.dataset.val) === v);
+      if(!match) return;
+
+      match.classList.add("selected", `sel-${v}`);
+    }
 
     function render(){
       qCount.textContent=`Question ${idx+1}/${questions.length}`;
       progressBadge.textContent=`${Math.round((answeredCount()/questions.length)*100)}% done`;
       questionText.textContent=questions[idx].q;
       questionHint.textContent=questions[idx].h;
+
       prevBtn.disabled = idx===0;
+
+      // hide results while answering
       resultArea.style.display="none";
+
+      // keep highlight when going back
+      highlightSelected();
     }
 
     function finish(){
@@ -131,16 +166,19 @@
                       "Super grounded ✅ — keep standards.";
 
       const data=getAppData();
-      data.lastQuiz={ percent, answers, savedAt:Date.now() };
+      data.lastQuiz={ percent, answers:[...answers], savedAt:Date.now() };
       setAppData(data);
 
       resultArea.style.display="block";
       bar.style.width=`${percent}%`;
       percentText.textContent=`${percent}%`;
       adviceText.textContent=advice;
+
+      highlightSelected();
     }
 
     function next(){
+      // if last question, only finish if none skipped
       if(idx >= questions.length-1){
         const firstUnanswered=answers.findIndex(v=>v===null);
         if(firstUnanswered!==-1){
@@ -149,26 +187,51 @@
           showDebug("Answer the skipped question before finishing.");
           return;
         }
+        hideDebug();
         finish();
         return;
       }
+
       idx++;
       render();
     }
 
-    document.querySelectorAll("button[data-val]").forEach(btn=>{
+    // CLICK HANDLERS (this is the part that makes it COLOR)
+    choiceButtons.forEach(btn=>{
       btn.addEventListener("click", ()=>{
-        answers[idx]=Number(btn.dataset.val);
-        next();
+        hideDebug();
+
+        const val = Number(btn.dataset.val);
+        answers[idx]=val;
+
+        // reset all, then tap+select this one
+        choiceButtons.forEach(clearChoiceClasses);
+        btn.classList.add("tap");
+
+        // tiny delay, then apply the colored selected style
+        setTimeout(() => {
+          btn.classList.remove("tap");
+          btn.classList.add("selected", `sel-${val}`);
+
+          // delay so you actually see the color before next question
+          setTimeout(() => next(), 180);
+        }, 40);
       });
     });
 
-    prevBtn.addEventListener("click", ()=>{ if(idx>0){ idx--; render(); } });
+    prevBtn.addEventListener("click", ()=>{
+      hideDebug();
+      if(idx>0){ idx--; render(); }
+    });
 
     restartBtn.addEventListener("click", ()=>{
       for(let k=0;k<answers.length;k++) answers[k]=null;
       idx=0;
-      debug.style.display="none";
+      hideDebug();
+      bar.style.width="0%";
+      percentText.textContent="0%";
+      adviceText.textContent="";
+      resultArea.style.display="none";
       render();
     });
 
