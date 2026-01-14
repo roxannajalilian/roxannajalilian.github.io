@@ -100,12 +100,13 @@ nav{
   padding: 10px 14px;
   border-radius: 999px;
   font-weight: 750;
-  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease;
   display:inline-flex; align-items:center; justify-content:center;
   min-height:40px;
 }
 .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.11); }
 .btn:active{ transform: translateY(0px) scale(.99); }
+
 .btn.primary{
   background: rgba(124,77,255,.25);
   border-color: rgba(124,77,255,.5);
@@ -113,6 +114,7 @@ nav{
 .btn.ghost{
   background: transparent;
 }
+
 .btn:disabled{
   opacity:.5; cursor:not-allowed; transform:none;
 }
@@ -186,25 +188,45 @@ label{ color: var(--muted); font-weight:650; display:block; margin: 6px 0; }
   display:flex;
   flex-direction:column;
   align-items:flex-start;
+
+  /* IMPORTANT: choices should NOT inherit .btn.primary/.btn.ghost looks */
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.14);
 }
+
+/* Even if you left primary/ghost in HTML, normalize them for choices */
+.choice.primary,
+.choice.ghost{
+  background: rgba(255,255,255,.06) !important;
+  border-color: rgba(255,255,255,.14) !important;
+}
+
 .choice b{ font-size:15px; }
 .choice span{ font-size:13px; color: var(--muted); }
 
-/* Selected answer colors */
-.choice.selected{ border-color: rgba(255,255,255,.18); transform: scale(1.01); }
+/* Selected answer colors (now overrides everything) */
+.choice.selected{
+  border-color: rgba(255,255,255,.22) !important;
+  transform: scale(1.01);
+  box-shadow: 0 12px 34px rgba(0,0,0,.25);
+}
 .choice.tap{ transform: scale(0.985); }
 
 .choice.selected.sel-3{
-  background: linear-gradient(135deg, rgba(255,60,120,.42), rgba(255,120,80,.30));
+  background: linear-gradient(135deg, rgba(255,60,120,.55), rgba(255,120,80,.35)) !important;
+  box-shadow: 0 0 0 3px rgba(255,60,120,.16), 0 14px 34px rgba(255,60,120,.20);
 }
 .choice.selected.sel-2{
-  background: linear-gradient(135deg, rgba(255,170,50,.38), rgba(255,230,120,.24));
+  background: linear-gradient(135deg, rgba(255,170,50,.52), rgba(255,230,120,.30)) !important;
+  box-shadow: 0 0 0 3px rgba(255,170,50,.14), 0 14px 34px rgba(255,170,50,.18);
 }
 .choice.selected.sel-1{
-  background: linear-gradient(135deg, rgba(180,160,255,.34), rgba(120,170,255,.22));
+  background: linear-gradient(135deg, rgba(180,160,255,.50), rgba(120,170,255,.28)) !important;
+  box-shadow: 0 0 0 3px rgba(160,160,255,.14), 0 14px 34px rgba(140,170,255,.16);
 }
 .choice.selected.sel-0{
-  background: linear-gradient(135deg, rgba(90,230,160,.24), rgba(70,160,255,.14));
+  background: linear-gradient(135deg, rgba(90,230,160,.40), rgba(70,160,255,.20)) !important;
+  box-shadow: 0 0 0 3px rgba(90,230,160,.12), 0 14px 34px rgba(90,230,160,.14);
 }
 
 /* Loader */
