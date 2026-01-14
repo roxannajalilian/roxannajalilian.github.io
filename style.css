@@ -219,4 +219,12 @@ a, button, input, textarea, select { pointer-events:auto; }
 .choice:active {
   transform: scale(0.98);
 }
-
+.choice.selected {
+  background: linear-gradient(135deg, rgba(124,77,255,0.55), rgba(70,130,255,0.45));
+  border-color: rgba(150,120,255,0.9);
+  box-shadow: 0 0 0 3px rgba(124,77,255,0.25),
+              0 10px 30px rgba(124,77,255,0.35);
+  transform: scale(1.01);
+}
+.choice.selected span { color: rgba(255,255,255,0.9); }
+.choice:active { transform: scale(0.98); }
