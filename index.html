@@ -17,6 +17,7 @@
     </div>
     <div class="nav-actions">
       <a class="btn" href="privacy.html">Privacy</a>
+      <a class="btn ghost" href="menu.html">Menu</a>
     </div>
   </nav>
 
@@ -44,6 +45,10 @@
           <button class="btn primary" id="continueBtn" type="button" disabled>Continue</button>
           <button class="btn ghost" id="resetBtn" type="button">Reset</button>
         </div>
+
+        <p class="muted" style="margin-top:12px;">
+          Tip: If your index keeps redirecting, open <b>index.html?stay=1</b>
+        </p>
       </div>
 
       <div class="section item" id="lockBox" style="display:none;">
@@ -69,13 +74,19 @@
     function showError(msg){ errorText.style.display = "block"; errorText.textContent = msg; }
     function clearError(){ errorText.style.display = "none"; errorText.textContent = ""; }
 
-    // Enable continue only if they agree
-    agreeBox.addEventListener("change", () => { continueBtn.disabled = !agreeBox.checked; });
+    // enable continue only if agreed
+    agreeBox.addEventListener("change", () => {
+      continueBtn.disabled = !agreeBox.checked;
+    });
 
-    // If already verified, go to MENU
-    (function(){
+    // ✅ FIX: only auto-skip to menu if NOT forcing stay
+    (function autoSkip(){
+      const params = new URLSearchParams(window.location.search);
+      const stay = params.get("stay") === "1"; // open index.html?stay=1 to stay here
+      if (stay) return;
+
       const data = getAppData();
-      if(data && Number(data.age) >= 18){
+      if (data && Number(data.age) >= 18) {
         window.location.href = "menu.html";
       }
     })();
@@ -83,6 +94,7 @@
     continueBtn.addEventListener("click", () => {
       clearError();
       const age = Number(ageInput.value);
+
       if(!age || age < 1 || age > 120){
         showError("Enter a valid age (1–120).");
         return;
@@ -113,6 +125,10 @@
       continueBtn.disabled = true;
       clearError();
       lockBox.style.display = "none";
+      // keep you on the start page
+      if (!window.location.search.includes("stay=1")) {
+        window.location.href = "index.html?stay=1";
+      }
     });
   </script>
 </body>
