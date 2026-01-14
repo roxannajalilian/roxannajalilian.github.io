@@ -1,11 +1,10 @@
-
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Locked</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Access Denied</title>
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
   <nav>
@@ -19,13 +18,17 @@
   </nav>
 
   <main class="container">
-    <div class="card center">
-      <h1>Access denied</h1>
-      <p class="muted" id="reason">Sorry — you must be 18 or older to use this app.</p>
-      <div class="row">
-        <button class="btn ghost" id="clear">Clear & return</button>
+    <div class="card center" style="max-width: 900px; margin: 0 auto;">
+      <h1 style="margin: 6px 0 10px;">Access denied</h1>
+      <p class="muted" id="reason">Sorry — you must be 18+.</p>
+
+      <div class="row" style="justify-content:center; margin-top:16px;">
+        <button class="btn ghost" id="clearBtn" type="button">Clear & return</button>
       </div>
-      <p class="tiny muted">If you’re under 18, this app can’t be used.</p>
+
+      <p class="tiny muted" style="margin-top:12px;">
+        If you’re under 18, this app can’t be used.
+      </p>
     </div>
   </main>
 
@@ -33,14 +36,16 @@
     import { getData, setData } from "./gate.js";
 
     const data = getData();
-    const reason = data?.lockReason || "Sorry — you must be 18 or older to use this app.";
-    document.getElementById("reason").textContent = reason;
+    document.getElementById("reason").textContent =
+      data?.lockReason || "Sorry — you must be 18 or older to use this app.";
 
-    // Stop back button from showing protected page
+    // Prevent going "back" into the app
     history.pushState(null, "", location.href);
-    window.addEventListener("popstate", () => history.pushState(null, "", location.href));
+    window.addEventListener("popstate", () => {
+      history.pushState(null, "", location.href);
+    });
 
-    document.getElementById("clear").addEventListener("click", () => {
+    document.getElementById("clearBtn").addEventListener("click", () => {
       setData({});
       window.location.replace("index.html");
     });
