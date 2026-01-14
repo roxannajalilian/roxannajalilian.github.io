@@ -1,4 +1,3 @@
-// shared.js
 const APP_KEY = "dd_app_v1";
 
 function getAppData() {
@@ -13,30 +12,41 @@ function setAppData(data) {
   localStorage.setItem(APP_KEY, JSON.stringify(data));
 }
 
-function clearAppData() {
-  localStorage.removeItem(APP_KEY);
-}
-
-// Redirect to start with a return destination
-function requireAdult(nextPage) {
-  const data = getAppData();
-  if (!data.age || Number(data.age) < 18) {
-    const next = encodeURIComponent(nextPage || "menu.html");
-    window.location.replace(`start.html?next=${next}`);
-  }
-}
-
-// Only allow returning to known pages
+/**
+ * Get ?next=page.html safely. Only allow your own pages.
+ * If missing or invalid, returns "menu.html".
+ */
 function safeNextFromURL() {
-  const allowed = new Set([
+  const params = new URLSearchParams(window.location.search);
+  const next = params.get("next");
+
+  const allow = new Set([
     "menu.html",
     "quiz.html",
     "plan.html",
     "scan.html",
     "game.html",
     "privacy.html",
+    "start.html"
   ]);
-  const p = new URLSearchParams(location.search);
-  const n = p.get("next") || "menu.html";
-  return allowed.has(n) ? n : "menu.html";
+
+  if (!next) return "menu.html";
+
+  // remove any path tricks (only filename)
+  const clean = next.split("/").pop();
+
+  return allow.has(clean) ? clean : "menu.html";
+}
+
+/**
+ * Call this at the TOP of protected pages (menu/quiz/plan/scan/game).
+ * If not verified 18+, bounce to start.html?next=<this page>.
+ */
+function requireAdult(pageName = "menu.html") {
+  const data = getAppData();
+  const age = Number(data?.age);
+
+  if (!age || age < 18) {
+    window.location.replace(`start.html?next=${encodeURIComponent(pageName)}`);
+  }
 }
