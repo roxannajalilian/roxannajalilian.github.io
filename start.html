@@ -3,54 +3,125 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Start</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Delulu Detector • Age Check</title>
+  <link rel="stylesheet" href="style.css?v=10" />
+
+  <style>
+    /* extra lock styling */
+    .lock-card{
+      max-width:520px;
+      margin:60px auto;
+    }
+    .tiny{
+      font-size:13px;
+      opacity:.75;
+    }
+  </style>
 </head>
 <body>
-  <nav>
-    <div class="brand">
-      <div class="logo">DD</div>
-      <div>
-        <div class="title">Delulu Detector</div>
-        <div class="sub">18+ only</div>
-      </div>
-    </div>
 
-    <div class="nav-actions">
-      <a class="btn ghost" href="privacy.html">Privacy</a>
-      <a class="btn ghost" href="menu.html">Menu</a>
-      <button class="btn ghost" id="resetAppBtn" type="button">Reset App</button>
-    </div>
-  </nav>
+  <!-- 🔒 NO NAVBAR ON THIS PAGE -->
 
   <div class="container">
-    <div class="card">
-      <div class="section">
-        <h1 style="margin:0 0 6px;">Welcome</h1>
-        <p class="muted" style="margin:0;">Enter your age to continue. This app is <b>18+</b> only.</p>
-      </div>
-
-      <div class="section">
-        <label for="ageInput">Your age (must be 18+)</label>
-        <input id="ageInput" type="number" min="18" max="120" placeholder="18" />
-
-        <div class="row" style="margin-top:10px; justify-content:space-between;">
-          <label style="display:flex; gap:10px; align-items:center; margin:0;">
-            <input id="agreeChk" type="checkbox" style="width:18px; height:18px;" />
-            <span class="muted">I agree to the <a href="privacy.html"><b>Privacy & Concerns</b></a></span>
-          </label>
-        </div>
-
-        <p class="muted" id="err" style="margin:10px 0 0; display:none;"></p>
-
-        <div class="row" style="margin-top:14px;">
-          <button class="btn primary" id="continueBtn" type="button" disabled>Continue</button>
-          <button class="btn" id="resetBtn" type="button">Reset</button>
+    <div class="card lock-card">
+      <div style="display:flex; gap:14px; align-items:center; margin-bottom:14px;">
+        <div class="logo">DD</div>
+        <div>
+          <h1 style="margin:0;">Delulu Detector</h1>
+          <p class="muted" style="margin:2px 0 0;">18+ Access Gate</p>
         </div>
       </div>
+
+      <p class="muted" style="margin-top:0;">
+        You must confirm you are <b>18 or older</b> before you can access the menu, quiz, plan, analysis, or game.
+      </p>
+
+      <div class="section">
+        <label for="ageInput">Enter your age</label>
+        <input
+          id="ageInput"
+          type="number"
+          inputmode="numeric"
+          min="18"
+          placeholder="18+ only"
+        />
+      </div>
+
+      <p id="errorText" style="display:none; margin:8px 0 0; color:#ff8a8a; font-weight:700;"></p>
+
+      <div class="row" style="margin-top:14px;">
+        <button class="btn primary" id="continueBtn" type="button">Continue</button>
+      </div>
+
+      <div class="hr"></div>
+
+      <p class="muted tiny" style="margin:0;">
+        Age is used only to verify access. No data is sent anywhere — it stays on your device (localStorage).
+      </p>
     </div>
   </div>
 
-  <script src="start.js?v=1"></script>
+  <script>
+    const APP_KEY = "dd_app_v1";
+
+    function getAppData(){
+      try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); }
+      catch { return {}; }
+    }
+    function setAppData(data){
+      localStorage.setItem(APP_KEY, JSON.stringify(data));
+    }
+
+    const ageInput = document.getElementById("ageInput");
+    const continueBtn = document.getElementById("continueBtn");
+    const errorText = document.getElementById("errorText");
+
+    // 🔒 HARD LOCK: if someone clicks ANY link somehow, block it
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest && e.target.closest("a");
+      if (a) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+
+    function showError(msg){
+      errorText.textContent = msg;
+      errorText.style.display = "block";
+    }
+
+    continueBtn.addEventListener("click", () => {
+      const age = Number(ageInput.value);
+
+      if (!age) return showError("Please enter your age first.");
+      if (age < 18) return showError("Sorry — this app is 18+ only.");
+
+      // ✅ verified
+      errorText.style.display = "none";
+
+      const data = getAppData();
+      data.age = age;
+      data.ageVerifiedAt = Date.now();
+      setAppData(data);
+
+      // go to menu only after verified
+      window.location.href = "menu.html";
+    });
+
+    // Enter key triggers continue (but still validates)
+    ageInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        continueBtn.click();
+      }
+    });
+
+    // Optional: if you want it to ALWAYS start blank even if age exists
+    // uncomment the next 3 lines:
+    // const d = getAppData();
+    // delete d.age; delete d.ageVerifiedAt;
+    // setAppData(d);
+  </script>
+
 </body>
 </html>
