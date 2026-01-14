@@ -126,4 +126,76 @@ function feedback(score) {
 }
 
 function showResults() {
-  const score
+  const score = calcScore();
+  const f = feedback(score);
+
+  document.querySelector(".card").classList.add("hidden");
+  resultCard.classList.remove("hidden");
+
+  resultTitle.textContent = f.title;
+  resultSubtitle.textContent = f.subtitle;
+  resultPara.textContent = f.para;
+  resultPct.textContent = `${score}%`;
+  modeTag.textContent = `Difficulty: ${MODES[mode].label}`;
+
+  // Save last result
+  data = getData();
+  data.lastQuizScore = score;
+  setData(data);
+}
+
+function needAnswer() {
+  return answers[current] === null;
+}
+
+document.querySelectorAll(".choice").forEach(btn => {
+  btn.addEventListener("click", () => {
+    answers[current] = Number(btn.dataset.val);
+    updateUI();
+    saveProgress();
+  });
+});
+
+nextBtn.addEventListener("click", () => {
+  if (needAnswer()) {
+    saveStatus.textContent = "Pick an option first";
+    return;
+  }
+  if (current < QUESTIONS.length - 1) {
+    current++;
+    updateUI();
+    saveProgress();
+  } else {
+    showResults();
+  }
+});
+
+returnBtn.addEventListener("click", () => {
+  if (current > 0) {
+    current--;
+    updateUI();
+    saveProgress();
+  }
+});
+
+restartBtn.addEventListener("click", () => {
+  current = 0;
+  answers = Array(QUESTIONS.length).fill(null);
+  document.querySelector(".card").classList.remove("hidden");
+  resultCard.classList.add("hidden");
+  updateUI();
+  saveProgress();
+});
+
+// OPTIONAL: allow user to set mode somewhere else in your app
+// If you already have a difficulty selector, just set data.mode and reload quiz.
+
+(function loadSaved() {
+  const saved = data?.quiz;
+  if (saved?.answers?.length === QUESTIONS.length) {
+    answers = saved.answers;
+    current = Math.min(saved.current ?? 0, QUESTIONS.length - 1);
+    mode = saved.mode || mode;
+  }
+  updateUI();
+})();
