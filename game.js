@@ -1,158 +1,154 @@
-import { requireAdultOrRedirect, getData, setData } from "./gate.js";
-requireAdultOrRedirect();
-
-const canvas = document.getElementById("gameCanvas");
+const canvas = document.getElementById("c");
 const ctx = canvas.getContext("2d");
 
-const startBtn = document.getElementById("startBtn");
+const scoreBadge = document.getElementById("scoreBadge");
+const overlay = document.getElementById("loseOverlay");
 const restartBtn = document.getElementById("restartBtn");
-const statusEl = document.getElementById("status");
-const readBtn = document.getElementById("readBtn");
 
-readBtn?.addEventListener("click", () => {
-  statusEl.textContent = "Read aloud coming soon.";
-});
-
-let running = false;
-let score = 0;
-let lives = 3;
-let speed = 2.2;
+let running = true;
 
 const player = {
-  x: canvas.width / 2 - 24,
-  y: canvas.height - 36,
-  w: 48,
+  x: canvas.width / 2,
+  y: canvas.height - 40,
+  w: 46,
   h: 14,
-  speed: 7
+  speed: 10
 };
 
-let keys = {};
-let delulus = [];
-let clarities = [];
-let frame = 0;
+let score = 0;
+let ticks = 0;
+let hazards = [];
 
-window.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
-window.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
-
-function rand(min, max) {
-  return Math.random() * (max - min) + min;
-}
-
-function spawnDelulu() {
-  delulus.push({ x: rand(0, canvas.width - 28), y: -20, r: 14 });
-}
-
-function spawnClarity() {
-  clarities.push({ x: rand(0, canvas.width - 20), y: -20, r: 10 });
-}
-
-function collideRect(ax, ay, aw, ah, bx, by, bw, bh) {
-  return ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by;
-}
-
-function update() {
-  if (!running) return;
-  frame++;
-
-  // movement
-  if (keys["arrowleft"] || keys["a"]) player.x -= player.speed;
-  if (keys["arrowright"] || keys["d"]) player.x += player.speed;
-  player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
-
-  // spawns (slightly patterned so it feels gamey)
-  if (frame % 18 === 0 && Math.random() < 0.65) spawnDelulu();
-  if (frame % 55 === 0) spawnClarity();
-
-  // move objects
-  delulus.forEach(d => d.y += speed);
-  clarities.forEach(c => c.y += speed * 0.85);
-
-  // collisions / cleanup
-  delulus = delulus.filter(d => {
-    const hit = collideRect(player.x, player.y, player.w, player.h, d.x - d.r, d.y - d.r, d.r*2, d.r*2);
-    if (hit) {
-      lives--;
-      statusEl.textContent = "Hit by delulu 😭";
-    }
-    return !hit && d.y < canvas.height + 30;
-  });
-
-  clarities = clarities.filter(c => {
-    const hit = collideRect(player.x, player.y, player.w, player.h, c.x - c.r, c.y - c.r, c.r*2, c.r*2);
-    if (hit) {
-      score++;
-      speed += 0.12;
-      statusEl.textContent = "Clarity +1 ✨";
-    }
-    return !hit && c.y < canvas.height + 30;
-  });
-
-  if (lives <= 0) endGame();
-}
-
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // subtle HUD glow overlay (fake)
-  ctx.fillStyle = "rgba(120,220,255,.06)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // player
-  ctx.fillStyle = "rgba(120,220,255,.95)";
-  ctx.fillRect(player.x, player.y, player.w, player.h);
-
-  // delulus (red)
-  ctx.fillStyle = "rgba(255,107,107,.92)";
-  delulus.forEach(d => {
-    ctx.beginPath();
-    ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-    ctx.fill();
-  });
-
-  // clarities (green)
-  ctx.fillStyle = "rgba(125,255,179,.92)";
-  clarities.forEach(c => {
-    ctx.beginPath();
-    ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
-    ctx.fill();
-  });
-
-  // HUD text
-  ctx.fillStyle = "rgba(255,255,255,.92)";
-  ctx.font = "14px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial";
-  ctx.fillText(`Score: ${score}`, 12, 22);
-  ctx.fillText(`Lives: ${lives}`, canvas.width - 86, 22);
-}
-
-function loop() {
-  update();
-  draw();
-  if (running) requestAnimationFrame(loop);
-}
-
-function startGame() {
+function resetGame(){
   running = true;
   score = 0;
-  lives = 3;
-  speed = 2.2;
-  delulus = [];
-  clarities = [];
-  frame = 0;
-  statusEl.textContent = "GO! Dodge the delulu.";
-  loop();
+  ticks = 0;
+  hazards = [];
+  player.x = canvas.width / 2;
+  overlay.classList.add("hidden");
+  scoreBadge.textContent = `Score: ${score}`;
 }
 
-function endGame() {
+function showLose(){
   running = false;
-
-  // save last score
-  const d = getData();
-  d.lastGameScore = score;
-  setData(d);
-
-  statusEl.textContent =
-    `Game over. Score ${score}. ${score >= 10 ? "You’re lowkey sane 👑" : "It’s okay we all spiral 🫶"}`;
+  overlay.classList.remove("hidden");
 }
 
-startBtn.addEventListener("click", startGame);
-restartBtn.addEventListener("click", startGame);
+restartBtn.addEventListener("click", () => {
+  resetGame();
+});
+
+const keys = { left:false, right:false };
+
+window.addEventListener("keydown", (e) => {
+  if(e.key === "ArrowLeft") keys.left = true;
+  if(e.key === "ArrowRight") keys.right = true;
+});
+window.addEventListener("keyup", (e) => {
+  if(e.key === "ArrowLeft") keys.left = false;
+  if(e.key === "ArrowRight") keys.right = false;
+});
+
+function spawnHazard(){
+  const size = 18 + Math.random() * 18;
+  hazards.push({
+    x: Math.random() * (canvas.width - size),
+    y: -size,
+    s: size,
+    v: 3 + Math.random() * 3
+  });
+}
+
+function rectHit(a,b){
+  return (
+    a.x < b.x + b.w &&
+    a.x + a.w > b.x &&
+    a.y < b.y + b.h &&
+    a.y + a.h > b.y
+  );
+}
+
+function update(){
+  if(!running) return;
+
+  ticks++;
+
+  // movement
+  if(keys.left) player.x -= player.speed;
+  if(keys.right) player.x += player.speed;
+  player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
+
+  // spawn hazards
+  if(ticks % 18 === 0) spawnHazard();
+
+  // move hazards
+  for(const h of hazards){
+    h.y += h.v;
+  }
+
+  // remove off screen + score
+  hazards = hazards.filter(h => {
+    if(h.y > canvas.height + h.s){
+      score++;
+      scoreBadge.textContent = `Score: ${score}`;
+      return false;
+    }
+    return true;
+  });
+
+  // collision
+  const pRect = { x: player.x, y: player.y, w: player.w, h: player.h };
+  for(const h of hazards){
+    const hRect = { x: h.x, y: h.y, w: h.s, h: h.s };
+    if(rectHit(pRect, hRect)){
+      showLose();
+      break;
+    }
+  }
+}
+
+function draw(){
+  // background
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // player
+  ctx.fillStyle = "rgba(255,255,255,.9)";
+  ctx.fillRect(player.x, player.y, player.w, player.h);
+
+  // hazards (red flags)
+  ctx.fillStyle = "rgba(255,80,110,.85)";
+  for(const h of hazards){
+    ctx.beginPath();
+    ctx.roundRect(h.x, h.y, h.s, h.s, 6);
+    ctx.fill();
+  }
+
+  // text
+  ctx.fillStyle = "rgba(255,255,255,.65)";
+  ctx.font = "14px system-ui";
+  ctx.fillText("Avoid the red flags", 16, 24);
+}
+
+function loop(){
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+// Polyfill for roundRect if needed
+if(!CanvasRenderingContext2D.prototype.roundRect){
+  CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r){
+    r = Math.min(r, w/2, h/2);
+    this.beginPath();
+    this.moveTo(x+r,y);
+    this.arcTo(x+w,y, x+w,y+h, r);
+    this.arcTo(x+w,y+h, x,y+h, r);
+    this.arcTo(x,y+h, x,y, r);
+    this.arcTo(x,y, x+w,y, r);
+    this.closePath();
+    return this;
+  };
+}
+
+resetGame();
+loop();
