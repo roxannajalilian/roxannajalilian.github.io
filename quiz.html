@@ -2,84 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Delulu Detector • Quiz</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="quiz.js" defer></script>
 </head>
+
 <body>
-  <nav>
+
+  <!-- TOP NAV -->
+  <nav class="topnav">
     <div class="brand">
       <div class="logo">DD</div>
-      <div>
-        <div class="title">Delulu Quiz</div>
-        <div class="sub">Answer honestly</div>
+      <div class="brandText">
+        <div class="brandTitle">Delulu Quiz</div>
+        <div class="brandSub">Answer honestly</div>
       </div>
     </div>
 
-    <div class="nav-actions">
-      <button class="btn ghost" id="backBtn" type="button">Back</button>
-      <a class="btn" href="menu.html">Menu</a>
-      <a class="btn ghost" href="plan.html">Plan</a>
-      <a class="btn ghost" href="scan.html">Analysis</a>
-      <a class="btn ghost" href="game.html">Game</a>
+    <div class="navBtns">
+      <button class="navBtn" id="btnBack" type="button">Back</button>
+      <button class="navBtn" id="btnMenu" type="button">Menu</button>
+      <button class="navBtn" id="btnPlan" type="button">Plan</button>
+      <button class="navBtn" id="btnAnalysis" type="button">Analysis</button>
+      <button class="navBtn" id="btnGame" type="button">Game</button>
     </div>
   </nav>
 
-  <div class="container">
-    <div class="card">
-      <div class="row" style="justify-content:space-between;">
-        <div class="badge" id="qCount">Question 1/10</div>
+  <!-- MAIN -->
+  <main class="page">
+    <section class="card quizCard">
+
+      <div class="pillRow">
+        <div class="pill" id="qCounter">Question 1/10</div>
       </div>
 
-      <h2 style="margin-top:12px;" id="questionText">Loading…</h2>
-      <p class="muted" id="questionHint">Tap a choice.</p>
+      <h1 class="qTitle" id="qText">Loading...</h1>
+      <p class="muted" id="qHint">Tap a choice.</p>
 
-      <div class="section">
-        <div class="row">
-          <button class="btn primary" data-val="3" type="button">Yes (a lot)</button>
-          <button class="btn" data-val="2" type="button">Sometimes</button>
-          <button class="btn" data-val="1" type="button">Rarely</button>
-          <button class="btn ghost" data-val="0" type="button">No</button>
-        </div>
+      <div class="answers" id="answers">
+        <button class="choice" data-value="3" type="button">Yes (a lot)</button>
+        <button class="choice" data-value="2" type="button">Sometimes</button>
+        <button class="choice" data-value="1" type="button">Rarely</button>
+        <button class="choice" data-value="0" type="button">No</button>
       </div>
 
-      <div class="section" id="resultArea" style="display:none;">
-        <h2>Your Result</h2>
+      <hr class="divider" />
 
-        <div class="progress" style="margin:10px 0 10px;">
-          <div id="bar"></div>
-        </div>
-
-        <h3 id="percentText">0%</h3>
-        <p class="muted" id="adviceText"></p>
-
-        <!-- NEW: more percentage examples -->
-        <p class="muted" id="rangeLabel" style="margin-top:10px;"></p>
-        <div class="item" id="examplesBox" style="margin-top:12px;"></div>
-
-        <div class="row" style="margin-top:12px;">
-          <a class="btn primary" href="plan.html">See Your Plan</a>
-          <a class="btn" href="menu.html">Menu</a>
-          <button class="btn ghost" id="restartQuiz" type="button">Restart Quiz</button>
-        </div>
+      <div class="quizFooter">
+        <div class="mutedSmall" id="progressText">Progress: 0%</div>
+        <button class="secondaryBtn" id="btnRestart" type="button">Restart</button>
       </div>
-    </div>
-  </div>
 
-  <script>
-    // Back button fix
-    document.getElementById("backBtn").addEventListener("click", () => {
-      if (history.length > 1) history.back();
-      else window.location.href = "menu.html";
-    });
+    </section>
+  </main>
 
-    // Age gate
-    const APP_KEY="dd_app_v1";
-    function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
-    const d=getAppData();
-    if(!d.age || Number(d.age) < 18) window.location.href="index.html";
-  </script>
-
-  <script src="quiz.js"></script>
 </body>
 </html>
