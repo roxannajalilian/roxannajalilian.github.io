@@ -17,16 +17,46 @@
     </div>
 
     <div class="nav-actions">
-      <button class="pill" id="menuBtn">Menu</button>
-      <button class="pill" id="policyBtn">Policy</button>
+      <a class="pill" href="menu.html">Menu</a>
+      <a class="pill" href="policy.html">Policy</a>
     </div>
   </nav>
 
   <main class="container">
-    <div class="card">
+
+    <!-- MODE SELECT SCREEN -->
+    <div class="card" id="modeCard">
       <div class="topline">
-        <div id="qCount" class="muted">Question 1 of 20</div>
-        <div class="pill subtle" id="saveStatus">Not saved yet</div>
+        <div class="muted">Choose your difficulty</div>
+        <div class="pill subtle" id="savedModeTag">Saved: Medium</div>
+      </div>
+
+      <h1 style="margin:14px 0 8px;">Pick a mode</h1>
+      <p class="muted" style="margin-top:0;">
+        Noob is chill • Medium is balanced • Hard calls you out 😭
+      </p>
+
+      <div class="answers" style="grid-template-columns: 1fr; max-width:520px;">
+        <button class="choice" id="pickNoob" type="button">Noob mode (short + easy)</button>
+        <button class="choice" id="pickMed" type="button">Medium mode (normal)</button>
+        <button class="choice" id="pickHard" type="button">Hard mode (longer + intense)</button>
+      </div>
+
+      <div class="bottomRow" style="margin-top:16px;">
+        <a class="btn ghost" href="menu.html">Back</a>
+        <button class="btn primary" id="startBtn" type="button">Start</button>
+      </div>
+
+      <p class="tiny muted centerText" style="margin-top:12px;">
+        Mode saves automatically.
+      </p>
+    </div>
+
+    <!-- QUIZ PLAY SCREEN -->
+    <div class="card hidden" id="quizCard">
+      <div class="topline">
+        <div id="qCount" class="muted">Question 1 of 10</div>
+        <div class="pill subtle" id="modePill">Mode: Medium</div>
       </div>
 
       <div class="progress">
@@ -36,30 +66,36 @@
       <h2 id="questionText">…</h2>
 
       <div class="answers">
-        <button class="choice" data-val="0">No</button>
-        <button class="choice" data-val="1">Sometimes</button>
-        <button class="choice" data-val="2">Yes</button>
-        <button class="choice" data-val="3">All the time</button>
+        <button class="choice" data-val="0" type="button">No</button>
+        <button class="choice" data-val="1" type="button">Sometimes</button>
+        <button class="choice" data-val="2" type="button">Yes</button>
+        <button class="choice" data-val="3" type="button">All the time</button>
       </div>
 
       <div class="bottomRow">
-        <button class="btn ghost" id="returnBtn">Return</button>
-        <button class="btn primary" id="nextBtn">Next</button>
+        <button class="btn ghost" id="returnBtn" type="button">Return</button>
+        <button class="btn primary" id="nextBtn" type="button">Next</button>
       </div>
 
-      <p class="tiny muted centerText">Tip: you can’t skip a question • “Return” goes back one question</p>
+      <p class="tiny muted centerText" id="hintText">
+        Tip: you can’t skip a question • “Return” goes back one question
+      </p>
     </div>
 
+    <!-- RESULT SCREEN -->
     <div class="card hidden" id="resultCard">
       <div class="resultGrid">
         <div>
           <h1 id="resultTitle">Your result</h1>
           <p class="muted" id="resultSubtitle"></p>
           <p id="resultPara"></p>
-          <div class="row">
-            <button class="btn ghost" id="restartBtn">Restart</button>
+
+          <div class="row" style="margin-top:14px;">
+            <button class="btn ghost" id="playAgainBtn" type="button">Play again</button>
             <a class="btn primary" href="scan.html">Try Text Analyzer</a>
           </div>
+
+          <p class="tiny muted" style="margin-top:10px;" id="modeNote"></p>
         </div>
 
         <div class="circleWrap">
@@ -73,6 +109,7 @@
         </div>
       </div>
     </div>
+
   </main>
 
   <script type="module" src="quiz.js"></script>
