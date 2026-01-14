@@ -6,6 +6,7 @@
   <title>Delulu Detector • Age Check</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <nav>
     <div class="brand">
@@ -17,24 +18,33 @@
     </div>
 
     <div class="nav-actions">
-      <a class="btn" href="menu.html">Menu</a>
+      <div class="pill" id="statusPill">Not verified</div>
     </div>
   </nav>
 
-  <div class="container">
-    <div class="card" style="max-width:720px;margin:0 auto;">
+  <main class="container">
+    <section class="card center" style="max-width:720px;margin:0 auto;">
       <h1 style="margin-bottom:6px;">Start</h1>
       <p class="muted">Enter your age to continue. You must be 18 or older.</p>
 
-      <div class="section">
-        <label class="muted" for="ageInput" style="display:block;margin-bottom:8px;">Your age</label>
-        <input id="ageInput" type="number" inputmode="numeric" min="1" max="120" placeholder="18" />
-        <p class="muted" id="errorText" style="margin-top:10px; display:none;"></p>
+      <div class="section" style="text-align:left;">
+        <label for="ageInput" class="muted" style="display:block;margin-bottom:8px;">Your age</label>
+        <input
+          id="ageInput"
+          type="number"
+          inputmode="numeric"
+          min="1"
+          max="120"
+          placeholder="18"
+          autocomplete="off"
+        />
+
+        <p class="muted" id="errorText" style="margin-top:10px;display:none;"></p>
 
         <div class="row" style="margin-top:14px;">
-          <!-- IMPORTANT: type="button" so it doesn't act weird like a form submit -->
+          <!-- IMPORTANT: type="button" so it never gets “unclickable” from forms -->
           <button class="btn primary" id="continueBtn" type="button">Continue</button>
-          <button class="btn ghost" id="resetBtn" type="button">Reset Age</button>
+          <button class="btn ghost" id="resetBtn" type="button">Reset</button>
         </div>
       </div>
 
@@ -44,9 +54,10 @@
           You will be redirected.
         </p>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
+  <!-- Script MUST be at the bottom so elements exist -->
   <script>
     const APP_KEY = "dd_app_v1";
 
@@ -58,20 +69,14 @@
       localStorage.setItem(APP_KEY, JSON.stringify(data));
     }
 
+    // Grab elements
     const ageInput = document.getElementById("ageInput");
     const continueBtn = document.getElementById("continueBtn");
     const resetBtn = document.getElementById("resetBtn");
     const errorText = document.getElementById("errorText");
     const lockBox = document.getElementById("lockBox");
     const lockMsg = document.getElementById("lockMsg");
-
-    // If already verified, skip
-    (function(){
-      const data = getAppData();
-      if (data && data.age >= 18){
-        window.location.href = "menu.html";
-      }
-    })();
+    const statusPill = document.getElementById("statusPill");
 
     function showError(msg){
       errorText.style.display = "block";
@@ -85,13 +90,24 @@
     function lockOut(msg){
       lockBox.style.display = "block";
       lockMsg.textContent = msg;
+      statusPill.textContent = "Blocked (<18)";
 
-      // kick them out of your site after a second
+      // Redirect OUTSIDE your site (as you wanted)
       setTimeout(() => {
         window.location.href = "https://www.google.com";
       }, 1200);
     }
 
+    // Auto-skip if already verified
+    (function autoSkip(){
+      const data = getAppData();
+      if (data && Number(data.age) >= 18){
+        statusPill.textContent = "Verified ✅";
+        window.location.href = "menu.html";
+      }
+    })();
+
+    // Click handler
     continueBtn.addEventListener("click", () => {
       clearError();
 
@@ -111,14 +127,22 @@
         return;
       }
 
+      statusPill.textContent = "Verified ✅";
       window.location.href = "menu.html";
     });
 
+    // Enter key also continues
+    ageInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") continueBtn.click();
+    });
+
+    // Reset
     resetBtn.addEventListener("click", () => {
       localStorage.removeItem(APP_KEY);
       ageInput.value = "";
       clearError();
       lockBox.style.display = "none";
+      statusPill.textContent = "Not verified";
     });
   </script>
 </body>
