@@ -1,269 +1,150 @@
 // scan.js
+import { requireAdultOrRedirect, getData, setData } from "./gate.js";
+
 requireAdultOrRedirect();
 
-const textInput = document.getElementById("textInput");
-const imgInput = document.getElementById("imgInput");
-const analyzeBtn = document.getElementById("analyzeBtn");
-const clearBtn = document.getElementById("clearBtn");
+const textEl = document.getElementById("text");
+const fileEl = document.getElementById("file");
+const fileName = document.getElementById("fileName");
+const previewWrap = document.getElementById("previewWrap");
+const preview = document.getElementById("preview");
 
-const scanWarn = document.getElementById("scanWarn");
-const scanPct = document.getElementById("scanPct");
-const scanLabel = document.getElementById("scanLabel");
-const signalsBox = document.getElementById("signalsBox");
-const scanAdvice = document.getElementById("scanAdvice");
+const analyzeBtn = document.getElementById("analyze");
+const clearBtn = document.getElementById("clear");
+const backBtn = document.getElementById("back");
+const msg = document.getElementById("msg");
 
-// NEW controls
-const formatMode = document.getElementById("formatMode");
-const whoMode = document.getElementById("whoMode");
-const myNameInput = document.getElementById("myName");
+const pct = document.getElementById("pct");
+const label = document.getElementById("label");
+const bullets = document.getElementById("bullets");
 
-function warn(msg){
-  scanWarn.textContent = msg;
-  scanWarn.style.display = msg ? "block" : "none";
+function setCircle(percent) {
+  // Visual ring using conic-gradient
+  const circle = document.getElementById("circle");
+  circle.style.background = `conic-gradient(rgba(120,220,255,.95) ${percent}%, rgba(255,255,255,.08) 0)`;
 }
 
-function addSignal(signals, condition, message, weight = 1){
-  if (condition) signals.push({ message, weight });
+function addBullet(t) {
+  const li = document.createElement("li");
+  li.textContent = t;
+  bullets.appendChild(li);
 }
 
-// -------- Parsing helpers --------
-
-// Detects lines like:
-// "Roxanna: hi"
-// "+1 (647)...: ok"
-// "Name - message"
-// "Name — message"
-function parseChatLines(raw) {
-  const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-
-  const items = [];
-  for (const line of lines) {
-    // Match "Speaker: message"
-    let m = line.match(/^(.{1,40}?)(?:\s*[:\-—]\s*)(.+)$/);
-    if (m) {
-      const speaker = m[1].trim();
-      const msg = m[2].trim();
-      items.push({ speaker, msg, raw: line });
-    } else {
-      // No speaker label -> treat as unknown speaker message
-      items.push({ speaker: "unknown", msg: line, raw: line });
-    }
-  }
-  return items;
-}
-
-// One-sided texts: treat all lines as "me"
-function parseTexts(raw) {
-  const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-  return lines.map(l => ({ speaker: "me", msg: l, raw: l }));
-}
-
-// Guess "me" vs "them" using "my name" (optional) + frequency
-function assignSides(items, myName) {
-  const name = (myName || "").trim().toLowerCase();
-  if (!name) return items; // leave speakers as-is; we'll infer later
-
-  return items.map(it => {
-    const sp = (it.speaker || "").toLowerCase();
-    if (sp.includes(name)) return { ...it, side: "me" };
-    return { ...it, side: "them" };
-  });
-}
-
-// If no myName, attempt auto: pick the most repeated non-unknown speaker as "them"
-// and treat other known speaker as "me" IF there are two major speakers.
-// If messy, it falls back to "both".
-function autoSideGuess(items) {
-  const counts = {};
-  for (const it of items) {
-    const s = (it.speaker || "unknown").toLowerCase();
-    if (s !== "unknown") counts[s] = (counts[s] || 0) + 1;
-  }
-  const speakers = Object.entries(counts).sort((a,b) => b[1]-a[1]).map(x => x[0]);
-  if (speakers.length < 2) return items; // can’t reliably split
-
-  const a = speakers[0];
-  const b = speakers[1];
-
-  // Arbitrary but consistent: the first speaker label becomes "them", second becomes "me"
-  return items.map(it => {
-    const s = (it.speaker || "").toLowerCase();
-    if (s === a) return { ...it, side: "them" };
-    if (s === b) return { ...it, side: "me" };
-    return { ...it, side: "unknown" };
-  });
-}
-
-// Build the text to scan depending on whoMode
-function buildScanText(items, who) {
-  if (who === "both") return items.map(i => i.msg).join("\n");
-
-  // Only me/them: require side labels
-  const filtered = items.filter(i => i.side === who);
-  return filtered.map(i => i.msg).join("\n");
-}
-
-// -------- Analysis --------
-function analyzeText(scanText) {
-  const t = scanText.trim();
+function analyzeText(raw) {
+  const t = (raw || "").trim();
   const lower = t.toLowerCase();
+
+  // Signals (simple but effective)
   const signals = [];
 
-  // “real convo signal” style (with weights)
-  addSignal(signals, /seen|left on read|read at|delivered/.test(lower),
-    "Read receipts / ‘seen’ is triggering you.", 2);
+  const qMarks = (t.match(/\?/g) || []).length;
+  const exMarks = (t.match(/!/g) || []).length;
+  const dots = (t.match(/\.{3,}/g) || []).length;
 
-  addSignal(signals, /\bok\b|\bk\b|\bsure\b|\bfine\b/.test(lower),
-    "Short replies (‘ok’, ‘k’, ‘sure’) can feel cold even if not intended.", 2);
+  const seen = /\bseen\b/.test(lower);
+  const ok = /\bok\b|\bk\b|\bokay\b/.test(lower);
+  const shortReplies = lower.split(/\n+/).filter(line => line.trim().length > 0 && line.trim().length <= 3).length;
 
-  addSignal(signals, /\.\.\.|…/.test(t),
-    "Ellipses (‘…’) can feel like attitude / suspense.", 1);
+  const shutdown = /\b(idk|fine|whatever|nvm|leave me alone|stop|bye)\b/.test(lower);
+  const reassuranceSeek = /\b(do you|are you|did i|why did|am i|did you)\b/.test(lower);
+  const doubleText = /\n\s*\n/.test(t); // multiple message blocks
 
-  addSignal(signals, /\?{2,}/.test(t),
-    "Multiple question marks = anxious urgency.", 1);
+  let score = 0;
 
-  addSignal(signals, /\bsorry\b/.test(lower),
-    "You’re apologizing a lot (often a stress sign).", 1);
+  if (qMarks >= 3) { score += 18; signals.push("Lots of question marks → anxious checking / seeking clarity."); }
+  if (exMarks >= 3) { score += 8; signals.push("A lot of intensity (!!!) can mean emotional urgency."); }
+  if (dots >= 1) { score += 8; signals.push("“...” shows uncertainty / reading between the lines."); }
+  if (seen) { score += 12; signals.push("Mentions of “seen” → focus on read receipts."); }
+  if (ok) { score += 10; signals.push("Short replies (“ok/k”) are easy to over-interpret."); }
+  if (shortReplies >= 3) { score += 10; signals.push("Many super short messages → low info, high misread risk."); }
+  if (shutdown) { score += 12; signals.push("Shutdown words (fine/whatever/bye) → conflict vibes or emotional cut-off."); }
+  if (reassuranceSeek) { score += 12; signals.push("A lot of reassurance questions → overthinking loop risk."); }
+  if (doubleText) { score += 10; signals.push("Multiple message blocks → might be double-texting or spiraling."); }
 
-  addSignal(signals, /\bnvm\b|\bnevermind\b|\bwhatever\b|\bi guess\b|\balright bro\b/.test(lower),
-    "Shutdown words can spike anxiety.", 2);
+  // clamp 0..100
+  score = Math.max(0, Math.min(100, score));
 
-  addSignal(signals, /\bon ur life\b|\bi'?m gonna be alone\b|\byou hate me\b|\byou don'?t care\b/.test(lower),
-    "Catastrophizing language (fear of abandonment).", 2);
+  let verdict = "No scan yet";
+  if (score <= 24) verdict = "Pretty calm — low delulu risk.";
+  else if (score <= 49) verdict = "A little overthinking — manageable.";
+  else if (score <= 74) verdict = "Medium delulu — you might be spiraling.";
+  else verdict = "High delulu — pause before you react.";
 
-  addSignal(signals, /\bwhy r u mad\b|\bwhy are you mad\b|\bare you mad\b/.test(lower),
-    "Repeated checking for mood/anger (reassurance seeking).", 2);
-
-  addSignal(signals, /\bexplain\b|\bi didn[’']t mean\b|\blet me explain\b/.test(lower),
-    "Over-explaining after tension (panic-fixing).", 1);
-
-  // Extra “aggression / red-flag vibe” detection
-  addSignal(signals, /\bshut up\b|\bstfu\b|\bfuck\b|\bbitch\b|\bidiot\b/.test(lower),
-    "Harsh language / insults = conflict escalation (red flag).", 3);
-
-  addSignal(signals, /\byou always\b|\byou never\b/.test(lower),
-    "‘You always/never’ = blaming language that escalates fights.", 2);
-
-  // Weighted score
-  const weightSum = signals.reduce((a, s) => a + (s.weight || 1), 0);
-  const scoreGuess = Math.min(100, 18 + weightSum * 10);
-
-  let label, explanation, advice;
-  if (scoreGuess <= 30) {
-    label = "Low delulu risk";
-    explanation = "Nothing here screams spiral. This looks pretty normal overall.";
-    advice = "Stay calm and ask ONE clear question if you’re unsure. Don’t create stories from silence.";
-  } else if (scoreGuess <= 60) {
-    label = "Medium delulu risk";
-    explanation = "Some patterns could trigger overthinking (short replies, uncertainty, tone-checking).";
-    advice = "Don’t send paragraphs. One calm message is stronger than ten stressed ones.";
-  } else if (scoreGuess <= 85) {
-    label = "High delulu risk";
-    explanation = "Multiple stress signals here usually lead to mind-reading or spiraling.";
-    advice = "Step away 10–20 minutes before responding. Ask for clarity, not reassurance.";
-  } else {
-    label = "Very high delulu risk";
-    explanation = "This looks like full spiral territory (urgency + fear language + cold replies).";
-    advice = "Put the phone down. Calm your body first. Then send ONE clear message or wait until you’re grounded.";
-  }
-
-  return { scoreGuess, label, explanation, advice, signals };
+  return { score, verdict, signals };
 }
 
-// -------- Main click --------
+function render(result) {
+  pct.textContent = `${result.score}%`;
+  label.textContent = result.verdict;
+  setCircle(result.score);
+
+  bullets.innerHTML = "";
+  if (!result.signals.length) {
+    addBullet("Not many “overthink” signals detected from this text.");
+    addBullet("If you still feel anxious, ask one clear question instead of guessing.");
+    return;
+  }
+  result.signals.slice(0, 6).forEach(addBullet);
+  addBullet("Mini tip: if you’re unsure, ask directly (one sentence) instead of rereading for hidden meaning.");
+}
+
+fileEl.addEventListener("change", async () => {
+  const f = fileEl.files?.[0];
+  if (!f) return;
+
+  fileName.textContent = f.name;
+
+  // If it's an image: show preview (we won’t OCR; just preview)
+  if (f.type.startsWith("image/")) {
+    const url = URL.createObjectURL(f);
+    preview.src = url;
+    previewWrap.classList.remove("hidden");
+    msg.textContent = "Screenshot loaded (preview only). Paste text for the actual analysis.";
+    return;
+  }
+
+  // If it's text file: load into textarea
+  if (f.name.toLowerCase().endsWith(".txt") || f.type.includes("text")) {
+    const txt = await f.text();
+    textEl.value = txt;
+    previewWrap.classList.add("hidden");
+    msg.textContent = "Loaded .txt into the box. Now click Analyze.";
+  }
+});
+
 analyzeBtn.addEventListener("click", () => {
-  warn("");
-
-  const raw = (textInput.value || "").trim();
-  if (!raw) return warn("Paste some text first.");
-
-  const fmt = formatMode.value;     // auto/texts/chat
-  const who = whoMode.value;        // both/me/them
-  const myName = (myNameInput.value || "").trim();
-
-  let items = [];
-
-  // choose parsing mode
-  if (fmt === "texts") {
-    items = parseTexts(raw);
-    items = items.map(i => ({ ...i, side: "me" }));
-  } else if (fmt === "chat") {
-    items = parseChatLines(raw);
-    items = assignSides(items, myName);
-    // if still no side labels, try auto guess
-    if (!items.some(i => i.side === "me" || i.side === "them")) {
-      items = autoSideGuess(items);
-    }
-  } else {
-    // auto-detect: if many lines have "Name: msg" pattern -> chat; else texts
-    const looksLikeChat = raw.split(/\r?\n/).filter(Boolean).slice(0, 6)
-      .some(l => /^(.{1,40}?)(?:\s*[:\-—]\s*)(.+)$/.test(l.trim()));
-
-    if (looksLikeChat) {
-      items = parseChatLines(raw);
-      items = assignSides(items, myName);
-      if (!items.some(i => i.side === "me" || i.side === "them")) {
-        items = autoSideGuess(items);
-      }
-    } else {
-      items = parseTexts(raw);
-      items = items.map(i => ({ ...i, side: "me" }));
-    }
+  const raw = textEl.value;
+  if (!raw.trim()) {
+    msg.textContent = "Paste some messages first (or upload a .txt).";
+    return;
   }
 
-  // if user picked me/them but we couldn't split, fallback to both with warning
-  let scanText = buildScanText(items, who);
-  if ((who === "me" || who === "them") && !scanText.trim()) {
-    warn("I couldn’t reliably tell who is who. Add your name (optional) or switch ‘Scan whose messages?’ to Both.");
-    scanText = buildScanText(items, "both");
-  }
-
-  const result = analyzeText(scanText);
-
-  // UI update
-  scanPct.textContent = result.scoreGuess + "%";
-  scanLabel.textContent = result.label;
-
-  const sigList = result.signals.map(s => s.message);
-  signalsBox.innerHTML = sigList.length
-    ? `<p><b>Signals detected:</b></p><ul>${sigList.map(s => `<li>${s}</li>`).join("")}</ul>`
-    : `<p><b>Signals detected:</b> none major.</p>`;
-
-  // show what was scanned
-  const whoLabel =
-    who === "both" ? "both sides" : (who === "me" ? "only your messages" : "only their messages");
-
-  scanAdvice.innerHTML = `
-    <p class="muted small"><b>Scanned:</b> ${whoLabel} • <b>Mode:</b> ${formatMode.value}</p>
-    <p><b>What it might mean:</b> ${result.explanation}</p>
-    <p><b>Best-friend advice:</b> ${result.advice}</p>
-    <p class="muted small">Note: fun pattern detector only (not a real diagnosis).</p>
-  `;
+  const result = analyzeText(raw);
+  render(result);
 
   // Save last scan
   const data = getData();
-  data.lastScan = {
-    scoreGuess: result.scoreGuess,
-    label: result.label,
-    signals: sigList,
-    scanned: who,
-    mode: fmt,
-    at: new Date().toISOString()
-  };
+  data.lastScan = { score: result.score, at: Date.now() };
   setData(data);
 
-  // Image is optional (no OCR)
-  if (imgInput.files && imgInput.files[0]) {
-    // optional: later you can show a preview
-  }
+  msg.textContent = "Scan complete.";
 });
 
 clearBtn.addEventListener("click", () => {
-  textInput.value = "";
-  if (imgInput) imgInput.value = "";
-  warn("");
-  scanPct.textContent = "--%";
-  scanLabel.textContent = "No scan yet";
-  signalsBox.innerHTML = "";
-  scanAdvice.innerHTML = "";
+  textEl.value = "";
+  fileEl.value = "";
+  fileName.textContent = "No file chosen";
+  previewWrap.classList.add("hidden");
+  pct.textContent = "--%";
+  label.textContent = "No scan yet";
+  bullets.innerHTML = `<li class="muted">Run a scan to see notes here.</li>`;
+  setCircle(0);
+  msg.textContent = "";
 });
+
+backBtn.addEventListener("click", () => {
+  window.location.href = "menu.html"; // change if your menu page is different
+});
+
+// init circle background
+setCircle(0);
