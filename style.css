@@ -1,9 +1,6 @@
 :root{
   --bg1:#0b0f1c;
   --bg2:#111b2e;
-  --card: rgba(255,255,255,.06);
-  --stroke: rgba(255,255,255,.14);
-  --stroke2: rgba(255,255,255,.25);
   --text: rgba(255,255,255,.92);
   --muted: rgba(255,255,255,.65);
 }
@@ -21,29 +18,31 @@ body{
     linear-gradient(180deg, var(--bg1), var(--bg2));
 }
 
-/* IMPORTANT: If you had a decorative overlay before, it may block clicks.
-   This prevents pseudo-layers from stealing clicks. */
+/* BIG FIX: pseudo/overlay layers can't block clicks */
 body::before,
 body::after{
   content:"";
   position: fixed;
-  inset: 0;
-  pointer-events: none; /* KEY */
+  inset:0;
+  pointer-events: none !important;
 }
 
-a{ color: inherit; text-decoration:none; }
+/* If you have any decorative divs, they won't block clicks */
+.bg, .glow, .blur, .decor, .noise, .overlay, .overlay-decor{
+  pointer-events: none !important;
+}
 
 nav{
   display:flex;
   align-items:center;
-  justify-content:space-between;
+  justify-content:flex-start;
   padding:14px 18px;
   border-bottom: 1px solid rgba(255,255,255,.08);
   background: rgba(10,12,22,.35);
   backdrop-filter: blur(12px);
   position: sticky;
   top:0;
-  z-index: 10;
+  z-index: 50;
 }
 
 .brand{
@@ -54,38 +53,22 @@ nav{
 
 .logo{
   width:40px;height:40px;
-  border-radius: 14px;
+  border-radius:14px;
   display:grid;
   place-items:center;
   background: rgba(255,255,255,.08);
   border:1px solid rgba(255,255,255,.12);
   font-weight:800;
-  letter-spacing:.5px;
 }
 
-.title{ font-weight:800; font-size: 16px; }
-.sub{ font-size: 12px; color: var(--muted); margin-top:2px; }
-
-.nav-actions{
-  display:flex;
-  gap:10px;
-  align-items:center;
-}
-
-.pill{
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.14);
-  background: rgba(10,12,22,.28);
-  font-size: 13px;
-  color: rgba(255,255,255,.82);
-}
+.title{ font-weight:800; font-size:16px; }
+.sub{ font-size:12px; color:var(--muted); margin-top:2px; }
 
 .container{
-  width: min(980px, 92vw);
+  width: min(900px, 92vw);
   margin: 18px auto 40px;
   position: relative;
-  z-index: 1;
+  z-index: 10;
 }
 
 .card{
@@ -95,20 +78,22 @@ nav{
   padding: 22px;
   box-shadow: 0 20px 80px rgba(0,0,0,.25);
   backdrop-filter: blur(16px);
-  position: relative;
-  z-index: 2;
 }
 
-.card.center{ text-align:center; }
-
-h1,h2,h3{ margin:0 0 8px; }
-p{ margin:0 0 10px; }
+.center{ text-align:center; }
 .muted{ color: var(--muted); }
 
 .section{
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid rgba(255,255,255,.10);
+}
+
+/* FORCE THIS CARD ABOVE EVERYTHING and clickable */
+.click-layer{
+  position: relative;
+  z-index: 9999;
+  pointer-events: auto;
 }
 
 .row{
@@ -125,12 +110,14 @@ p{ margin:0 0 10px; }
   padding: 10px 14px;
   border-radius: 999px;
   cursor:pointer;
-  font-weight: 800;
-  font-size: 14px;
+  font-weight:800;
+  font-size:14px;
   transition: .15s transform, .15s background, .15s border-color;
   user-select:none;
+
+  /* FORCE clickability */
   position: relative;
-  z-index: 5;
+  z-index: 99999;
   pointer-events: auto;
 }
 
@@ -139,14 +126,10 @@ p{ margin:0 0 10px; }
   background: rgba(255,255,255,.10);
   border-color: rgba(255,255,255,.22);
 }
-.btn:active{ transform: translateY(0px); }
 
 .btn.primary{
   background: rgba(120,85,255,.30);
   border-color: rgba(120,85,255,.55);
-}
-.btn.primary:hover{
-  background: rgba(120,85,255,.38);
 }
 
 .btn.ghost{
@@ -160,10 +143,8 @@ p{ margin:0 0 10px; }
   background: rgba(10,12,22,.30);
 }
 
-/* Inputs (no white boxes) */
-input[type="text"],
-input[type="number"],
-textarea{
+/* Inputs: no white box */
+input[type="number"]{
   width: 100%;
   padding: 14px 14px;
   border-radius: 14px;
@@ -171,24 +152,17 @@ textarea{
   background: rgba(10, 12, 22, .35);
   color: rgba(255,255,255,.92);
   outline: none;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+
   position: relative;
-  z-index: 5;
+  z-index: 99999;
   pointer-events: auto;
 }
 
-input::placeholder,
-textarea::placeholder{
+input::placeholder{
   color: rgba(255,255,255,.55);
 }
 
-input:focus,
-textarea:focus{
+input:focus{
   border-color: rgba(255,255,255,.30);
   background: rgba(10, 12, 22, .45);
-}
-
-/* Emergency: stop any accidental overlay classes from blocking clicks */
-.bg, .glow, .blur, .decor, .noise, .overlay-decor{
-  pointer-events: none !important;
 }
