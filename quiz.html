@@ -3,243 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Quiz</title>
-
-  <style>
-    /* BASIC RESET */
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background: linear-gradient(135deg, #2b0f4a, #101020 45%, #083b5e);
-      color: #fff;
-    }
-
-    /* NAV */
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 18px;
-      border-bottom: 1px solid rgba(255,255,255,.1);
-      background: rgba(0,0,0,.3);
-      backdrop-filter: blur(10px);
-    }
-    .brand { display: flex; gap: 10px; align-items: center; }
-    .logo {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: rgba(255,255,255,.1);
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-    }
-    .title { font-weight: 800; }
-    .sub { font-size: 12px; opacity: .7; }
-
-    .btn {
-      border: 1px solid rgba(255,255,255,.2);
-      background: rgba(255,255,255,.08);
-      color: #fff;
-      padding: 8px 14px;
-      border-radius: 999px;
-      cursor: pointer;
-    }
-
-    /* LAYOUT */
-    .container {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 0 16px;
-    }
-    .card {
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 22px;
-      padding: 18px;
-    }
-
-    .badges { display: flex; gap: 8px; margin-bottom: 12px; }
-    .badge {
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.15);
-      background: rgba(255,255,255,.08);
-      font-size: 13px;
-    }
-
-    h2 { margin: 0 0 6px; }
-    .muted { opacity: .7; }
-
-    /* CHOICES */
-    .choice-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-top: 16px;
-    }
-    @media (max-width: 700px) {
-      .choice-grid { grid-template-columns: 1fr; }
-    }
-
-    .choice {
-      padding: 16px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.15);
-      background: rgba(255,255,255,.06);
-      cursor: pointer;
-      transition: transform .12s ease;
-    }
-    .choice b { display: block; }
-    .choice span { font-size: 13px; opacity: .7; }
-
-    /* RESULT */
-    .progress {
-      height: 14px;
-      background: rgba(255,255,255,.1);
-      border-radius: 999px;
-      overflow: hidden;
-      margin: 10px 0;
-    }
-    .progress div {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #7c4dff, #5ae6a0);
-    }
-  </style>
+  <title>Delulu Detector • Menu</title>
+  <link rel="stylesheet" href="style.css?v=11" />
+  <script src="shared.js?v=11"></script>
+  <script>requireAdult("menu.html");</script>
 </head>
-
 <body>
+  <nav>
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div>
+        <div class="title">Delulu Detector</div>
+        <div class="sub">Menu</div>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <a class="btn ghost" href="privacy.html">Privacy</a>
+      <button class="btn ghost" id="logoutBtn" type="button">Log out</button>
+    </div>
+  </nav>
 
-<nav>
-  <div class="brand">
-    <div class="logo">DD</div>
-    <div>
-      <div class="title">Delulu Detector</div>
-      <div class="sub">Quiz</div>
+  <div class="container">
+    <div class="card">
+      <div class="section">
+        <h1 style="margin:0 0 6px;">Pick what you want to do</h1>
+        <p class="muted" style="margin:0;">Everything is locked until age is verified ✅</p>
+      </div>
+
+      <div class="grid-2 section">
+        <div class="tile">
+          <h3>Quiz</h3>
+          <p class="muted">Get your delulu % and save it for Plan.</p>
+          <a class="btn primary" href="quiz.html">Open Quiz</a>
+        </div>
+
+        <div class="tile">
+          <h3>Your Plan</h3>
+          <p class="muted">Uses your last quiz score to generate advice.</p>
+          <a class="btn primary" href="plan.html">Open Plan</a>
+        </div>
+
+        <div class="tile">
+          <h3>Text + Photo Analysis</h3>
+          <p class="muted">Paste convo + optional screenshot/photo.</p>
+          <a class="btn primary" href="scan.html">Open Analysis</a>
+        </div>
+
+        <div class="tile">
+          <h3>Mini Game</h3>
+          <p class="muted">Delulu Dodge: avoid red flags.</p>
+          <a class="btn primary" href="game.html">Play</a>
+        </div>
+      </div>
     </div>
   </div>
-  <div>
-    <a class="btn" href="menu.html">Menu</a>
-  </div>
-</nav>
 
-<div class="container">
-  <div class="card">
-
-    <div class="badges">
-      <div class="badge" id="qCount">Question 1/10</div>
-      <div class="badge" id="progress">0%</div>
-    </div>
-
-    <h2 id="questionText">Loading…</h2>
-    <p class="muted" id="questionHint"></p>
-
-    <div class="choice-grid">
-      <div class="choice" data-val="3"><b>Yes (a lot)</b><span>Strong signal</span></div>
-      <div class="choice" data-val="2"><b>Sometimes</b><span>Not always</span></div>
-      <div class="choice" data-val="1"><b>Rarely</b><span>Once in a while</span></div>
-      <div class="choice" data-val="0"><b>No</b><span>Doesn’t apply</span></div>
-    </div>
-
-    <div id="result" style="display:none; margin-top:20px;">
-      <h2>Your Result</h2>
-      <div class="progress"><div id="bar"></div></div>
-      <h3 id="percent">0%</h3>
-      <p class="muted" id="advice"></p>
-      <a class="btn" href="plan.html">Go to Plan</a>
-    </div>
-
-  </div>
-</div>
-
-<script>
-  const APP_KEY = "dd_app_v1";
-  const data = JSON.parse(localStorage.getItem(APP_KEY) || "{}");
-  if (!data.age || data.age < 18) location.href = "start.html";
-
-  const questions = [
-    ["Do you reread texts to find hidden meaning?", "Searching for clues in one word."],
-    ["Do you assume silence means they’re mad?", "No reply = panic."],
-    ["Do you overthink punctuation?", "Dot dot dot trauma."],
-    ["Do you check activity for hints?", "Detective mode."],
-    ["Do you rewrite replies multiple times?", "Pressure to be perfect."],
-    ["Do you double text?", "Chase mode."],
-    ["Do you replay convos in your head?", "Looping thoughts."],
-    ["Do you ignore red flags?", "Hope goggles."],
-    ["Does your mood depend on replies?", "High/low emotions."],
-    ["Do you excuse disrespect?", "Bare minimum defense."]
-  ];
-
-  let i = 0;
-  let score = 0;
-
-  const qCount = document.getElementById("qCount");
-  const progress = document.getElementById("progress");
-  const qText = document.getElementById("questionText");
-  const qHint = document.getElementById("questionHint");
-  const choices = document.querySelectorAll(".choice");
-  const result = document.getElementById("result");
-  const bar = document.getElementById("bar");
-  const percent = document.getElementById("percent");
-  const advice = document.getElementById("advice");
-
-  function render() {
-    qCount.textContent = `Question ${i + 1}/${questions.length}`;
-    progress.textContent = `${Math.round((i / questions.length) * 100)}%`;
-    qText.textContent = questions[i][0];
-    qHint.textContent = questions[i][1];
-
-    // reset visuals
-    choices.forEach(c => {
-      c.style.background = "rgba(255,255,255,.06)";
-      c.style.boxShadow = "";
-      c.style.transform = "";
+  <script>
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      const d = getAppData();
+      delete d.age;
+      delete d.ageVerifiedAt;
+      setAppData(d);
+      window.location.replace("start.html?next=menu.html");
     });
-  }
-
-  function finish() {
-    const pct = Math.round((score / (questions.length * 3)) * 100);
-    bar.style.width = pct + "%";
-    percent.textContent = pct + "%";
-    advice.textContent =
-      pct >= 70 ? "High delulu — stop chasing." :
-      pct >= 40 ? "Half delulu — ground yourself." :
-                  "Pretty grounded.";
-
-    data.lastQuiz = { percent: pct, savedAt: Date.now() };
-    localStorage.setItem(APP_KEY, JSON.stringify(data));
-    result.style.display = "block";
-  }
-
-  choices.forEach(choice => {
-    choice.onclick = () => {
-      const v = Number(choice.dataset.val);
-      score += v;
-
-      // FORCE COLOR
-      const colors = {
-        3: ["#ff4b7d", "#ff8c5a"],
-        2: ["#ffb347", "#ffe27a"],
-        1: ["#b59cff", "#78aaff"],
-        0: ["#5ae6a0", "#46a0ff"]
-      };
-
-      choice.style.background = `linear-gradient(135deg, ${colors[v][0]}, ${colors[v][1]})`;
-      choice.style.boxShadow = "0 12px 30px rgba(0,0,0,.35)";
-      choice.style.transform = "scale(1.03)";
-
-      setTimeout(() => {
-        i++;
-        if (i >= questions.length) finish();
-        else render();
-      }, 300);
-    };
-  });
-
-  render();
-</script>
-
+  </script>
 </body>
 </html>
