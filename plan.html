@@ -27,22 +27,77 @@
 
   <div class="container">
     <div class="card">
-      <div id="planOut">Loading…</div>
+      <!-- LOADING -->
+      <div id="loadingWrap" class="plan-loading">
+        <div class="spinner" aria-hidden="true"></div>
+        <div>
+          <h2 style="margin:0 0 6px;">Building your plan…</h2>
+          <p class="muted" style="margin:0;">Reading your quiz result and generating advice.</p>
+        </div>
+      </div>
 
-      <div class="row section">
-        <a class="btn" href="menu.html">Back to Menu</a>
-        <a class="btn primary" href="quiz.html">Retake Quiz</a>
+      <!-- EMPTY STATE -->
+      <div id="emptyWrap" class="section" style="display:none;">
+        <h2 style="margin:0 0 6px;">No quiz result yet</h2>
+        <p class="muted" style="margin:0 0 14px;">Take the quiz first so I can make a plan for you.</p>
+        <div class="row">
+          <a class="btn primary" href="quiz.html">Start Quiz</a>
+          <a class="btn" href="menu.html">Back to Menu</a>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="resultWrap" style="display:none;">
+        <div class="plan-head">
+          <div>
+            <h2 style="margin:0 0 6px;">Your Plan</h2>
+            <p class="muted" id="savedAtText" style="margin:0;"></p>
+          </div>
+          <div class="badge" id="scoreBadge">—%</div>
+        </div>
+
+        <div class="progress" style="margin:12px 0 14px;">
+          <div id="planBar"></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="item">
+            <h3 style="margin:0 0 8px;">What your score means</h3>
+            <p class="muted" id="meaningText" style="margin:0;"></p>
+          </div>
+
+          <div class="item">
+            <h3 style="margin:0 0 8px;">Your main rule</h3>
+            <p class="muted" id="ruleText" style="margin:0;"></p>
+          </div>
+        </div>
+
+        <div class="section grid-2">
+          <div class="item">
+            <h3 style="margin:0 0 10px;">Do this today</h3>
+            <ul id="todayList" style="margin:0; padding-left:18px;"></ul>
+          </div>
+
+          <div class="item">
+            <h3 style="margin:0 0 10px;">Texting boundaries</h3>
+            <ul id="boundariesList" style="margin:0; padding-left:18px;"></ul>
+          </div>
+        </div>
+
+        <div class="section item">
+          <h3 style="margin:0 0 10px;">Copy-paste lines (so you don’t spiral)</h3>
+          <div class="plan-quotes" id="linesBox"></div>
+        </div>
+
+        <div class="row section">
+          <a class="btn primary" href="quiz.html">Retake Quiz</a>
+          <a class="btn" href="menu.html">Back to Menu</a>
+        </div>
       </div>
     </div>
   </div>
 
-  <script>
-    const APP_KEY="dd_app_v1";
-    function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
-    const d=getAppData();
-    if(!d.age || Number(d.age) < 18) window.location.replace("start.html");
-  </script>
-
-  <script src="plan.js"></script>
+  <script src="plan.js?v=1"></script>
 </body>
 </html>
+
