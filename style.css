@@ -289,4 +289,20 @@ canvas{
   flex-wrap:wrap;
   align-items:center;
 }
+/* --- FIX: background overlays blocking clicks --- */
+body::before,
+body::after,
+.container::before,
+.container::after,
+.card::before,
+.card::after {
+  pointer-events: none !important;
+}
+
+/* Ensure interactive elements can be clicked */
+a, button, input, textarea, select {
+  pointer-events: auto !important;
+}
+
+
 
