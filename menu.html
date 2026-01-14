@@ -3,92 +3,77 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Menu</title>
-  <link rel="stylesheet" href="style.css?v=9" />
-  <script>
-    // 🔒 GLOBAL AGE GATE (must be on every protected page)
-    const APP_KEY = "dd_app_v1";
-    function getAppData(){
-      try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); }
-      catch { return {}; }
-    }
-    const data = getAppData();
-
-    // if age not verified, bounce to start
-    if (!data.age || Number(data.age) < 18) {
-      window.location.replace("start.html");
-    }
-  </script>
+  <title>Delulu Detector • Age Check</title>
+  <link rel="stylesheet" href="style.css?v=11" />
+  <script src="shared.js?v=11"></script>
 </head>
 <body>
-  <nav>
-    <div class="brand">
-      <div class="logo">DD</div>
-      <div>
-        <div class="title">Delulu Detector</div>
-        <div class="sub">Menu</div>
-      </div>
-    </div>
-
-    <div class="nav-actions">
-      <a class="btn ghost" href="start.html">Start</a>
-      <button class="btn ghost" id="logoutBtn" type="button">Log out</button>
-    </div>
-  </nav>
+  <!-- NO NAVBAR ON PURPOSE -->
 
   <div class="container">
-    <div class="card">
-      <div class="section">
-        <h1 style="margin:0 0 6px;">Menu</h1>
-        <p class="muted" style="margin:0;">
-          Choose a feature. (18+ verified ✅)
-        </p>
+    <div class="card" style="max-width:520px; margin:60px auto;">
+      <div style="display:flex; gap:14px; align-items:center; margin-bottom:14px;">
+        <div class="logo">DD</div>
+        <div>
+          <h1 style="margin:0;">Delulu Detector</h1>
+          <p class="muted" style="margin:2px 0 0;">18+ only</p>
+        </div>
       </div>
 
-      <div class="grid-2 section">
-        <div class="tile">
-          <h3>Quiz</h3>
-          <p class="muted">Answer questions and get a delulu %.</p>
-          <a class="btn primary" href="quiz.html">Open Quiz</a>
-        </div>
+      <p class="muted" style="margin-top:0;">
+        Confirm you are <b>18 or older</b> to access Menu, Quiz, Plan, Analysis, and Game.
+      </p>
 
-        <div class="tile">
-          <h3>Plan</h3>
-          <p class="muted">Get advice based on your last quiz.</p>
-          <a class="btn primary" href="plan.html">Open Plan</a>
-        </div>
+      <div class="section">
+        <label for="ageInput">Enter your age</label>
+        <input id="ageInput" type="number" inputmode="numeric" min="18" placeholder="18+ only" />
+      </div>
 
-        <div class="tile">
-          <h3>Text + Photo Analysis</h3>
-          <p class="muted">Paste a convo or add a screenshot + note.</p>
-          <a class="btn primary" href="scan.html">Open Analysis</a>
-        </div>
+      <p id="errorText" style="display:none; margin:8px 0 0; color:#ff8a8a; font-weight:800;"></p>
 
-        <div class="tile">
-          <h3>Game</h3>
-          <p class="muted">Play the mini game mode.</p>
-          <a class="btn primary" href="game.html">Open Game</a>
-        </div>
+      <div class="row" style="margin-top:14px;">
+        <button class="btn primary" id="continueBtn" type="button">Continue</button>
+        <a class="btn ghost" href="privacy.html">Privacy</a>
       </div>
 
       <div class="hr"></div>
-
-      <p class="muted" style="margin:0;">
-        Tip: If you ever want to “lock it again”, click Log out.
+      <p class="muted small" style="margin:0;">
+        Age is stored only to verify access (localStorage). No data is sent anywhere.
       </p>
     </div>
   </div>
 
   <script>
-    // Log out clears verification so user gets locked again
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      try {
-        const d = JSON.parse(localStorage.getItem("dd_app_v1") || "{}");
-        delete d.age;
-        delete d.ageVerifiedAt;
-        localStorage.setItem("dd_app_v1", JSON.stringify(d));
-      } catch {}
-      window.location.replace("start.html");
+    const NEXT = safeNextFromURL();
+    const ageInput = document.getElementById("ageInput");
+    const continueBtn = document.getElementById("continueBtn");
+    const errorText = document.getElementById("errorText");
+
+    function showError(msg){
+      errorText.textContent = msg;
+      errorText.style.display = "block";
+    }
+
+    continueBtn.addEventListener("click", () => {
+      const age = Number(ageInput.value);
+      if (!age) return showError("Enter your age first.");
+      if (age < 18) return showError("Sorry — this app is 18+ only.");
+
+      errorText.style.display = "none";
+
+      const data = getAppData();
+      data.age = age;
+      data.ageVerifiedAt = Date.now();
+      setAppData(data);
+
+      window.location.href = NEXT; // ✅ returns to the page you wanted
+    });
+
+    ageInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        continueBtn.click();
+      }
     });
   </script>
 </body>
