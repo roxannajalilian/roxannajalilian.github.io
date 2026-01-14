@@ -4,7 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Menu</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=9" />
+  <script>
+    // 🔒 GLOBAL AGE GATE (must be on every protected page)
+    const APP_KEY = "dd_app_v1";
+    function getAppData(){
+      try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); }
+      catch { return {}; }
+    }
+    const data = getAppData();
+
+    // if age not verified, bounce to start
+    if (!data.age || Number(data.age) < 18) {
+      window.location.replace("start.html");
+    }
+  </script>
 </head>
 <body>
   <nav>
@@ -18,68 +32,62 @@
 
     <div class="nav-actions">
       <a class="btn ghost" href="start.html">Start</a>
-      <a class="btn" href="menu.html">Menu</a>
-      <a class="btn ghost" href="quiz.html">Quiz</a>
-      <a class="btn ghost" href="plan.html">Plan</a>
-      <a class="btn ghost" href="scan.html">Analysis</a>
-      <a class="btn ghost" href="game.html">Game</a>
-      <button class="btn ghost" id="resetAppBtn" type="button">Reset App</button>
+      <button class="btn ghost" id="logoutBtn" type="button">Log out</button>
     </div>
   </nav>
 
   <div class="container">
     <div class="card">
       <div class="section">
-        <h1 style="margin:0 0 6px;">Choose a mode</h1>
-        <p class="muted" id="scoreLine" style="margin:0;">Loading score…</p>
+        <h1 style="margin:0 0 6px;">Menu</h1>
+        <p class="muted" style="margin:0;">
+          Choose a feature. (18+ verified ✅)
+        </p>
       </div>
 
-      <div class="section grid-2">
+      <div class="grid-2 section">
         <div class="tile">
-          <h3>📝 Quiz</h3>
-          <p class="muted">Get your delulu % and save it for your plan.</p>
-          <a class="btn primary" href="quiz.html">Start Quiz</a>
+          <h3>Quiz</h3>
+          <p class="muted">Answer questions and get a delulu %.</p>
+          <a class="btn primary" href="quiz.html">Open Quiz</a>
         </div>
 
         <div class="tile">
-          <h3>📌 Plan</h3>
-          <p class="muted">Uses your last quiz result to build a plan.</p>
-          <a class="btn" href="plan.html">Open Plan</a>
+          <h3>Plan</h3>
+          <p class="muted">Get advice based on your last quiz.</p>
+          <a class="btn primary" href="plan.html">Open Plan</a>
         </div>
 
         <div class="tile">
-          <h3>🔎 Text Analysis</h3>
-          <p class="muted">Paste a convo and get “signals” + a score.</p>
-          <a class="btn" href="scan.html">Open Analysis</a>
+          <h3>Text + Photo Analysis</h3>
+          <p class="muted">Paste a convo or add a screenshot + note.</p>
+          <a class="btn primary" href="scan.html">Open Analysis</a>
         </div>
 
         <div class="tile">
-          <h3>🎮 Game</h3>
-          <p class="muted">Delulu Dodge: avoid red flags and survive.</p>
-          <a class="btn" href="game.html">Play</a>
+          <h3>Game</h3>
+          <p class="muted">Play the mini game mode.</p>
+          <a class="btn primary" href="game.html">Open Game</a>
         </div>
       </div>
+
+      <div class="hr"></div>
+
+      <p class="muted" style="margin:0;">
+        Tip: If you ever want to “lock it again”, click Log out.
+      </p>
     </div>
   </div>
 
   <script>
-    const APP_KEY = "dd_app_v1";
-    function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
-
-    const data = getAppData();
-    if (!data.age || Number(data.age) < 18) window.location.replace("start.html");
-
-    const scoreLine = document.getElementById("scoreLine");
-    const last = data.lastQuiz;
-    if (last && typeof last.percent === "number") {
-      const when = last.savedAt ? new Date(last.savedAt).toLocaleString() : "";
-      scoreLine.textContent = `Last quiz: ${last.percent}%${when ? " • " + when : ""}`;
-    } else {
-      scoreLine.textContent = "No quiz saved yet. Take the quiz to unlock your Plan.";
-    }
-
-    document.getElementById("resetAppBtn").addEventListener("click", () => {
-      localStorage.removeItem(APP_KEY);
+    // Log out clears verification so user gets locked again
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      try {
+        const d = JSON.parse(localStorage.getItem("dd_app_v1") || "{}");
+        delete d.age;
+        delete d.ageVerifiedAt;
+        localStorage.setItem("dd_app_v1", JSON.stringify(d));
+      } catch {}
       window.location.replace("start.html");
     });
   </script>
