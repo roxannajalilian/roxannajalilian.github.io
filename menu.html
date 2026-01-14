@@ -1,81 +1,146 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Delulu Detector • Menu</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="./style.css" />
 </head>
+
 <body>
-<nav>
-  <div class="nav-inner">
+  <div class="cursorGlow"></div>
+
+  <nav>
     <div class="brand">
       <div class="logo">DD</div>
       <div>
         <div class="title">Delulu Detector</div>
-        <div class="sub">Choose a mode</div>
+        <div class="sub">AI Control Panel</div>
       </div>
     </div>
-    <div class="nav-right">
-      <a class="navlink active" href="menu.html">Menu</a>
-      <a class="navlink" href="policy.html">Policy</a>
-      <a class="navlink" href="index.html" id="logoutBtn">Reset</a>
+
+    <div class="nav-actions">
+      <button class="pill" id="readBtn" type="button">🔊 Read aloud</button>
+      <a class="pill" href="policy.html">Policy</a>
+      <a class="pill" href="index.html">Start</a>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<div class="container">
-  <div class="card">
-    <div class="row spread">
-      <div>
-        <h2>Pick what you want to do</h2>
-        <p class="muted" style="margin:6px 0 0;">Quiz gives you a score + results. Plan uses your saved quiz score.</p>
+  <main class="container">
+    <div class="card" style="padding:26px;">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+        <div style="min-width:260px;">
+          <h1 style="margin:0 0 8px;">AI Delulu Control Panel</h1>
+          <p class="muted" style="margin:0; max-width:720px;">
+            Analyze • Reflect • Simulate — pick a tool below.
+          </p>
+        </div>
+        <div class="pill" id="welcomeTag" style="background:rgba(255,255,255,.04);">
+          Saved: Loading…
+        </div>
       </div>
-      <span class="pill" id="agePill">Age: --</span>
+
+      <div class="menuGrid3">
+        <a class="menuCard" href="quiz.html">
+          <div class="menuIcon">🧠</div>
+          <div>
+            <div class="menuTitle">Quiz</div>
+            <div class="menuSub">Your quiz only — get a result + short reassuring paragraph</div>
+          </div>
+          <div class="menuGo">→</div>
+        </a>
+
+        <a class="menuCard" href="scan.html">
+          <div class="menuIcon">🔎</div>
+          <div>
+            <div class="menuTitle">Text Analyzer</div>
+            <div class="menuSub">Paste messages → get a delulu score + reasons</div>
+          </div>
+          <div class="menuGo">→</div>
+        </a>
+
+        <a class="menuCard" href="game.html">
+          <div class="menuIcon">🎮</div>
+          <div>
+            <div class="menuTitle">Game</div>
+            <div class="menuSub">Delulu Dodge: avoid red thoughts, collect clarity</div>
+          </div>
+          <div class="menuGo">→</div>
+        </a>
+      </div>
+
+      <p class="tiny muted centerText" style="margin:14px 0 0;">
+        Everything saves locally in your browser.
+      </p>
     </div>
 
-    <div class="grid" style="margin-top:14px;">
-      <div class="tile col-6">
-        <h2>📝 Delulu Quiz</h2>
-        <p class="muted">2 minutes • gets you a % and “best-friend” advice.</p>
-        <button class="primary" onclick="location.href='quiz.html'">Start Quiz</button>
+    <div style="display:grid; grid-template-columns: 1.2fr .8fr; gap:12px; margin-top:12px;" id="lowerGrid">
+      <div class="card">
+        <h2 style="margin:0 0 10px;">Saved stats</h2>
+
+        <div class="statGrid3">
+          <div class="statCard">
+            <div class="muted tiny">Last Quiz</div>
+            <div class="statBig" id="lastQuiz">—</div>
+            <div class="muted tiny" id="lastQuizSub">No quiz yet</div>
+          </div>
+
+          <div class="statCard">
+            <div class="muted tiny">Last Scan</div>
+            <div class="statBig" id="lastScan">—</div>
+            <div class="muted tiny" id="lastScanSub">No scan yet</div>
+          </div>
+
+          <div class="statCard">
+            <div class="muted tiny">Last Game</div>
+            <div class="statBig" id="lastGame">—</div>
+            <div class="muted tiny" id="lastGameSub">No game yet</div>
+          </div>
+        </div>
+
+        <div style="height:1px; background:rgba(255,255,255,.12); margin:16px 0;"></div>
+
+        <div class="row" style="justify-content:space-between;">
+          <div>
+            <div class="muted tiny">Need a clean restart?</div>
+            <div class="tiny muted">Clears saved scores/progress in this browser.</div>
+          </div>
+          <button class="btn ghost" id="resetBtn" type="button">Reset data</button>
+        </div>
+
+        <p class="tiny muted" id="msg" style="margin:10px 0 0;"></p>
       </div>
 
-      <div class="tile col-6">
-        <h2>📌 Your Plan</h2>
-        <p class="muted">Uses your saved quiz result to generate a plan just for you.</p>
-        <button class="primary" id="planBtn" onclick="location.href='plan.html'">Open Plan</button>
-      </div>
+      <div class="card">
+        <h2 style="margin:0 0 10px;">Extras</h2>
 
-      <div class="tile col-6">
-        <h2>🔍 Text Analyzer</h2>
-        <p class="muted">Paste a convo irl or text + optional photo. Detects “signals” + gives a score.</p>
-        <button class="secondary" onclick="location.href='scan.html'">Open Analyzer</button>
-      </div>
+        <div class="resultSide">
+          <div style="display:flex; justify-content:space-between; gap:10px;">
+            <div>
+              <div class="menuTitle" style="margin:0;">Accessibility</div>
+              <div class="muted tiny">Read aloud button is available.</div>
+            </div>
+            <button class="btn ghost" id="readBtn2" type="button">🔊</button>
+          </div>
 
-      <div class="tile col-6">
-        <h2>🎮  Mini Game</h2>
-        <p class="muted">Delulu Dodge: avoid the red flags and survive.</p>
-        <button class="secondary" onclick="location.href='game.html'">Play</button>
+          <div style="height:1px; background:rgba(255,255,255,.12); margin:14px 0;"></div>
+
+          <div class="menuTitle" style="margin:0;">Privacy</div>
+          <p class="muted tiny" style="margin:8px 0 0;">
+            This app doesn’t upload anything. Your text stays on your device.
+          </p>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+  </main>
 
-<div class="footer">Back buttons go to Menu • GitHub Pages: filenames are case-sensitive</div>
+  <script src="./glow.js"></script>
+  <script type="module" src="./menu.js"></script>
 
-<script src="storage.js"></script>
-<script>
-  requireAdultOrRedirect();
-  const data = getData();
-  document.getElementById("agePill").textContent = "Age: " + (data.age || "--");
-
-  // Reset button should really clear storage
-  document.getElementById("logoutBtn").addEventListener("click", (e) => {
-    e.preventDefault();
-    localStorage.removeItem(KEY);
-    window.location.href = "index.html";
-  });
-</script>
+  <style>
+    @media (max-width: 980px){
+      #lowerGrid{ grid-template-columns: 1fr; }
+    }
+  </style>
 </body>
 </html>
