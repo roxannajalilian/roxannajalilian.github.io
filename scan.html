@@ -3,113 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Age Check</title>
-  <link rel="stylesheet" href="style.css?v=8" />
+  <title>Delulu Detector • Analysis</title>
+  <link rel="stylesheet" href="style.css?v=11" />
+  <script src="shared.js?v=11"></script>
+  <script>requireAdult("scan.html");</script>
 </head>
 <body>
-
-  <!-- NO NAV ON PURPOSE (LOCKED PAGE) -->
+  <nav>
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div>
+        <div class="title">Delulu Detector</div>
+        <div class="sub">Text + Photo Analysis</div>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <a class="btn ghost" href="menu.html">Menu</a>
+      <a class="btn ghost" href="quiz.html">Quiz</a>
+      <a class="btn ghost" href="plan.html">Plan</a>
+      <a class="btn ghost" href="game.html">Game</a>
+    </div>
+  </nav>
 
   <div class="container">
-    <div class="card" style="max-width:520px; margin:60px auto;">
-      
-      <div style="display:flex; gap:14px; align-items:center; margin-bottom:14px;">
-        <div class="logo">DD</div>
-        <div>
-          <h1 style="margin:0;">Delulu Detector</h1>
-          <p class="muted" style="margin:2px 0 0;">18+ only</p>
-        </div>
-      </div>
-
-      <p class="muted">
-        This app contains relationship and emotional analysis intended for adults.
-        You must confirm you are <b>18 or older</b> to continue.
+    <div class="card">
+      <h2 style="margin:0 0 6px;">Paste the messages</h2>
+      <p class="muted" style="margin:0 0 12px;">
+        Paste a convo. Optional: add a screenshot/photo (preview will show).
       </p>
+
+      <label for="textBox">Conversation text</label>
+      <textarea id="textBox" rows="6" placeholder="Paste the convo here..."></textarea>
 
       <div class="section">
-        <label for="ageInput">Enter your age</label>
-        <input
-          id="ageInput"
-          type="number"
-          min="18"
-          placeholder="18+ only"
-        />
+        <label for="photoInput">Optional photo/screenshot</label>
+        <input id="photoInput" type="file" accept="image/*" />
+        <div id="preview" class="preview" style="display:none;">
+          <img id="previewImg" alt="Preview"/>
+        </div>
+        <p class="muted small" id="photoNote" style="margin:8px 0 0;"></p>
       </div>
 
-      <p class="muted" id="errorText" style="display:none; color:#ff7a7a;">
-        You must be 18 or older to use this app.
-      </p>
-
-      <div class="row" style="margin-top:14px;">
-        <button class="btn primary" id="continueBtn" type="button">
-          Continue
-        </button>
+      <div class="row">
+        <button class="btn primary" id="analyzeBtn" type="button">Analyze</button>
+        <button class="btn ghost" id="clearBtn" type="button">Clear</button>
       </div>
 
-      <div class="hr"></div>
+      <div class="section" id="resultBox" style="display:none;">
+        <div class="hr"></div>
+        <h2 style="margin:0 0 8px;">Result</h2>
+        <div class="progress"><div id="scanBar"></div></div>
+        <h3 id="scanPercent" style="margin:10px 0 6px;">0%</h3>
+        <p class="muted" id="scanSummary" style="margin:0;"></p>
 
-      <p class="muted" style="font-size:13px;">
-        Your age is stored only to verify access. No personal data is shared.
-      </p>
-
+        <div class="tile section">
+          <h3>What I noticed</h3>
+          <ul id="signals" style="margin:8px 0 0; color:var(--muted); line-height:1.6;"></ul>
+        </div>
+      </div>
     </div>
   </div>
 
-  <script>
-    const APP_KEY = "dd_app_v1";
-
-    function getAppData(){
-      try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); }
-      catch { return {}; }
-    }
-    function setAppData(data){
-      localStorage.setItem(APP_KEY, JSON.stringify(data));
-    }
-
-    const ageInput = document.getElementById("ageInput");
-    const continueBtn = document.getElementById("continueBtn");
-    const errorText = document.getElementById("errorText");
-
-    // 🔒 HARD LOCK: do NOT auto-redirect anywhere
-    // User MUST click Continue
-
-    continueBtn.addEventListener("click", () => {
-      const age = Number(ageInput.value);
-
-      // No input
-      if (!age) {
-        errorText.textContent = "Please enter your age.";
-        errorText.style.display = "block";
-        return;
-      }
-
-      // Under 18
-      if (age < 18) {
-        errorText.textContent = "Sorry — this app is 18+ only.";
-        errorText.style.display = "block";
-        return;
-      }
-
-      // ✅ Passed age check
-      errorText.style.display = "none";
-
-      const data = getAppData();
-      data.age = age;
-      data.ageVerifiedAt = Date.now();
-      setAppData(data);
-
-      // Only NOW allow entry
-      window.location.href = "menu.html";
-    });
-
-    // Prevent Enter key bypass
-    ageInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        continueBtn.click();
-      }
-    });
-  </script>
-
+  <script src="scan.js?v=11"></script>
 </body>
 </html>
