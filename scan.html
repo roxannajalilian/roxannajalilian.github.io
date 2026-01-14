@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Analysis</title>
-  <link rel="stylesheet" href="style.css" />
+
+  <!-- ✅ Cache-bust CSS so GitHub Pages updates immediately -->
+  <link rel="stylesheet" href="style.css?v=7" />
 </head>
 <body>
   <nav>
@@ -30,12 +32,11 @@
       <div class="section">
         <h1 style="margin:0 0 6px;">Scan a convo</h1>
         <p class="muted" style="margin:0;">
-          Paste text or add a screenshot/photo. (Photo is preview + notes only — not real OCR.)
+          Paste text OR upload a screenshot/photo. (Photo is preview + your note — no OCR.)
         </p>
       </div>
 
       <div class="section grid-2">
-
         <!-- LEFT -->
         <div class="tile">
           <label for="textInput">Paste messages (optional)</label>
@@ -43,21 +44,15 @@
 
           <div class="hr"></div>
 
-          <label>Screenshot / Photo (optional)</label>
+          <label for="imgInput">Upload a screenshot/photo (optional)</label>
 
-          <!-- Hidden file input (more reliable) -->
+          <!-- ✅ Visible input = most reliable (mobile + desktop) -->
           <input
             id="imgInput"
             type="file"
             accept="image/*"
-            capture="environment"
-            style="display:none;"
+            style="width:100%; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.18); color:white;"
           />
-
-          <div class="row" style="margin-top:10px;">
-            <button class="btn primary" id="pickPhotoBtn" type="button">Choose Photo</button>
-            <button class="btn ghost" id="removeImgBtn" type="button" style="display:none;">Remove</button>
-          </div>
 
           <div id="imgWrap" style="display:none; margin-top:12px;">
             <div class="muted" style="margin:0 0 8px;">Preview</div>
@@ -69,6 +64,9 @@
 
             <label for="imgNote" style="margin-top:12px;">Photo note (optional)</label>
             <input id="imgNote" type="text" placeholder='Example: "He left me on read for 6 hours"'>
+            <div class="row" style="margin-top:10px;">
+              <button class="btn ghost" id="removeImgBtn" type="button">Remove photo</button>
+            </div>
           </div>
 
           <div class="row" style="margin-top:14px;">
@@ -76,10 +74,8 @@
             <button class="btn" id="clearBtn" type="button">Clear</button>
           </div>
 
-          <p class="muted" id="photoHelp" style="margin:10px 0 0;">
-            If nothing happens when you click “Choose Photo”, you’re probably opening the file locally.
-            Open it through GitHub Pages (or a live server).
-          </p>
+          <!-- ✅ Debug tells you EXACTLY what happened -->
+          <p class="muted" id="debug" style="margin:10px 0 0;"></p>
         </div>
 
         <!-- RIGHT -->
@@ -107,32 +103,31 @@
               style="width:100%; border-radius:16px; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.18);"
             />
           </div>
-
-          <p class="muted" id="debug" style="margin-top:12px;"></p>
         </div>
-
       </div>
     </div>
   </div>
 
+  <!-- ✅ Cache-bust script too -->
   <script>
     (() => {
       const APP_KEY = "dd_app_v1";
       function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
 
+      // 18+ gate
       const data = getAppData();
       if (!data.age || Number(data.age) < 18) {
+        // (this will redirect; if you keep getting kicked, it means age never saved)
         window.location.replace("start.html");
         return;
       }
 
       const textInput = document.getElementById("textInput");
       const imgInput = document.getElementById("imgInput");
-      const pickPhotoBtn = document.getElementById("pickPhotoBtn");
-      const removeImgBtn = document.getElementById("removeImgBtn");
       const imgWrap = document.getElementById("imgWrap");
       const imgPreview = document.getElementById("imgPreview");
       const imgNote = document.getElementById("imgNote");
+      const removeImgBtn = document.getElementById("removeImgBtn");
       const analyzeBtn = document.getElementById("analyzeBtn");
       const clearBtn = document.getElementById("clearBtn");
 
@@ -140,72 +135,89 @@
       const scoreText = document.getElementById("scoreText");
       const summaryText = document.getElementById("summaryText");
       const notesEl = document.getElementById("notes");
+
       const usedPhotoBox = document.getElementById("usedPhotoBox");
       const photoNoteOut = document.getElementById("photoNoteOut");
       const photoOut = document.getElementById("photoOut");
+
       const debug = document.getElementById("debug");
 
       let photoDataUrl = "";
+      let objectUrl = "";
 
       function setNotes(items){
         notesEl.innerHTML = items.map(x => `<li>${x}</li>`).join("");
       }
-
       function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
 
-      // Button triggers file picker reliably
-      pickPhotoBtn.addEventListener("click", () => {
-        debug.textContent = "";
-        imgInput.click();
-      });
-
-      // When file chosen
-      imgInput.addEventListener("change", () => {
-        const file = imgInput.files && imgInput.files[0];
-        if (!file) {
-          debug.textContent = "No file selected.";
-          return;
+      function resetPhoto(){
+        if (objectUrl) {
+          try { URL.revokeObjectURL(objectUrl); } catch {}
+          objectUrl = "";
         }
-
-        // Safety: image only
-        if (!file.type.startsWith("image/")) {
-          debug.textContent = "That file isn’t an image. Choose a photo/screenshot.";
-          imgInput.value = "";
-          return;
-        }
-
-        // Read and preview
-        const reader = new FileReader();
-        reader.onload = () => {
-          photoDataUrl = String(reader.result || "");
-          imgPreview.src = photoDataUrl;
-          imgWrap.style.display = "block";
-          removeImgBtn.style.display = "inline-flex";
-          debug.textContent = "Photo added ✅";
-        };
-        reader.onerror = () => {
-          debug.textContent = "Couldn’t read that image. Try a different one.";
-        };
-        reader.readAsDataURL(file);
-      });
-
-      removeImgBtn.addEventListener("click", () => {
         imgInput.value = "";
         imgWrap.style.display = "none";
         imgPreview.src = "";
         imgNote.value = "";
         photoDataUrl = "";
-        removeImgBtn.style.display = "none";
         usedPhotoBox.style.display = "none";
+        photoOut.src = "";
+        photoNoteOut.textContent = "";
+      }
+
+      // ✅ photo upload
+      imgInput.addEventListener("change", () => {
+        const file = imgInput.files && imgInput.files[0];
+        if (!file) {
+          debug.textContent = "No file chosen.";
+          return;
+        }
+
+        debug.textContent = `Picked: ${file.name} (${Math.round(file.size/1024)} KB)`;
+
+        // image only
+        if (!file.type || !file.type.startsWith("image/")) {
+          debug.textContent = "That’s not an image file. Choose a screenshot/photo.";
+          resetPhoto();
+          return;
+        }
+
+        // ✅ MOST RELIABLE preview method
+        try {
+          if (objectUrl) URL.revokeObjectURL(objectUrl);
+          objectUrl = URL.createObjectURL(file);
+          imgPreview.src = objectUrl;
+          photoDataUrl = objectUrl; // we’ll reuse the same URL
+          imgWrap.style.display = "block";
+          debug.textContent = "Photo loaded ✅";
+          return;
+        } catch {}
+
+        // fallback: FileReader
+        const reader = new FileReader();
+        reader.onload = () => {
+          photoDataUrl = String(reader.result || "");
+          imgPreview.src = photoDataUrl;
+          imgWrap.style.display = "block";
+          debug.textContent = "Photo loaded ✅";
+        };
+        reader.onerror = () => {
+          debug.textContent = "Couldn’t read image. If you’re on iPhone, try a screenshot (PNG) instead of HEIC.";
+        };
+        reader.readAsDataURL(file);
+      });
+
+      removeImgBtn.addEventListener("click", () => {
+        resetPhoto();
         debug.textContent = "Photo removed.";
       });
 
-      function analyzeText(raw, photoNoteText){
+      function analyzeText(raw, note){
         const t = (raw || "").trim();
-        const photoNoteClean = (photoNoteText || "").trim();
+        const noteClean = (note || "").trim();
 
         if (!t && !photoDataUrl) {
-          return { score: 0, summary: "Paste text or add a photo first.", notes: ["Nothing to analyze yet."] };
+          return { score: 0, summary: "Paste text or upload a photo first.", notes: ["Nothing to analyze yet."] };
         }
 
         const lower = t.toLowerCase();
@@ -238,8 +250,8 @@
         if (photoDataUrl) {
           signals.push("Screenshot uploaded (used for context).");
           score += 10;
-          if (photoNoteClean) {
-            signals.push(`Photo note: “${photoNoteClean}”.`);
+          if (noteClean) {
+            signals.push(`Photo note: “${noteClean}”.`);
             score += 8;
           } else {
             signals.push("No photo note added (optional).");
@@ -299,16 +311,7 @@
         scoreText.textContent = "—%";
         summaryText.textContent = "Run an analysis to see results.";
         setNotes(["No scan yet."]);
-
-        imgInput.value = "";
-        imgWrap.style.display = "none";
-        imgPreview.src = "";
-        imgNote.value = "";
-        photoDataUrl = "";
-        removeImgBtn.style.display = "none";
-        usedPhotoBox.style.display = "none";
-        photoOut.src = "";
-        photoNoteOut.textContent = "";
+        resetPhoto();
         debug.textContent = "";
       });
     })();
