@@ -1,14 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delulu Detector • Analyzer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Text Analyzer</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<nav>
-  <div class="nav-inner">
+  <nav>
     <div class="brand">
       <div class="logo">DD</div>
       <div>
@@ -16,55 +15,65 @@
         <div class="sub">Paste convo + optional screenshot</div>
       </div>
     </div>
-    <div class="nav-right">
-      <a class="navlink" href="menu.html">Menu</a>
-      <a class="navlink" href="plan.html">Plan</a>
+    <div class="nav-actions">
+      <button class="pill" id="menuBtn">Menu</button>
+      <a class="pill" href="plan.html">Plan</a>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<div class="container">
-  <div class="card">
-    <div class="grid">
-      <div class="col-6">
+  <main class="container">
+    <div class="card twoCol">
+      <section>
         <h2>Paste the messages</h2>
-        <p class="muted" style="margin-top:6px;">It looks for patterns (short replies, “seen”, “ok”, “??”, shutdown words, etc.).</p>
-        <textarea id="textInput" placeholder="Paste conversation text here…"></textarea>
+        <p class="muted">
+          It looks for patterns (short replies, “seen”, “ok”, “??”, shutdown words, etc.).
+        </p>
 
-        <div class="row" style="justify-content:flex-start; margin-top:10px;">
-          <input id="imgInput" type="file" accept="image/*" />
+        <textarea id="text" class="textarea" placeholder="Paste conversation text here..."></textarea>
+
+        <div class="fileRow">
+          <label class="btn ghost">
+            Choose screenshot
+            <input id="file" type="file" accept="image/*,.txt" hidden />
+          </label>
+          <span class="muted tiny" id="fileName">No file chosen</span>
         </div>
 
-        <div class="row" style="justify-content:flex-start; margin-top:12px;">
-          <button class="primary" id="analyzeBtn">Analyze</button>
-          <button class="secondary" onclick="location.href='menu.html'">Back</button>
-          <button class="secondary" id="clearBtn">Clear</button>
+        <div id="previewWrap" class="hidden">
+          <div class="tiny muted">Screenshot preview:</div>
+          <img id="preview" alt="preview" class="previewImg" />
         </div>
 
-        <div id="scanWarn" class="notice" style="display:none;"></div>
-      </div>
+        <div class="row">
+          <button class="btn primary" id="analyze">Analyze</button>
+          <button class="btn ghost" id="back">Back</button>
+          <button class="btn ghost" id="clear">Clear</button>
+        </div>
 
-      <div class="col-6">
+        <p class="tiny muted" id="msg"></p>
+      </section>
+
+      <section class="resultSide">
         <h2>Result</h2>
-
         <div class="circleWrap">
-          <div class="circle">
-            <div>
-              <div class="big" id="scanPct">--%</div>
-              <div class="label" id="scanLabel">No scan yet</div>
+          <div class="circle" id="circle">
+            <div class="circleInner">
+              <div class="big" id="pct">--%</div>
+              <div class="muted tiny" id="label">No scan yet</div>
             </div>
           </div>
         </div>
 
-        <div id="signalsBox" class="muted" style="margin-top:12px;"></div>
-        <hr/>
-        <div id="scanAdvice"></div>
-      </div>
-    </div>
-  </div>
-</div>
+        <div class="divider"></div>
 
-<script src="storage.js"></script>
-<script src="scan.js"></script>
+        <h3 class="tight">What I noticed</h3>
+        <ul class="list" id="bullets">
+          <li class="muted">Run a scan to see notes here.</li>
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="scan.js"></script>
 </body>
 </html>
