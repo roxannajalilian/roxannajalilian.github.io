@@ -1,89 +1,71 @@
-(() => {
-  const APP_KEY = "dd_app_v1";
-  function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Delulu Detector • Plan</title>
+  <link rel="stylesheet" href="style.css?v=11" />
+  <script src="shared.js?v=11"></script>
+  <script>requireAdult("plan.html");</script>
+</head>
+<body>
+  <nav>
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div>
+        <div class="title">Delulu Detector</div>
+        <div class="sub">Your Plan</div>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <a class="btn ghost" href="menu.html">Menu</a>
+      <a class="btn ghost" href="quiz.html">Quiz</a>
+      <a class="btn ghost" href="scan.html">Analysis</a>
+      <a class="btn ghost" href="game.html">Game</a>
+    </div>
+  </nav>
 
-  const data = getAppData();
-  if (!data.age || Number(data.age) < 18) { window.location.replace("start.html"); return; }
+  <div class="container">
+    <div class="card">
+      <div id="loadingBox" class="loading-row">
+        <div class="spinner"></div>
+        <div>
+          <div style="font-weight:900;">Generating your plan…</div>
+          <div class="muted small">Using your saved quiz score</div>
+        </div>
+      </div>
 
-  const loadingWrap = document.getElementById("loadingWrap");
-  const emptyWrap = document.getElementById("emptyWrap");
-  const resultWrap = document.getElementById("resultWrap");
+      <div id="planContent" style="display:none;">
+        <h2 style="margin:14px 0 6px;">Your Plan</h2>
+        <p class="muted" id="planMeta" style="margin:0 0 12px;"></p>
 
-  const scoreBadge = document.getElementById("scoreBadge");
-  const planBar = document.getElementById("planBar");
-  const savedAtText = document.getElementById("savedAtText");
+        <div class="progress"><div id="planBar"></div></div>
+        <h3 id="planPercent" style="margin:10px 0 6px;"></h3>
 
-  const meaningText = document.getElementById("meaningText");
-  const ruleText = document.getElementById("ruleText");
-  const todayList = document.getElementById("todayList");
-  const boundariesList = document.getElementById("boundariesList");
-  const linesBox = document.getElementById("linesBox");
+        <div class="grid-2 section">
+          <div class="tile">
+            <h3>Do this next</h3>
+            <p class="muted" id="nextSteps"></p>
+          </div>
+          <div class="tile">
+            <h3>Texting rule</h3>
+            <p class="muted" id="rule"></p>
+          </div>
+        </div>
 
-  const last = data.lastQuiz;
+        <div class="tile section">
+          <h3>Reality check</h3>
+          <p class="muted" id="reality"></p>
+        </div>
 
-  function setList(el, items){ el.innerHTML = items.map(x => `<li>${x}</li>`).join(""); }
-  function cards(lines){ return lines.map(l => `<div class="quote">${l}</div>`).join(""); }
+        <div class="row" style="margin-top:12px;">
+          <a class="btn primary" href="quiz.html">Retake Quiz</a>
+          <a class="btn" href="menu.html">Back to Menu</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  function planFor(p){
-    if (p >= 80) return {
-      meaning:"Full spiral mode — your brain is writing stories from tiny signals.",
-      rule:"One message max. If they’re inconsistent, detach. Don’t chase.",
-      today:["Mute notifs for 2 hours.","Write facts only (actions, not guesses).","Ask ONE clear question then stop."],
-      bounds:["No double text for 6 hours.","No checking views/activity.","Dry/rude twice = step back."],
-      lines:["“Hey, are we good? I just want clarity.”","“No worries — I’ll give you space.”","“I’m not into mixed signals.”"]
-    };
-    if (p >= 60) return {
-      meaning:"High delulu — silence/tone triggers you into overthinking.",
-      rule:"Ask once, then wait. Your peace > their reply.",
-      today:["Wait 5 minutes before replying.","Do a distraction task first.","Only respond when calm."],
-      bounds:["No paragraphs for one-word replies.","Don’t reward disappearing.","Consistency > cute words."],
-      lines:["“Can you be direct? I’m confused.”","“Okay, we can talk later.”","“I like consistent communication.”"]
-    };
-    if (p >= 40) return {
-      meaning:"Half-delulu — mostly okay, but certain triggers flip you.",
-      rule:"Patterns > moments. One text isn’t a prophecy.",
-      today:["Stop rereading the chat.","Ask simple questions, no hints.","Do something productive."],
-      bounds:["Don’t text when heated.","Mirror dry energy.","Don’t beg for replies."],
-      lines:["“What’s the plan?”","“If you’re busy, talk later.”","“Just tell me straight.”"]
-    };
-    if (p >= 20) return {
-      meaning:"Slight overthink — you notice signals but stay mostly grounded.",
-      rule:"Stay chill and let actions speak.",
-      today:["Reply normally.","Give time to respond.","Do something fun, not phone-watching."],
-      bounds:["Don’t assume tone from punctuation.","Don’t change mood from one reply.","Ask instead of guessing."],
-      lines:["“No worries, talk later.”","“What did you mean?”","“Cool, let me know.”"]
-    };
-    return {
-      meaning:"Super grounded — you’re not spiraling, you’re watching reality.",
-      rule:"Keep standards. Don’t entertain inconsistency.",
-      today:["Stay consistent.","Protect your energy.","Choose effort-matching people."],
-      bounds:["Don’t over-invest early.","Watch actions not promises.","Step back sooner if off."],
-      lines:["“I like clear communication.”","“Let me know when you’re free.”","“I’m not guessing games.”"]
-    };
-  }
-
-  setTimeout(() => {
-    if (!last || typeof last.percent !== "number") {
-      loadingWrap.style.display = "none";
-      emptyWrap.style.display = "block";
-      return;
-    }
-
-    const p = last.percent;
-    const plan = planFor(p);
-
-    loadingWrap.style.display = "none";
-    resultWrap.style.display = "block";
-
-    scoreBadge.textContent = `${p}%`;
-    planBar.style.width = `${p}%`;
-    savedAtText.textContent = last.savedAt ? `Saved: ${new Date(last.savedAt).toLocaleString()}` : "";
-
-    meaningText.textContent = plan.meaning;
-    ruleText.textContent = plan.rule;
-
-    setList(todayList, plan.today);
-    setList(boundariesList, plan.bounds);
-    linesBox.innerHTML = cards(plan.lines);
-  }, 850);
-})();
+  <script src="plan.js?v=11"></script>
+</body>
+</html>
