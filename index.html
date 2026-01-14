@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delulu Detector • Age Check</title>
+  <title>Delulu Detector • Age</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -16,33 +16,20 @@
         <div class="sub">Age verification</div>
       </div>
     </div>
-
-    <div class="nav-actions">
-      <div class="pill" id="statusPill">Not verified</div>
-    </div>
   </nav>
 
-  <main class="container">
-    <section class="card center" style="max-width:720px;margin:0 auto;">
+  <div class="container">
+    <div class="card center click-layer">
       <h1 style="margin-bottom:6px;">Start</h1>
       <p class="muted">Enter your age to continue. You must be 18 or older.</p>
 
       <div class="section" style="text-align:left;">
-        <label for="ageInput" class="muted" style="display:block;margin-bottom:8px;">Your age</label>
-        <input
-          id="ageInput"
-          type="number"
-          inputmode="numeric"
-          min="1"
-          max="120"
-          placeholder="18"
-          autocomplete="off"
-        />
+        <label class="muted" for="ageInput" style="display:block;margin-bottom:8px;">Your age</label>
+        <input id="ageInput" type="number" inputmode="numeric" min="1" max="120" placeholder="18" />
 
-        <p class="muted" id="errorText" style="margin-top:10px;display:none;"></p>
+        <p class="muted" id="errorText" style="display:none;margin-top:10px;"></p>
 
         <div class="row" style="margin-top:14px;">
-          <!-- IMPORTANT: type="button" so it never gets “unclickable” from forms -->
           <button class="btn primary" id="continueBtn" type="button">Continue</button>
           <button class="btn ghost" id="resetBtn" type="button">Reset</button>
         </div>
@@ -50,14 +37,11 @@
 
       <div class="section item" id="lockBox" style="display:none;">
         <h2 style="margin:0 0 6px;">Sorry — 18+ only</h2>
-        <p class="muted" id="lockMsg" style="margin:0;">
-          You will be redirected.
-        </p>
+        <p class="muted" id="lockMsg" style="margin:0;">Redirecting…</p>
       </div>
-    </section>
-  </main>
+    </div>
+  </div>
 
-  <!-- Script MUST be at the bottom so elements exist -->
   <script>
     const APP_KEY = "dd_app_v1";
 
@@ -69,14 +53,12 @@
       localStorage.setItem(APP_KEY, JSON.stringify(data));
     }
 
-    // Grab elements
     const ageInput = document.getElementById("ageInput");
     const continueBtn = document.getElementById("continueBtn");
     const resetBtn = document.getElementById("resetBtn");
     const errorText = document.getElementById("errorText");
     const lockBox = document.getElementById("lockBox");
     const lockMsg = document.getElementById("lockMsg");
-    const statusPill = document.getElementById("statusPill");
 
     function showError(msg){
       errorText.style.display = "block";
@@ -87,32 +69,18 @@
       errorText.textContent = "";
     }
 
-    function lockOut(msg){
-      lockBox.style.display = "block";
-      lockMsg.textContent = msg;
-      statusPill.textContent = "Blocked (<18)";
-
-      // Redirect OUTSIDE your site (as you wanted)
-      setTimeout(() => {
-        window.location.href = "https://www.google.com";
-      }, 1200);
-    }
-
-    // Auto-skip if already verified
-    (function autoSkip(){
+    // If already verified, go straight to menu
+    (function(){
       const data = getAppData();
       if (data && Number(data.age) >= 18){
-        statusPill.textContent = "Verified ✅";
         window.location.href = "menu.html";
       }
     })();
 
-    // Click handler
     continueBtn.addEventListener("click", () => {
       clearError();
 
       const age = Number(ageInput.value);
-
       if (!age || age < 1 || age > 120){
         showError("Enter a valid age (1–120).");
         return;
@@ -123,26 +91,25 @@
       setAppData(data);
 
       if (age < 18){
-        lockOut("Sorry — you must be 18 or older to use this app.");
+        lockBox.style.display = "block";
+        lockMsg.textContent = "Sorry — you must be 18 or older to use this app. Redirecting…";
+        setTimeout(() => window.location.href = "https://www.google.com", 1200);
         return;
       }
 
-      statusPill.textContent = "Verified ✅";
       window.location.href = "menu.html";
     });
 
-    // Enter key also continues
+    // Enter key also works
     ageInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") continueBtn.click();
     });
 
-    // Reset
     resetBtn.addEventListener("click", () => {
       localStorage.removeItem(APP_KEY);
       ageInput.value = "";
       clearError();
       lockBox.style.display = "none";
-      statusPill.textContent = "Not verified";
     });
   </script>
 </body>
