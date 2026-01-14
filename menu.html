@@ -27,7 +27,7 @@
   <div class="container">
     <div class="card">
       <h2>Choose a mode</h2>
-      <p class="muted">Everything links back here so you never get stuck.</p>
+      <p class="muted">You can always come back here from the top buttons.</p>
 
       <div class="section">
         <div class="item">
@@ -64,9 +64,17 @@
       </div>
 
       <div class="row section">
-        <a class="btn ghost" href="index.html">Back to Age Check</a>
+        <a class="btn ghost" href="index.html">Back to Start</a>
       </div>
     </div>
   </div>
+
+  <script>
+    // Age gate protection
+    const APP_KEY="dd_app_v1";
+    function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
+    const d=getAppData();
+    if(!d.age || Number(d.age) < 18) window.location.href="index.html";
+  </script>
 </body>
 </html>
