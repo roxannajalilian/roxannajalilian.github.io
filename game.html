@@ -8,43 +8,46 @@
 </head>
 
 <body>
+  <div class="cursorGlow"></div>
+
   <nav>
     <div class="brand">
       <div class="logo">DD</div>
       <div>
         <div class="title">Delulu Dodge</div>
-        <div class="sub">Dodge the delulu. Collect clarity.</div>
+        <div class="sub">Dodge delulu • Collect clarity</div>
       </div>
     </div>
 
     <div class="nav-actions">
-      <button class="pill" id="readBtn">🔊 Read aloud</button>
+      <button class="pill" id="readBtn" type="button">🔊 Read aloud</button>
       <a class="pill" href="menu.html">Menu</a>
     </div>
   </nav>
 
   <main class="container">
     <div class="card center" style="max-width:900px;margin:0 auto;">
-      <h1>Delulu Dodge</h1>
-      <p class="muted">
-        Move left & right. Avoid delulu thoughts. Collect clarity orbs.
+      <h1 style="margin-bottom:6px;">Delulu Dodge</h1>
+      <p class="muted" style="margin-top:0;">
+        Move left/right. Avoid red thoughts. Collect green clarity orbs.
       </p>
 
-      <canvas id="gameCanvas" width="700" height="420"
+      <canvas id="gameCanvas" width="720" height="420"
         style="margin-top:14px;border-radius:18px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.35);">
       </canvas>
 
       <div class="row" style="justify-content:center;margin-top:14px;">
-        <button class="btn primary" id="startBtn">Start</button>
-        <button class="btn ghost" id="restartBtn">Restart</button>
+        <button class="btn primary" id="startBtn" type="button">Start</button>
+        <button class="btn ghost" id="restartBtn" type="button">Restart</button>
       </div>
 
       <p class="tiny muted" id="status" style="margin-top:10px;">
-        Controls: ← → arrows or A / D
+        Controls: ← → or A / D
       </p>
     </div>
   </main>
 
+  <script src="./glow.js"></script>
   <script type="module" src="./game.js"></script>
 </body>
 </html>
