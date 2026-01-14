@@ -238,3 +238,8 @@ nav{
   .btn{ width:100%; }
   .bottomRow{ flex-direction:column-reverse; }
 }
+
+.choice:active{
+  transform: translateY(1px);
+}
+
