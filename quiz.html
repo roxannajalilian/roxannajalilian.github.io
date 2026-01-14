@@ -36,20 +36,26 @@
 
       <div class="section">
         <div class="row">
-          <button class="btn primary" data-val="3">Yes (a lot)</button>
-          <button class="btn" data-val="2">Sometimes</button>
-          <button class="btn" data-val="1">Rarely</button>
-          <button class="btn ghost" data-val="0">No</button>
+          <button class="btn primary" data-val="3" type="button">Yes (a lot)</button>
+          <button class="btn" data-val="2" type="button">Sometimes</button>
+          <button class="btn" data-val="1" type="button">Rarely</button>
+          <button class="btn ghost" data-val="0" type="button">No</button>
         </div>
       </div>
 
       <div class="section" id="resultArea" style="display:none;">
         <h2>Your Result</h2>
+
         <div class="progress" style="margin:10px 0 10px;">
           <div id="bar"></div>
         </div>
+
         <h3 id="percentText">0%</h3>
         <p class="muted" id="adviceText"></p>
+
+        <!-- NEW: more percentage examples -->
+        <p class="muted" id="rangeLabel" style="margin-top:10px;"></p>
+        <div class="item" id="examplesBox" style="margin-top:12px;"></div>
 
         <div class="row" style="margin-top:12px;">
           <a class="btn primary" href="plan.html">See Your Plan</a>
@@ -67,7 +73,7 @@
       else window.location.href = "menu.html";
     });
 
-    // Age gate protection
+    // Age gate
     const APP_KEY="dd_app_v1";
     function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
     const d=getAppData();
