@@ -1,49 +1,119 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delulu Detector • Game</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Delulu Dash</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<nav>
-  <div class="nav-inner">
+  <nav>
     <div class="brand">
       <div class="logo">DD</div>
       <div>
-        <div class="title">Delulu Dodge</div>
-        <div class="sub">Avoid red flags • survive</div>
+        <div class="title">Delulu Dash</div>
+        <div class="sub">React fast. Don’t spiral.</div>
       </div>
     </div>
-    <div class="nav-right">
-      <a class="navlink" href="menu.html">Menu</a>
+
+    <div class="nav-actions">
+      <a class="pill" href="menu.html">Menu</a>
+      <a class="pill" href="policy.html">Policy</a>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<div class="container">
-  <div class="card">
-    <div class="row spread">
-      <div class="muted">Move: ← → or A/D • Mobile: drag</div>
-      <div class="pill" id="scorePill">Score: 0</div>
+  <main class="container">
+
+    <!-- MODE SELECT -->
+    <div class="card" id="startCard">
+      <div class="topline">
+        <div class="muted">Pick difficulty</div>
+        <div class="pill subtle" id="savedMode">Saved: Medium</div>
+      </div>
+
+      <h1 style="margin:14px 0 8px;">Choose your mode</h1>
+      <p class="muted" style="margin-top:0;">
+        Noob = slower • Medium = normal • Hard = fast + brutal 😭
+      </p>
+
+      <div class="answers" style="grid-template-columns: 1fr; max-width:520px;">
+        <button class="choice" id="mNoob" type="button">Noob</button>
+        <button class="choice" id="mMed" type="button">Medium</button>
+        <button class="choice" id="mHard" type="button">Hard</button>
+      </div>
+
+      <div class="row" style="margin-top:16px;">
+        <button class="btn primary" id="playBtn" type="button">Play</button>
+        <a class="btn ghost" href="menu.html">Back</a>
+      </div>
+
+      <p class="tiny muted centerText" style="margin-top:12px;">
+        Goal: pick the healthiest response under pressure.
+      </p>
     </div>
 
-    <div style="margin-top:12px;">
-      <canvas id="c" width="900" height="420" style="width:100%; border-radius:18px; border:1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.25)"></canvas>
+    <!-- GAME -->
+    <div class="card hidden" id="gameCard">
+      <div class="topline">
+        <div class="pill subtle" id="hudLeft">Level 1 • Mode: Medium</div>
+        <div class="pill subtle" id="hudRight">Score 0 • ❤️ 3 • Streak 0</div>
+      </div>
+
+      <div class="progress" style="margin-top:14px;">
+        <div class="bar" id="timeBar"></div>
+      </div>
+
+      <h2 id="prompt" style="margin-top:10px;">…</h2>
+      <p class="muted" id="context" style="margin-top:-4px;"></p>
+
+      <div class="answers" style="margin-top:14px;">
+        <button class="choice" id="a0" type="button"></button>
+        <button class="choice" id="a1" type="button"></button>
+        <button class="choice" id="a2" type="button"></button>
+        <button class="choice" id="a3" type="button"></button>
+      </div>
+
+      <div class="row" style="margin-top:14px;">
+        <span class="tiny muted" id="feedback">Pick fast…</span>
+        <span class="tiny muted" id="tip"></span>
+      </div>
+
+      <div class="bottomRow" style="margin-top:14px;">
+        <button class="btn ghost" id="quitBtn" type="button">Quit</button>
+        <button class="btn ghost" id="pauseBtn" type="button">Pause</button>
+      </div>
     </div>
 
-    <div class="row" style="margin-top:14px;">
-      <button class="primary" id="startBtn">Start</button>
-      <button class="secondary" id="resetBtn">Reset</button>
-      <button class="secondary" onclick="location.href='menu.html'">Back</button>
+    <!-- RESULTS -->
+    <div class="card hidden" id="endCard">
+      <div class="resultGrid">
+        <div>
+          <h1 id="endTitle">Result</h1>
+          <p class="muted" id="endSub"></p>
+          <p id="endPara"></p>
+
+          <div class="row" style="margin-top:14px;">
+            <button class="btn primary" id="againBtn" type="button">Play again</button>
+            <a class="btn ghost" href="menu.html">Menu</a>
+          </div>
+
+          <p class="tiny muted" style="margin-top:10px;" id="endStats"></p>
+        </div>
+
+        <div class="circleWrap">
+          <div class="circle" id="endCircle">
+            <div class="circleInner">
+              <div class="big" id="endScore">0</div>
+              <div class="muted tiny">score</div>
+            </div>
+          </div>
+          <div class="tiny muted centerText" id="endMode"></div>
+        </div>
+      </div>
     </div>
 
-    <div id="gameMsg" class="notice" style="display:none;"></div>
-  </div>
-</div>
+  </main>
 
-<script src="storage.js"></script>
-<script src="game.js"></script>
+  <script type="module" src="game.js"></script>
 </body>
 </html>
