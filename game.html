@@ -1,53 +1,54 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Delulu Dodge</title>
-  <link rel="stylesheet" href="./style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Delulu Detector • Mini Game</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-  <div class="cursorGlow"></div>
-
   <nav>
     <div class="brand">
       <div class="logo">DD</div>
       <div>
         <div class="title">Delulu Dodge</div>
-        <div class="sub">Dodge delulu • Collect clarity</div>
+        <div class="sub">Avoid the red flags and survive</div>
       </div>
     </div>
 
     <div class="nav-actions">
-      <button class="pill" id="readBtn" type="button">🔊 Read aloud</button>
-      <a class="pill" href="menu.html">Menu</a>
+      <a class="btn" href="menu.html">Menu</a>
     </div>
   </nav>
 
-  <main class="container">
-    <div class="card center" style="max-width:900px;margin:0 auto;">
-      <h1 style="margin-bottom:6px;">Delulu Dodge</h1>
-      <p class="muted" style="margin-top:0;">
-        Move left/right. Avoid red thoughts. Collect green clarity orbs.
-      </p>
-
-      <canvas id="gameCanvas" width="720" height="420"
-        style="margin-top:14px;border-radius:18px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.35);">
-      </canvas>
-
-      <div class="row" style="justify-content:center;margin-top:14px;">
-        <button class="btn primary" id="startBtn" type="button">Start</button>
-        <button class="btn ghost" id="restartBtn" type="button">Restart</button>
+  <div class="container">
+    <div class="card">
+      <div class="row" style="justify-content:space-between;">
+        <div class="badge" id="scoreBadge">Score: 0</div>
+        <div class="badge">Move: ← →</div>
       </div>
 
-      <p class="tiny muted" id="status" style="margin-top:10px;">
-        Controls: ← → or A / D
+      <div class="section">
+        <canvas id="c" width="900" height="440"></canvas>
+      </div>
+
+      <p class="muted" style="margin-top:12px;">
+        Tip: Don’t let the red flags hit you.
       </p>
     </div>
-  </main>
+  </div>
 
-  <script src="./glow.js"></script>
-  <script type="module" src="./game.js"></script>
+  <div id="loseOverlay" class="overlay hidden">
+    <div class="overlay-card">
+      <h2>Oh you lost 😭</h2>
+      <p class="muted">Good try. Run it back?</p>
+      <div class="row">
+        <button class="btn primary" id="restartBtn">Restart</button>
+        <a class="btn" href="menu.html">Menu</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
 </body>
 </html>
