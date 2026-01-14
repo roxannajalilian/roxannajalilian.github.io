@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Quiz</title>
+  <title>Delulu Detector • Menu</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -11,54 +11,62 @@
     <div class="brand">
       <div class="logo">DD</div>
       <div>
-        <div class="title">Delulu Quiz</div>
-        <div class="sub">Answer honestly (it’s for you)</div>
+        <div class="title">Delulu Detector</div>
+        <div class="sub">Menu</div>
       </div>
     </div>
 
     <div class="nav-actions">
-      <a class="btn" href="menu.html">Menu</a>
+      <a class="btn" href="quiz.html">Quiz</a>
       <a class="btn" href="plan.html">Plan</a>
+      <a class="btn" href="scan.html">Analysis</a>
+      <a class="btn" href="game.html">Game</a>
     </div>
   </nav>
 
   <div class="container">
     <div class="card">
-      <div class="row" style="justify-content:space-between;">
-        <div class="badge" id="qCount">Question 1/10</div>
-        <div class="badge" id="ageBadge">Age: ?</div>
-      </div>
-
-      <h2 style="margin-top:12px;" id="questionText">Loading…</h2>
-      <p class="muted" id="questionHint">Tap a choice.</p>
+      <h2>Choose a mode</h2>
+      <p class="muted">Everything links back here so you never get stuck.</p>
 
       <div class="section">
-        <div class="row">
-          <button class="btn primary" data-val="3">Yes (a lot)</button>
-          <button class="btn" data-val="2">Sometimes</button>
-          <button class="btn" data-val="1">Rarely</button>
-          <button class="btn ghost" data-val="0">No</button>
+        <div class="item">
+          <h3>📝 Quiz</h3>
+          <p class="muted">Get your delulu % and save it for your plan.</p>
+          <div class="row" style="margin-top:12px;">
+            <a class="btn primary" href="quiz.html">Start Quiz</a>
+          </div>
+        </div>
+
+        <div class="item" style="margin-top:14px;">
+          <h3>📌 Plan</h3>
+          <p class="muted">Uses your last quiz result to make a plan.</p>
+          <div class="row" style="margin-top:12px;">
+            <a class="btn" href="plan.html">Open Plan</a>
+          </div>
+        </div>
+
+        <div class="item" style="margin-top:14px;">
+          <h3>🔎 Text Analysis</h3>
+          <p class="muted">Paste a convo and get “signals” + a score.</p>
+          <div class="row" style="margin-top:12px;">
+            <a class="btn" href="scan.html">Open Analysis</a>
+          </div>
+        </div>
+
+        <div class="item" style="margin-top:14px;">
+          <h3>🎮 Game</h3>
+          <p class="muted">Delulu Dodge: avoid red flags.</p>
+          <div class="row" style="margin-top:12px;">
+            <a class="btn" href="game.html">Play</a>
+          </div>
         </div>
       </div>
 
-      <div class="section" id="resultArea" style="display:none;">
-        <h2 id="resultTitle">Your Result</h2>
-        <div class="progress" style="margin:10px 0 10px;">
-          <div id="bar"></div>
-        </div>
-        <h3 id="percentText">0%</h3>
-        <p class="muted" id="adviceText"></p>
-
-        <div class="row" style="margin-top:12px;">
-          <a class="btn primary" href="plan.html">See Your Plan</a>
-          <a class="btn" href="menu.html">Menu</a>
-          <button class="btn ghost" id="restartQuiz">Restart Quiz</button>
-        </div>
+      <div class="row section">
+        <a class="btn ghost" href="index.html">Back to Age Check</a>
       </div>
-
     </div>
   </div>
-
-  <script src="quiz.js"></script>
 </body>
 </html>
