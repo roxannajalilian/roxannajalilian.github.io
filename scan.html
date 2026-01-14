@@ -1,85 +1,75 @@
-const convo = document.getElementById("convo");
-const shot = document.getElementById("shot");
-const shotName = document.getElementById("shotName");
-const analyzeBtn = document.getElementById("analyzeBtn");
-const clearBtn = document.getElementById("clearBtn");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Delulu Detector • Text Analysis</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav>
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div>
+        <div class="title">Text Analysis</div>
+        <div class="sub">Paste convo + get signals</div>
+      </div>
+    </div>
 
-const scanBar = document.getElementById("scanBar");
-const scanPercent = document.getElementById("scanPercent");
-const notes = document.getElementById("notes");
+    <div class="nav-actions">
+      <button class="btn ghost" id="backBtn" type="button">Back</button>
+      <a class="btn" href="menu.html">Menu</a>
+      <a class="btn ghost" href="quiz.html">Quiz</a>
+      <a class="btn ghost" href="plan.html">Plan</a>
+      <a class="btn ghost" href="game.html">Game</a>
+    </div>
+  </nav>
 
-shot.addEventListener("change", () => {
-  shotName.textContent = shot.files?.[0]?.name || "No file chosen";
-});
+  <div class="container">
+    <div class="card">
+      <h2>Paste the messages</h2>
+      <p class="muted">This looks for patterns like dry replies, shutdown words, and pressure texts.</p>
 
-function addNote(text){
-  const li = document.createElement("li");
-  li.textContent = text;
-  notes.appendChild(li);
-}
+      <div class="form-grid section">
+        <textarea id="convo" placeholder="Paste conversation text here..."></textarea>
 
-function analyzeText(text){
-  const t = text.toLowerCase();
+        <div class="row">
+          <button class="btn primary" id="analyzeBtn" type="button">Analyze</button>
+          <button class="btn ghost" id="clearBtn" type="button">Clear</button>
+        </div>
+      </div>
 
-  const signals = [
-    { name: "Very short replies", re: /\b(ok|k|sure|fine|nm|idk|lol)\b/g, weight: 10 },
-    { name: "Seen/Read energy", re: /\b(seen|read|delivered)\b/g, weight: 12 },
-    { name: "Shutdown words", re: /\b(stop|leave me|dont talk|whatever|bye)\b/g, weight: 16 },
-    { name: "Question pressure", re: /\?\?+|\bwhy\b|\bwhat are we\b/g, weight: 10 },
-    { name: "Mixed signals", re: /\b(i miss you|i hate you|i'm done|i love you)\b/g, weight: 8 },
-    { name: "Double-text vibes", re: /\n\s*\n/g, weight: 6 }, // blank lines
-  ];
+      <div class="section">
+        <h2>Result</h2>
+        <div class="progress" style="margin:10px 0;">
+          <div id="scanBar"></div>
+        </div>
+        <p class="muted" id="scanPercent">--% • No scan yet</p>
 
-  let score = 0;
-  const found = [];
+        <div class="item" style="margin-top:12px;">
+          <h3 style="margin:0 0 8px;">What I noticed</h3>
+          <ul id="notes">
+            <li class="muted">Run a scan to see notes here.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  for(const s of signals){
-    const matches = t.match(s.re);
-    if(matches && matches.length){
-      score += s.weight * Math.min(matches.length, 3);
-      found.push({ label: s.name, count: matches.length });
-    }
-  }
+  <script>
+    // Back button fix
+    document.getElementById("backBtn").addEventListener("click", () => {
+      if (history.length > 1) history.back();
+      else window.location.href = "menu.html";
+    });
 
-  // Clamp score into 0-100
-  score = Math.min(100, Math.round(score));
+    // Age gate
+    const APP_KEY="dd_app_v1";
+    function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
+    const d=getAppData();
+    if(!d.age || Number(d.age) < 18) window.location.href="index.html";
+  </script>
 
-  return { score, found };
-}
-
-analyzeBtn.addEventListener("click", () => {
-  const text = (convo.value || "").trim();
-  notes.innerHTML = "";
-
-  if(!text){
-    addNote("Paste something first.");
-    scanBar.style.width = "0%";
-    scanPercent.textContent = "--% • No scan yet";
-    return;
-  }
-
-  const { score, found } = analyzeText(text);
-
-  scanBar.style.width = `${score}%`;
-  scanPercent.textContent = `${score}% • signals detected`;
-
-  if(found.length === 0){
-    addNote("Not many obvious red flags in the text itself.");
-    addNote("If it still feels off, look for patterns over time (consistency).");
-  } else {
-    addNote("Top signals I detected:");
-    for(const f of found){
-      addNote(`• ${f.label} (x${f.count})`);
-    }
-    addNote("Best move: send 1 clear message, then stop chasing.");
-  }
-});
-
-clearBtn.addEventListener("click", () => {
-  convo.value = "";
-  shot.value = "";
-  shotName.textContent = "No file chosen";
-  scanBar.style.width = "0%";
-  scanPercent.textContent = "--% • No scan yet";
-  notes.innerHTML = `<li class="muted">Run a scan to see notes here.</li>`;
-});
+  <script src="scan.js"></script>
+</body>
+</html>
