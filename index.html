@@ -1,14 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Delulu Detector • Start</title>
-  <link rel="stylesheet" href="style.css" />
+
+  <!-- IMPORTANT: use ./style.css so path is correct on GitHub pages -->
+  <link rel="stylesheet" href="./style.css" />
 </head>
+
 <body>
-<nav>
-  <div class="nav-inner">
+  <nav>
     <div class="brand">
       <div class="logo">DD</div>
       <div>
@@ -16,72 +18,42 @@
         <div class="sub">Age verification</div>
       </div>
     </div>
-  </div>
-</nav>
 
-<div class="container">
-  <div class="card center">
-    <h1>Start</h1>
-    <p class="muted">Enter your age to continue. You must be <b>18+</b>.</p>
+    <div class="nav-actions">
+      <a class="pill" href="policy.html">Policy</a>
+    </div>
+  </nav>
 
-    <div class="field">
-      <label class="muted">Your age (18+)</label>
-      <input id="ageInput" type="number" min="18" max="120" placeholder="e.g., 19" />
+  <main class="container">
+    <div class="card center" style="max-width: 860px; margin: 0 auto;">
+      <h1 style="margin: 6px 0 8px;">Start</h1>
+      <p class="muted" style="margin-top:0;">
+        Enter your age to continue. You must be <b>18+</b>.
+      </p>
+
+      <div style="max-width: 420px; margin: 18px auto 0; text-align:left;">
+        <label class="muted tiny" for="age">Your age (18+)</label>
+        <input id="age" class="input" type="number" inputmode="numeric" min="1" max="120" placeholder="e.g., 18" />
+
+        <label class="checkRow" style="margin-top:14px;">
+          <input id="agree" type="checkbox" />
+          <span>I agree to the <a href="policy.html">Terms & Privacy</a></span>
+        </label>
+
+        <p class="tiny muted" id="msg" style="margin:10px 0 0;"></p>
+
+        <div class="row" style="margin-top:16px;">
+          <button class="btn primary" id="continueBtn" type="button">Continue</button>
+          <button class="btn ghost" id="resetBtn" type="button">Reset</button>
+        </div>
+      </div>
     </div>
 
-    <div class="row" style="justify-content:flex-start; margin-top:10px;">
-      <label class="muted">
-        <input id="agreeChk" type="checkbox" />
-        I agree to the <a href="policy.html">Terms & Privacy</a>
-      </label>
-    </div>
+    <p class="tiny muted centerText" style="margin-top:14px;">
+      Delulu Detector: a quiz, analyzer, and mini-game (HTML/CSS/JS).
+    </p>
+  </main>
 
-    <div class="row" style="margin-top:16px;">
-      <button class="primary" type="button" id="continueBtn">Continue</button>
-      <button class="secondary" type="button" id="resetBtn">Reset</button>
-    </div>
-
-    <div id="msg" class="notice" style="display:none;"></div>
-  </div>
-</div>
-
-<div class="footer">Delulu Detector a quiz, analyzer, mini-game for friends!/CSS/JS</div>
-
-<script src="storage.js"></script>
-<script>
-  function showError(text){
-    const msg = document.getElementById("msg");
-    msg.textContent = text;
-    msg.style.display = "block";
-  }
-
-  document.getElementById("continueBtn").addEventListener("click", () => {
-    const age = Number(document.getElementById("ageInput").value);
-    const agree = document.getElementById("agreeChk").checked;
-
-    if (!agree) {
-      showError("Please accept the Terms & Privacy.");
-      return;
-    }
-
-    // ✅ PUT YOUR CODE HERE
-    if (!age) {
-      showError("Enter a valid age.");
-      return;
-    }
-
-    if (age < 18) {
-      lockOut("Sorry — you must be 18 or older to use this app.");
-      return;
-    }
-
-    // ✅ ONLY 18+ USERS REACH HERE
-    const data = getData();
-    data.age = age;
-    setData(data);
-
-    window.location.href = "menu.html";
-  });
-</script>
+  <script type="module" src="./index.js"></script>
 </body>
 </html>
