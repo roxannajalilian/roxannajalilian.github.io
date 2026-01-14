@@ -1,165 +1,129 @@
 // quiz.js
+import { requireAdultOrRedirect, getData, setData } from "./gate.js";
+
 requireAdultOrRedirect();
 
-// Start fresh each time you enter quiz (so it doesn't "trap" you)
-let current = 0;
-
-const questions = [
+const QUESTIONS = [
   "I reread texts to find hidden meaning.",
-  "If someone replies late, I assume something is wrong.",
-  "I overthink emojis, punctuation, or short replies.",
-  "I imagine worst-case scenarios before having proof.",
-  "My mood depends on how fast someone texts back.",
-  "I check my phone repeatedly waiting for a reply.",
-  "I overanalyze one message instead of the whole conversation.",
-  "I assume tone or intention without asking.",
-  "I feel anxious if I don’t get reassurance.",
-  "I replay conversations in my head.",
-  "I read into what someone didn’t say.",
-  "I assume silence means something negative.",
-  "I want to double-text when anxious.",
-  "I focus more on texts than real-life actions.",
-  "I struggle to sit with uncertainty.",
-  "I overthink even when nothing is clearly wrong.",
-  "I get triggered by short answers like “ok” or “k”.",
-  "I assume “seen” means they’re ignoring me.",
-  "I feel like I need to explain myself a lot after a tense reply.",
-  "I try to mind-read what they meant instead of asking directly."
+  "If someone replies late, I assume it means something.",
+  "I notice every small change in tone (periods, emojis, caps).",
+  "I keep checking if they viewed my story / were online.",
+  "I imagine conversations that haven’t happened yet.",
+  "I overthink short replies like “ok” or “k”.",
+  "I build a whole storyline from one message.",
+  "I screenshot and zoom in like I’m in the FBI.",
+  "I feel calmer only after I get reassurance.",
+  "I assume silence means they’re upset with me.",
+  "I interpret “seen” as personal sometimes.",
+  "I compare how they text me vs other people.",
+  "I rewrite my text a million times before sending.",
+  "I panic-delete texts and regret it after.",
+  "I look for “signs” (numbers, timing, weird coincidences).",
+  "I assume mixed signals are secretly deep feelings.",
+  "I get stuck in “what if” loops.",
+  "I ask friends to analyze the convo with me.",
+  "I feel embarrassed after overthinking but still do it.",
+  "I know I’m doing too much… but I can’t stop sometimes."
 ];
 
-let answers = new Array(questions.length).fill(null);
+// Difficulty: changes how harsh the scoring is + feedback tone
+const MODES = {
+  noob:   { label: "Noob mode",   weight: 0.9, soften: true  },
+  medium: { label: "Medium mode", weight: 1.0, soften: false },
+  hard:   { label: "Hard mode",   weight: 1.15, soften: false }
+};
 
-const qText = document.getElementById("questionText");
-const progressText = document.getElementById("progressText");
-const progressFill = document.getElementById("progressFill");
-const answerButtons = Array.from(document.querySelectorAll(".answer"));
-const backBtn = document.getElementById("backBtn");
+let data = getData();
+let mode = data?.mode || "medium";
+if (!MODES[mode]) mode = "medium";
+
+let current = 0;
+let answers = Array(QUESTIONS.length).fill(null);
+
+const qCount = document.getElementById("qCount");
+const bar = document.getElementById("bar");
+const questionText = document.getElementById("questionText");
 const nextBtn = document.getElementById("nextBtn");
-const warn = document.getElementById("warn");
-const pillSave = document.getElementById("pillSave");
+const returnBtn = document.getElementById("returnBtn");
+const saveStatus = document.getElementById("saveStatus");
 
-function setWarn(text){
-  warn.textContent = text;
-  warn.style.display = text ? "block" : "none";
-}
+const resultCard = document.getElementById("resultCard");
+const resultTitle = document.getElementById("resultTitle");
+const resultSubtitle = document.getElementById("resultSubtitle");
+const resultPara = document.getElementById("resultPara");
+const resultPct = document.getElementById("resultPct");
+const modeTag = document.getElementById("modeTag");
+const restartBtn = document.getElementById("restartBtn");
 
-function renderQuestion() {
-  qText.textContent = questions[current];
-  progressText.textContent = `Question ${current + 1} of ${questions.length}`;
-  progressFill.style.width = `${((current + 1) / questions.length) * 100}%`;
+function updateUI() {
+  qCount.textContent = `Question ${current + 1} of ${QUESTIONS.length}`;
+  questionText.textContent = QUESTIONS[current];
 
-  answerButtons.forEach(btn => {
-    btn.classList.remove("selected");
-    const v = Number(btn.dataset.value);
-    if (answers[current] === v) btn.classList.add("selected");
+  const progress = (current / QUESTIONS.length) * 100;
+  bar.style.width = `${Math.max(6, progress)}%`;
+
+  // Return button should actually work + be disabled on first question
+  returnBtn.disabled = current === 0;
+  returnBtn.classList.toggle("disabled", current === 0);
+
+  // highlight selected
+  document.querySelectorAll(".choice").forEach(btn => {
+    const v = Number(btn.dataset.val);
+    btn.classList.toggle("selected", answers[current] === v);
   });
 
-  backBtn.disabled = current === 0;
-  nextBtn.textContent = current === questions.length - 1 ? "Finish" : "Next";
-  setWarn("");
+  saveStatus.textContent = "Not saved yet";
 }
 
-answerButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    answers[current] = Number(btn.dataset.value);
-    answerButtons.forEach(b => b.classList.remove("selected"));
-    btn.classList.add("selected");
-    setWarn("");
-  });
-});
-
-backBtn.addEventListener("click", () => {
-  if (current > 0) {
-    current--;
-    renderQuestion();
-  }
-});
-
-nextBtn.addEventListener("click", () => {
-  if (answers[current] === null) {
-    setWarn("Pick an answer before continuing.");
-    return;
-  }
-
-  if (current < questions.length - 1) {
-    current++;
-    renderQuestion();
-  } else {
-    finishQuiz();
-  }
-});
-
-function finishQuiz() {
-  const totalScore = answers.reduce((a, b) => a + b, 0);
-  const maxScore = questions.length * 3;
-  const percentage = Math.round((totalScore / maxScore) * 100);
-
-  // Profiles (same tone, more custom, less AI)
-  const profiles = [
-    {
-      max: 25,
-      tier: "Low overthinking",
-      vibe: "🧊 Ice Queen (Calm Brain)",
-      explain1: "You’re honestly pretty grounded. Even if something feels off, you don’t let one text control your whole mood. You’re good at not jumping to conclusions and you don’t need constant reassurance to feel okay.",
-      explain2: "You notice things, but you don’t spiral. You’re more like “I’ll see what happens” instead of stressing yourself out. That’s a flex tbh.",
-      advice: "Keep trusting patterns, not one message. If you’re confused, ask once and keep it moving.",
-      why: "You’ve probably learned that overthinking doesn’t actually fix anything, so you don’t waste energy on it."
-    },
-    {
-      max: 50,
-      tier: "Mild overthinking",
-      vibe: "🌙 Soft Thinker",
-      explain1: "You’re actually pretty emotionally aware. When things aren’t clear, you just feel it more. If the vibe changes or replies get slower, your brain automatically starts connecting dots.",
-      explain2: "You don’t jump straight to worst-case scenarios, but you do replay things and reread messages, wondering if you messed something up. It’s not drama — you just want clarity so you can relax again. This really just means you care and you’re sensitive to changes. You’re not delulu. You just need clear communication to feel settled.",
-      advice: "When you feel yourself starting to think too much, pause and ask: “Do I have proof or just vibes?” Then send ONE calm message if you need to.",
-      why: "You’re the type who reads the room fast, so when the room is confusing, your brain tries to fill in the missing parts."
-    },
-    {
-      max: 75,
-      tier: "High overthinking",
-      vibe: "🦋 Butterfly (Sensitive + Deep)",
-      explain1: "Okay butterfly… you feel everything. If someone replies dry, takes longer than usual, or the vibe changes even a little, you notice it right away. Your brain doesn’t do “wait and see” — it does “wait and panic” 😭",
-      explain2: "You care a lot, so you start trying to figure out what they meant, what you did, and what’s gonna happen next. It’s not because you’re crazy — it’s because you don’t like feeling unsure and you want things to be okay.",
-      advice: "Do not react in the moment. Put your phone down for 10–20 minutes, then come back. If you still feel weird, ask something simple like “Are we good?” and stop there.",
-      why: "You’re probably really loyal once you care, so your brain treats uncertainty like a threat."
-    },
-    {
-      max: 100,
-      tier: "Very high overthinking",
-      vibe: "🔥 Delulu Detective (Spiral Mode)",
-      explain1: "Not gonna lie… your brain turns into a whole detective sometimes. One “ok” can feel like a breakup. If someone’s energy changes, you start replaying everything, checking timing, and trying to figure out the “real meaning.”",
-      explain2: "When you don’t get clarity fast, your thoughts get loud. You might over-explain, double text, or keep checking if they’re mad — not because you’re weak, but because you’re anxious and you want the tension to go away.",
-      advice: "Emergency rule: don’t text when you’re panicking. Calm down first (water, breathe, walk, anything). Then send ONE clear message like “Are we good?” and leave it.",
-      why: "You probably hate not knowing where you stand, so your brain tries to solve it instantly… even when it can’t."
-    }
-  ];
-
-  const p = profiles.find(x => percentage <= x.max) || profiles[profiles.length - 1];
-
-  // Save result (keep old fields too so your other pages won't break)
-  const data = getData();
-  data.quizResult = {
-    percentage,
-    tier: p.tier,
-    vibe: p.vibe,
-
-    // NEW: richer, less-AI copy
-    explain1: p.explain1,
-    explain2: p.explain2,
-    advice: p.advice,
-    why: p.why,
-
-    // Backwards compat (some pages might read "explanation")
-    explanation: p.explain1,
-
-    at: new Date().toISOString()
-  };
+function saveProgress() {
+  data = getData();
+  data.quiz = { answers, current, mode };
   setData(data);
-
-  pillSave.textContent = "Saved ✓";
-  pillSave.style.borderColor = "rgba(83,255,214,.55)";
-
-  window.location.href = "loading.html";
+  saveStatus.textContent = "Saved";
 }
 
-renderQuestion();
+function calcScore() {
+  // base score 0..100
+  const totalMax = QUESTIONS.length * 3;
+  const sum = answers.reduce((a, v) => a + (v ?? 0), 0);
+
+  // mode weight makes hard mode slightly higher
+  const weighted = Math.round((sum / totalMax) * 100 * MODES[mode].weight);
+  return Math.max(0, Math.min(100, weighted));
+}
+
+function archetypeFor(score) {
+  // You asked for “50-64 = butterfly” style mapping + reassuring paragraph
+  if (score <= 24) return { name: "Chill Cat", range: "0–24", vibe: "low", emoji: "😼" };
+  if (score <= 49) return { name: "Curious Bunny", range: "25–49", vibe: "midlow", emoji: "🐰" };
+  if (score <= 64) return { name: "Butterfly", range: "50–64", vibe: "mid", emoji: "🦋" };
+  if (score <= 84) return { name: "Detective", range: "65–84", vibe: "high", emoji: "🕵️" };
+  return { name: "Astronaut (Gone-Gone)", range: "85–100", vibe: "veryhigh", emoji: "🧑‍🚀" };
+}
+
+function feedback(score) {
+  const a = archetypeFor(score);
+  const soften = MODES[mode].soften;
+
+  const subtitle = `${a.emoji} ${a.name} • ${a.range} • Mode: ${MODES[mode].label}`;
+
+  let para = "";
+  if (a.vibe === "low") {
+    para = "You’re pretty grounded. You might still notice details, but you don’t let them run your whole brain. Keep that energy — it’s literally a flex.";
+  } else if (a.vibe === "midlow") {
+    para = "You overthink sometimes, but you can still pull yourself back. A good move for you is: if you feel yourself spiraling, pause and ask “what’s the simplest explanation?”";
+  } else if (a.vibe === "mid") {
+    para = "You’re a Butterfly — sensitive to vibes and details, but not fully lost in them. You care a lot, which is sweet. Just remember: one message isn’t the whole story, and you deserve consistency, not confusion.";
+  } else if (a.vibe === "high") {
+    para = "You’re in Detective mode — you can read between the lines like it’s your job. Sometimes that protects you, but sometimes it makes you suffer for no reason. If you’re unsure, the healthiest cheat code is asking directly instead of building theories.";
+  } else {
+    para = soften
+      ? "Okayyy astronaut 😭 your brain is doing parkour. It doesn’t mean you’re “crazy” — it usually means you care and you’re anxious. Try grounding yourself: drink water, breathe, and don’t make big decisions while you’re spiraling."
+      : "Astronaut level means your brain is doing the MOST. It’s not a personality flaw — it’s usually anxiety + caring a lot. The fix is slowing the spiral: don’t reread, don’t assume, and get real clarity instead of guessing.";
+  }
+
+  return { title: `${a.name} (${score}%)`, subtitle, para };
+}
+
+function showResults() {
+  const score
