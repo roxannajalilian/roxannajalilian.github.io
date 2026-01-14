@@ -1,187 +1,187 @@
-// quiz.js — FULL working file (fixes stuck "Loading...")
+const APP_KEY = "dd_app_v1";
+function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
+function setAppData(data){ localStorage.setItem(APP_KEY, JSON.stringify(data)); }
 
-/** Storage keys */
-const KEY = "delulu_data_v1";          // your main app storage
-const QUIZ_KEY = "delulu_quiz_v1";     // quiz state storage
+const questions = [
+  { q: "Do you reread texts to find hidden meaning?", h: "Like searching for clues in one word." },
+  { q: "Do you assume silence means they’re mad or losing interest?", h: "No reply = panic." },
+  { q: "Do you overthink punctuation (… / lol / k)?", h: "Dot dot dot trauma." },
+  { q: "Do you check activity (views, snaps, followers) for hints?", h: "Detective mode." },
+  { q: "Do you type a reply, delete it, retype it 10 times?", h: "Pressure to be perfect." },
+  { q: "Do you double-text because you feel ignored?", h: "Chase mode." },
+  { q: "Do you replay the convo in your head for hours?", h: "Looping thoughts." },
+  { q: "Do you ignore obvious signs because you want it to work?", h: "Hope goggles." },
+  { q: "Does your mood depend on their reply?", h: "High/low based on texts." },
+  { q: "Do you excuse disrespect (dry, rude, disappearing)?", h: "Bare minimum defense." }
+];
 
-/** Pages (change these if your filenames are different) */
-const PAGES = {
-  menu: "menu.html",
-  index: "index.html",
-  plan: "plan.html",
-  analysis: "analysis.html",
-  game: "game.html",
-  results: "results.html" // optional (we also show result inline if you don't have it)
-};
+// state
+let i = 0;
+const answers = new Array(questions.length).fill(null); // store vals per question
 
-function safeParse(json, fallback) {
-  try { return JSON.parse(json); } catch { return fallback; }
+// DOM
+const qCount = document.getElementById("qCount");
+const progressBadge = document.getElementById("progressBadge");
+const questionText = document.getElementById("questionText");
+const questionHint = document.getElementById("questionHint");
+
+const resultArea = document.getElementById("resultArea");
+const bar = document.getElementById("bar");
+const percentText = document.getElementById("percentText");
+const adviceText = document.getElementById("adviceText");
+const rangeLabelEl = document.getElementById("rangeLabel");
+const examplesBoxEl = document.getElementById("examplesBox");
+
+const prevBtn = document.getElementById("prevBtn");
+const restartQuiz = document.getElementById("restartQuiz");
+const restartBtnTop = document.getElementById("restartBtnTop");
+
+function countAnswered(){
+  return answers.filter(v => v !== null).length;
 }
-function getData() {
-  return safeParse(localStorage.getItem(KEY) || "{}", {});
-}
-function setData(data) {
-  localStorage.setItem(KEY, JSON.stringify(data));
-}
 
-function requireAdultOrRedirect() {
-  const data = getData();
-  // If you want NO age gate, delete this whole function call below
-  if (!data || !Number.isFinite(Number(data.age)) || Number(data.age) < 18) {
-    // Kick them out
-    window.location.href = PAGES.index;
-    return false;
-  }
-  return true;
+function currentScore(){
+  // recompute from answers so "Previous" works correctly
+  return answers.reduce((sum, v) => sum + (v ?? 0), 0);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  // Gate (optional)
-  if (!requireAdultOrRedirect()) return;
-
-  // Grab UI
-  const qText = document.getElementById("qText");
-  const qCounter = document.getElementById("qCounter");
-  const qHint = document.getElementById("qHint");
-  const answersWrap = document.getElementById("answers");
-  const progressText = document.getElementById("progressText");
-  const btnRestart = document.getElementById("btnRestart");
-
-  const btnBack = document.getElementById("btnBack");
-  const btnMenu = document.getElementById("btnMenu");
-  const btnPlan = document.getElementById("btnPlan");
-  const btnAnalysis = document.getElementById("btnAnalysis");
-  const btnGame = document.getElementById("btnGame");
-
-  // Safety check (prevents silent fail → stuck on Loading)
-  if (!qText || !qCounter || !answersWrap) {
-    console.error("Missing quiz HTML elements. Check IDs: qText, qCounter, answers");
-    return;
-  }
-
-  // NAV buttons
-  btnBack?.addEventListener("click", () => history.back());
-  btnMenu?.addEventListener("click", () => (window.location.href = PAGES.menu));
-  btnPlan?.addEventListener("click", () => (window.location.href = PAGES.plan));
-  btnAnalysis?.addEventListener("click", () => (window.location.href = PAGES.analysis));
-  btnGame?.addEventListener("click", () => (window.location.href = PAGES.game));
-
-  // Questions (edit these anytime)
-  const questions = [
-    "I reread texts to find hidden meaning.",
-    "I assume silence means something bad.",
-    "I overthink message timing (minutes, hours, seen, online).",
-    "I feel anxious if they don’t reply fast.",
-    "I make scenarios in my head based on tiny clues.",
-    "I check their socials for “signs” (likes, views, follows).",
-    "I take short replies personally.",
-    "I need reassurance often to feel okay.",
-    "I can’t focus while waiting for a reply.",
-    "I convince myself they’re losing interest with no proof."
-  ];
-
-  // State
-  let current = 0;
-  let score = 0;
-
-  // Load saved quiz state (optional)
-  const saved = safeParse(localStorage.getItem(QUIZ_KEY) || "{}", {});
-  if (Number.isInteger(saved.current) && Number.isFinite(saved.score)) {
-    current = Math.min(Math.max(saved.current, 0), questions.length - 1);
-    score = Math.max(saved.score, 0);
-  }
-
-  function saveState() {
-    localStorage.setItem(QUIZ_KEY, JSON.stringify({ current, score }));
-  }
-
-  function percentDone() {
-    if (questions.length === 0) return 0;
-    return Math.round((current / questions.length) * 100);
-  }
-
-  function render() {
-    // Fix the "Loading..." issue: ALWAYS replace it with real question text
-    qText.textContent = questions[current] || "Question missing (check your questions list).";
-    qCounter.textContent = `Question ${current + 1}/${questions.length}`;
-    if (progressText) progressText.textContent = `Progress: ${percentDone()}%`;
-    if (qHint) qHint.textContent = "Tap a choice.";
-    saveState();
-  }
-
-  function finish() {
-    // compute %
-    const max = questions.length * 3;
-    const pct = Math.round((score / max) * 100);
-
-    // store to main app data
-    const data = getData();
-    data.lastQuiz = {
-      score,
-      max,
-      pct,
-      finishedAt: new Date().toISOString()
+function getRangeInfo(percent){
+  if (percent <= 20){
+    return {
+      label: "0–20% • Super grounded ✅",
+      examples: [
+        "You don’t assume tone from one word.",
+        "You don’t chase for replies.",
+        "You keep your mood steady even if they’re slow."
+      ],
+      advice: "Keep doing you. If something feels off, ask once and watch actions."
     };
-    setData(data);
-
-    // clear quiz state
-    localStorage.removeItem(QUIZ_KEY);
-
-    // If you have results.html, go there; otherwise show inline
-    // (leave this as is — it will still work even if results.html doesn't exist)
-    try {
-      window.location.href = PAGES.results;
-    } catch {
-      // fallback
-      showInlineResult(pct);
-    }
   }
-
-  function showInlineResult(pct) {
-    qCounter.textContent = "Finished";
-    qText.textContent = `Your result: ${pct}%`;
-
-    let msg = "";
-    if (pct <= 25) msg = "Low delulu — you’re pretty grounded.";
-    else if (pct <= 50) msg = "Some delulu — you overthink sometimes.";
-    else if (pct <= 75) msg = "High delulu — you spiral easily, breathe + slow down.";
-    else msg = "MAX delulu — you’re in your head heavy. Stop reading into everything.";
-
-    if (qHint) qHint.textContent = msg;
-    answersWrap.style.display = "none";
-    if (progressText) progressText.textContent = "Progress: 100%";
+  if (percent <= 40){
+    return {
+      label: "21–40% • Slight overthink",
+      examples: [
+        "You analyze a bit sometimes (timing, tone).",
+        "You still keep control most of the time.",
+        "You want clarity but don’t fully spiral."
+      ],
+      advice: "Don’t read into small stuff. Look at patterns over time."
+    };
   }
+  if (percent <= 60){
+    return {
+      label: "41–60% • Half-delulu 😭",
+      examples: [
+        "You reread texts and overthink silence.",
+        "You feel tempted to double-text.",
+        "You start guessing instead of asking."
+      ],
+      advice: "Ask one clear question then stop. No chasing. Match energy."
+    };
+  }
+  if (percent <= 80){
+    return {
+      label: "61–80% • High delulu (spiral risk)",
+      examples: [
+        "Your mood depends on their replies.",
+        "You ignore red flags because you want it to work.",
+        "You overthink punctuation/response time hard."
+      ],
+      advice: "Pause before replying. One message max. If it’s inconsistent, detach."
+    };
+  }
+  return {
+    label: "81–100% • MAX delulu 🚨",
+    examples: [
+      "Detective mode 24/7.",
+      "Chasing clarity from someone inconsistent.",
+      "Forgiving disrespect / bare minimum."
+    ],
+    advice: "Stop chasing. Protect your dignity. Watch actions, not words."
+  };
+}
 
-  function next() {
-    current++;
-    if (current >= questions.length) {
-      finish();
+function render(){
+  const done = countAnswered();
+  qCount.textContent = `Question ${i+1}/${questions.length}`;
+  progressBadge.textContent = `${Math.round((done/questions.length)*100)}% done`;
+
+  questionText.textContent = questions[i].q;
+  questionHint.textContent = questions[i].h;
+
+  prevBtn.disabled = (i === 0);
+
+  // hide results while taking quiz
+  resultArea.style.display = "none";
+}
+
+function finish(){
+  const max = 3 * questions.length;
+  const score = currentScore();
+  const percent = Math.round((score / max) * 100);
+  const info = getRangeInfo(percent);
+
+  // Save for Plan
+  const data = getAppData();
+  data.lastQuiz = { percent, answers, savedAt: Date.now(), rangeLabel: info.label };
+  setAppData(data);
+
+  // show
+  resultArea.style.display = "block";
+  bar.style.width = `${percent}%`;
+  percentText.textContent = `${percent}% • ${info.label}`;
+  adviceText.textContent = info.advice;
+
+  if (rangeLabelEl) rangeLabelEl.textContent = info.label;
+  if (examplesBoxEl){
+    examplesBoxEl.innerHTML = `
+      <h3 style="margin:0 0 8px;">What this score looks like</h3>
+      <ul style="margin:0; padding-left:18px;">
+        ${info.examples.map(e => `<li>${e}</li>`).join("")}
+      </ul>
+    `;
+  }
+}
+
+function goNext(){
+  // if reached end and all answered, finish
+  if (i >= questions.length - 1){
+    // If user skipped somehow, force to last unanswered
+    const firstUnanswered = answers.findIndex(v => v === null);
+    if (firstUnanswered !== -1){
+      i = firstUnanswered;
+      render();
       return;
     }
-    render();
+    finish();
+    return;
   }
+  i++;
+  render();
+}
 
-  // Choice click handling
-  answersWrap.addEventListener("click", (e) => {
-    const btn = e.target.closest(".choice");
-    if (!btn) return;
-
-    const val = Number(btn.dataset.value);
-    if (!Number.isFinite(val)) return;
-
-    score += val;
-    next();
+document.querySelectorAll("button[data-val]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const val = Number(btn.dataset.val);
+    answers[i] = val;
+    goNext();
   });
+});
 
-  // Restart
-  btnRestart?.addEventListener("click", () => {
-    current = 0;
-    score = 0;
-    localStorage.removeItem(QUIZ_KEY);
-    answersWrap.style.display = "";
-    render();
-  });
-
-  // Initial render (THIS is what fixes the stuck loading)
+prevBtn.addEventListener("click", () => {
+  if (i > 0) i--;
   render();
 });
+
+function restartAll(){
+  for (let k=0;k<answers.length;k++) answers[k] = null;
+  i = 0;
+  if (examplesBoxEl) examplesBoxEl.innerHTML = "";
+  if (rangeLabelEl) rangeLabelEl.textContent = "";
+  render();
+}
+
+restartQuiz.addEventListener("click", restartAll);
+restartBtnTop.addEventListener("click", restartAll);
+
+render();
