@@ -17,56 +17,85 @@
     </div>
 
     <div class="nav-actions">
-     <a class="btn ghost" href="start.html">Start</a>
-      <a class="btn" href="quiz.html">Quiz</a>
-      <a class="btn" href="plan.html">Plan</a>
-      <a class="btn" href="scan.html">Analysis</a>
-      <a class="btn" href="game.html">Game</a>
-      <button class="btn ghost" id="resetAll" type="button">Reset App</button>
+      <a class="btn ghost" href="start.html">Start</a>
+      <a class="btn" href="menu.html">Menu</a>
+      <a class="btn ghost" href="quiz.html">Quiz</a>
+      <a class="btn ghost" href="plan.html">Plan</a>
+      <a class="btn ghost" href="scan.html">Analysis</a>
+      <a class="btn ghost" href="game.html">Game</a>
+
+      <button class="btn ghost" id="resetAppBtn" type="button">Reset App</button>
     </div>
   </nav>
 
   <div class="container">
     <div class="card">
-      <h2>Choose a mode</h2>
-      <p class="muted" id="lastScore">Loading score…</p>
-
       <div class="section">
+        <h1 style="margin:0 0 6px;">Choose a mode</h1>
+        <p class="muted" id="scoreLine" style="margin:0;">Loading score…</p>
+      </div>
+
+      <div class="section grid-2">
         <div class="item">
-          <h3>📝 Quiz</h3>
-          <p class="muted">Get your delulu % and save it for your plan.</p>
-          <div class="row" style="margin-top:12px;">
-            <a class="btn primary" href="quiz.html">Start Quiz</a>
-          </div>
+          <h3 style="margin:0 0 6px;">📝 Quiz</h3>
+          <p class="muted" style="margin:0 0 12px;">Get your delulu % and save it for your plan.</p>
+          <a class="btn primary" href="quiz.html">Start Quiz</a>
         </div>
 
-        <div class="item" style="margin-top:14px;">
-          <h3>📌 Plan</h3>
-          <p class="muted">Uses your last quiz result to make a plan.</p>
-          <div class="row" style="margin-top:12px;">
-            <a class="btn" href="plan.html">Open Plan</a>
-          </div>
+        <div class="item">
+          <h3 style="margin:0 0 6px;">📌 Plan</h3>
+          <p class="muted" style="margin:0 0 12px;">Uses your last quiz result to make a plan.</p>
+          <a class="btn" href="plan.html">Open Plan</a>
         </div>
 
-        <div class="item" style="margin-top:14px;">
-          <h3>🔎 Text Analysis</h3>
-          <p class="muted">Paste a convo and get “signals” + a score.</p>
-          <div class="row" style="margin-top:12px;">
-            <a class="btn" href="scan.html">Open Analysis</a>
-          </div>
+        <div class="item">
+          <h3 style="margin:0 0 6px;">🔎 Text Analysis</h3>
+          <p class="muted" style="margin:0 0 12px;">Paste a convo and get “signals” + a score.</p>
+          <a class="btn" href="scan.html">Open Analysis</a>
         </div>
 
-        <div class="item" style="margin-top:14px;">
-          <h3>🎮 Game</h3>
-          <p class="muted">Delulu Dodge: avoid red flags.</p>
-          <div class="row" style="margin-top:12px;">
-            <a class="btn" href="game.html">Play</a>
-          </div>
+        <div class="item">
+          <h3 style="margin:0 0 6px;">🎮 Game</h3>
+          <p class="muted" style="margin:0 0 12px;">Delulu Dodge: avoid red flags and survive.</p>
+          <a class="btn" href="game.html">Play</a>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="menu.js"></script>
+  <script>
+    // shared storage key
+    const APP_KEY = "dd_app_v1";
+
+    function getAppData() {
+      try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); }
+      catch { return {}; }
+    }
+    function setAppData(d) {
+      localStorage.setItem(APP_KEY, JSON.stringify(d));
+    }
+
+    // age gate
+    const data = getAppData();
+    if (!data.age || Number(data.age) < 18) {
+      window.location.replace("start.html");
+    }
+
+    // show score if exists
+    const scoreLine = document.getElementById("scoreLine");
+    const last = data.lastQuiz;
+    if (last && typeof last.percent === "number") {
+      const when = last.savedAt ? new Date(last.savedAt).toLocaleString() : "";
+      scoreLine.textContent = `Last quiz: ${last.percent}%${when ? " • " + when : ""}`;
+    } else {
+      scoreLine.textContent = "No saved quiz yet. Take the quiz to unlock your Plan.";
+    }
+
+    // reset app button
+    document.getElementById("resetAppBtn").addEventListener("click", () => {
+      localStorage.removeItem(APP_KEY);
+      window.location.replace("start.html");
+    });
+  </script>
 </body>
 </html>
