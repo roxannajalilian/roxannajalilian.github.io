@@ -17,16 +17,38 @@
     </div>
 
     <div class="nav-actions">
+      <button class="btn ghost" id="backBtn" type="button">Back</button>
       <a class="btn" href="menu.html">Menu</a>
-      <a class="btn" href="quiz.html">Quiz</a>
+      <a class="btn ghost" href="quiz.html">Quiz</a>
+      <a class="btn ghost" href="scan.html">Analysis</a>
+      <a class="btn ghost" href="game.html">Game</a>
     </div>
   </nav>
 
   <div class="container">
     <div class="card">
       <div id="planOut"></div>
+
+      <div class="row section">
+        <a class="btn" href="menu.html">Menu</a>
+        <a class="btn primary" href="quiz.html">Retake Quiz</a>
+      </div>
     </div>
   </div>
+
+  <script>
+    // Back button fix
+    document.getElementById("backBtn").addEventListener("click", () => {
+      if (history.length > 1) history.back();
+      else window.location.href = "menu.html";
+    });
+
+    // Age gate
+    const APP_KEY="dd_app_v1";
+    function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
+    const d=getAppData();
+    if(!d.age || Number(d.age) < 18) window.location.href="index.html";
+  </script>
 
   <script src="plan.js"></script>
 </body>
