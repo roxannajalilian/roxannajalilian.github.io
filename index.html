@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delulu Detector • Start</title>
+  <title>Delulu Detector</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,7 +12,7 @@
       <div class="logo">DD</div>
       <div>
         <div class="title">Delulu Detector</div>
-        <div class="sub">Start</div>
+        <div class="sub">18+ only</div>
       </div>
     </div>
     <div class="nav-actions">
@@ -23,13 +23,17 @@
   </nav>
 
   <div class="container">
-    <div class="card center" style="max-width:720px;margin:0 auto;">
-      <h1 style="margin-bottom:6px;">Start</h1>
-      <p class="muted">Enter your age to continue. You must be 18 or older.</p>
+    <div class="card center" style="max-width:760px;margin:0 auto;">
+      <h1 style="margin:0 0 6px;">Welcome</h1>
+      <p class="muted" style="margin:0;">
+        Enter your age to continue. <b>This app is 18+ only.</b>
+      </p>
 
       <div class="section" style="text-align:left;">
-        <label class="muted" for="ageInput" style="display:block;margin-bottom:8px;">Your age</label>
-        <input id="ageInput" type="number" inputmode="numeric" min="1" max="120" placeholder="18" />
+        <label class="muted" for="ageInput" style="display:block;margin-bottom:8px;">Your age (must be 18+)</label>
+
+        <!-- Notice: min=18 (no more 1–120) -->
+        <input id="ageInput" type="number" inputmode="numeric" min="18" max="120" placeholder="18" />
 
         <div style="margin-top:12px;">
           <label style="display:flex;gap:10px;align-items:flex-start;">
@@ -49,7 +53,7 @@
       </div>
 
       <div class="section item" id="lockBox" style="display:none;">
-        <h2 style="margin:0 0 6px;">Sorry — 18+ only</h2>
+        <h2 style="margin:0 0 6px;">18+ only</h2>
         <p class="muted" id="lockMsg" style="margin:0;">Redirecting…</p>
       </div>
     </div>
@@ -76,25 +80,29 @@
       continueBtn.disabled = !agreeBox.checked;
     });
 
+    // ✅ IMPORTANT: do NOT auto-redirect (unless you want it)
+    // If you *do* want auto-redirect when verified, I can add it back safely.
+
     continueBtn.addEventListener("click", () => {
       clearError();
       const age = Number(ageInput.value);
 
-      if(!age || age < 1 || age > 120){
-        showError("Enter a valid age (1–120).");
+      if (!age || isNaN(age)) {
+        showError("Enter your age (18+).");
+        return;
+      }
+
+      if (age < 18) {
+        showError("18+ only. You cannot continue.");
+        lockBox.style.display = "block";
+        lockMsg.textContent = "18+ only. Redirecting…";
+        setTimeout(() => window.location.href = "https://www.google.com", 1200);
         return;
       }
 
       const data = getAppData();
       data.age = age;
       setAppData(data);
-
-      if(age < 18){
-        lockBox.style.display = "block";
-        lockMsg.textContent = "Sorry — you must be 18 or older to use this app. Redirecting…";
-        setTimeout(() => window.location.href = "https://www.google.com", 1200);
-        return;
-      }
 
       window.location.href = "menu.html";
     });
