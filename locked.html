@@ -1,1 +1,49 @@
 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Locked</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav>
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div>
+        <div class="title">Delulu Detector</div>
+        <div class="sub">Access restricted</div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="card center">
+      <h1>Access denied</h1>
+      <p class="muted" id="reason">Sorry — you must be 18 or older to use this app.</p>
+      <div class="row">
+        <button class="btn ghost" id="clear">Clear & return</button>
+      </div>
+      <p class="tiny muted">If you’re under 18, this app can’t be used.</p>
+    </div>
+  </main>
+
+  <script type="module">
+    import { getData, setData } from "./gate.js";
+
+    const data = getData();
+    const reason = data?.lockReason || "Sorry — you must be 18 or older to use this app.";
+    document.getElementById("reason").textContent = reason;
+
+    // Stop back button from showing protected page
+    history.pushState(null, "", location.href);
+    window.addEventListener("popstate", () => history.pushState(null, "", location.href));
+
+    document.getElementById("clear").addEventListener("click", () => {
+      setData({});
+      window.location.replace("index.html");
+    });
+  </script>
+</body>
+</html>
