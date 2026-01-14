@@ -17,17 +17,19 @@
     </div>
 
     <div class="nav-actions">
+      <a class="btn ghost" href="index.html?stay=1">Start</a>
       <a class="btn" href="quiz.html">Quiz</a>
       <a class="btn" href="plan.html">Plan</a>
       <a class="btn" href="scan.html">Analysis</a>
       <a class="btn" href="game.html">Game</a>
+      <button class="btn ghost" id="resetAll" type="button">Reset App</button>
     </div>
   </nav>
 
   <div class="container">
     <div class="card">
       <h2>Choose a mode</h2>
-      <p class="muted">You can always come back here from the top buttons.</p>
+      <p class="muted">If you aren’t verified, you’ll be sent back to Start.</p>
 
       <div class="section">
         <div class="item">
@@ -62,19 +64,24 @@
           </div>
         </div>
       </div>
-
-      <div class="row section">
-        <a class="btn ghost" href="index.html">Back to Start</a>
-      </div>
     </div>
   </div>
 
   <script>
-    // Age gate protection
     const APP_KEY="dd_app_v1";
     function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
-    const d=getAppData();
-    if(!d.age || Number(d.age) < 18) window.location.href="index.html";
+
+    // ✅ FIX: if not verified, force Start page
+    const d = getAppData();
+    if (!d.age || Number(d.age) < 18) {
+      window.location.replace("index.html?stay=1");
+    }
+
+    // Reset always works
+    document.getElementById("resetAll").addEventListener("click", () => {
+      localStorage.removeItem(APP_KEY);
+      window.location.replace("index.html?stay=1");
+    });
   </script>
 </body>
 </html>
