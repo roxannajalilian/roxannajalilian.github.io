@@ -4,86 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Age Check</title>
-  <link rel="stylesheet" href="style.css?v=10" />
-
-  <style>
-    /* extra lock styling */
-    .lock-card{
-      max-width:520px;
-      margin:60px auto;
-    }
-    .tiny{
-      font-size:13px;
-      opacity:.75;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css?v=11" />
+  <script src="shared.js?v=11"></script>
 </head>
 <body>
-
-  <!-- 🔒 NO NAVBAR ON THIS PAGE -->
+  <!-- NO NAVBAR ON PURPOSE -->
 
   <div class="container">
-    <div class="card lock-card">
+    <div class="card" style="max-width:520px; margin:60px auto;">
       <div style="display:flex; gap:14px; align-items:center; margin-bottom:14px;">
         <div class="logo">DD</div>
         <div>
           <h1 style="margin:0;">Delulu Detector</h1>
-          <p class="muted" style="margin:2px 0 0;">18+ Access Gate</p>
+          <p class="muted" style="margin:2px 0 0;">18+ only</p>
         </div>
       </div>
 
       <p class="muted" style="margin-top:0;">
-        You must confirm you are <b>18 or older</b> before you can access the menu, quiz, plan, analysis, or game.
+        Confirm you are <b>18 or older</b> to access Menu, Quiz, Plan, Analysis, and Game.
       </p>
 
       <div class="section">
         <label for="ageInput">Enter your age</label>
-        <input
-          id="ageInput"
-          type="number"
-          inputmode="numeric"
-          min="18"
-          placeholder="18+ only"
-        />
+        <input id="ageInput" type="number" inputmode="numeric" min="18" placeholder="18+ only" />
       </div>
 
-      <p id="errorText" style="display:none; margin:8px 0 0; color:#ff8a8a; font-weight:700;"></p>
+      <p id="errorText" style="display:none; margin:8px 0 0; color:#ff8a8a; font-weight:800;"></p>
 
       <div class="row" style="margin-top:14px;">
         <button class="btn primary" id="continueBtn" type="button">Continue</button>
+        <a class="btn ghost" href="privacy.html">Privacy</a>
       </div>
 
       <div class="hr"></div>
-
-      <p class="muted tiny" style="margin:0;">
-        Age is used only to verify access. No data is sent anywhere — it stays on your device (localStorage).
+      <p class="muted small" style="margin:0;">
+        Age is stored only to verify access (localStorage). No data is sent anywhere.
       </p>
     </div>
   </div>
 
   <script>
-    const APP_KEY = "dd_app_v1";
-
-    function getAppData(){
-      try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); }
-      catch { return {}; }
-    }
-    function setAppData(data){
-      localStorage.setItem(APP_KEY, JSON.stringify(data));
-    }
-
+    const NEXT = safeNextFromURL();
     const ageInput = document.getElementById("ageInput");
     const continueBtn = document.getElementById("continueBtn");
     const errorText = document.getElementById("errorText");
-
-    // 🔒 HARD LOCK: if someone clicks ANY link somehow, block it
-    document.addEventListener("click", (e) => {
-      const a = e.target.closest && e.target.closest("a");
-      if (a) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    }, true);
 
     function showError(msg){
       errorText.textContent = msg;
@@ -92,11 +56,9 @@
 
     continueBtn.addEventListener("click", () => {
       const age = Number(ageInput.value);
-
-      if (!age) return showError("Please enter your age first.");
+      if (!age) return showError("Enter your age first.");
       if (age < 18) return showError("Sorry — this app is 18+ only.");
 
-      // ✅ verified
       errorText.style.display = "none";
 
       const data = getAppData();
@@ -104,24 +66,15 @@
       data.ageVerifiedAt = Date.now();
       setAppData(data);
 
-      // go to menu only after verified
-      window.location.href = "menu.html";
+      window.location.href = NEXT; // ✅ returns to the page you wanted
     });
 
-    // Enter key triggers continue (but still validates)
     ageInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
         continueBtn.click();
       }
     });
-
-    // Optional: if you want it to ALWAYS start blank even if age exists
-    // uncomment the next 3 lines:
-    // const d = getAppData();
-    // delete d.age; delete d.ageVerifiedAt;
-    // setAppData(d);
   </script>
-
 </body>
 </html>
