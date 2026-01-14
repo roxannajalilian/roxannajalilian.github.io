@@ -15,36 +15,25 @@ function show(m) {
   msg.textContent = m;
 }
 
-// 🚫 IMPORTANT: NO AUTO-REDIRECT ON PAGE LOAD
-// index.html stays the main page
+// index.html is main page: do NOT auto-redirect on load
 
 continueBtn.addEventListener("click", () => {
   const age = Number(ageEl.value);
 
-  if (!agreeEl.checked) {
-    show("Please agree to the Terms & Privacy.");
-    return;
-  }
-
-  if (!Number.isFinite(age) || age < 1 || age > 120) {
-    show("Enter a valid age.");
-    return;
-  }
+  if (!agreeEl.checked) return show("Please agree to the Terms & Privacy.");
+  if (!Number.isFinite(age) || age < 1 || age > 120) return show("Enter a valid age.");
 
   if (age < 18) {
-    // FULL lockout for under 18
     lockOut("Sorry — you must be 18 or older to use this app.");
     return;
   }
 
-  // Save valid age
   const data = getData();
   data.age = age;
   data.lockedOut = false;
   data.lockReason = "";
   setData(data);
 
-  // ONLY NOW go to menu
   window.location.replace("menu.html");
 });
 
