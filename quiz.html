@@ -44,7 +44,7 @@
           <p class="muted" id="questionHint" style="margin:0;">Tap a choice.</p>
         </div>
 
-        <div class="choice-grid">
+        <div class="choice-grid" id="choices">
           <button class="btn choice primary" data-val="3" type="button">
             <b>Yes (a lot)</b>
             <span>Strong signal / you do this often</span>
@@ -86,17 +86,181 @@
           <button class="btn ghost" id="restartQuiz" type="button">Restart Quiz</button>
         </div>
       </div>
+
+      <p class="muted" id="debugMsg" style="margin-top:14px; display:none;"></p>
     </div>
   </div>
 
   <script>
-    // Age gate
-    const APP_KEY="dd_app_v1";
+    // ====== APP STORAGE ======
+    const APP_KEY = "dd_app_v1";
     function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
-    const d=getAppData();
-    if(!d.age || Number(d.age) < 18) window.location.replace("start.html");
-  </script>
+    function setAppData(data){ localStorage.setItem(APP_KEY, JSON.stringify(data)); }
 
-  <script src="quiz.js"></script>
+    // ====== AGE GATE (must be 18+) ======
+    (function(){
+      const d = getAppData();
+      if (!d.age || Number(d.age) < 18) window.location.replace("start.html");
+    })();
+
+    // ====== QUIZ LOGIC (INLINE so it cannot fail to load) ======
+    document.addEventListener("DOMContentLoaded", () => {
+      const debug = (msg) => {
+        const el = document.getElementById("debugMsg");
+        el.style.display = "block";
+        el.textContent = msg;
+      };
+
+      try {
+        const questions = [
+          { q: "Do you reread texts to find hidden meaning?", h: "Like searching for clues in one word." },
+          { q: "Do you assume silence means they’re mad or losing interest?", h: "No reply = panic." },
+          { q: "Do you overthink punctuation (… / lol / k)?", h: "Dot dot dot trauma." },
+          { q: "Do you check activity (views, snaps, followers) for hints?", h: "Detective mode." },
+          { q: "Do you type a reply, delete it, retype it 10 times?", h: "Pressure to be perfect." },
+          { q: "Do you double-text because you feel ignored?", h: "Chase mode." },
+          { q: "Do you replay the convo in your head for hours?", h: "Looping thoughts." },
+          { q: "Do you ignore obvious signs because you want it to work?", h: "Hope goggles." },
+          { q: "Does your mood depend on their reply?", h: "High/low based on texts." },
+          { q: "Do you excuse disrespect (dry, rude, disappearing)?", h: "Bare minimum defense." }
+        ];
+
+        let i = 0;
+        const answers = new Array(questions.length).fill(null);
+
+        const qCount = document.getElementById("qCount");
+        const progressBadge = document.getElementById("progressBadge");
+        const questionText = document.getElementById("questionText");
+        const questionHint = document.getElementById("questionHint");
+
+        const resultArea = document.getElementById("resultArea");
+        const bar = document.getElementById("bar");
+        const percentText = document.getElementById("percentText");
+        const adviceText = document.getElementById("adviceText");
+        const rangeLabelEl = document.getElementById("rangeLabel");
+        const examplesBoxEl = document.getElementById("examplesBox");
+
+        const prevBtn = document.getElementById("prevBtn");
+        const restartQuiz = document.getElementById("restartQuiz");
+        const restartBtnTop = document.getElementById("restartBtnTop");
+
+        const choiceButtons = Array.from(document.querySelectorAll("button[data-val]"));
+
+        function countAnswered(){ return answers.filter(v => v !== null).length; }
+        function scoreNow(){ return answers.reduce((s,v)=> s + (v ?? 0), 0); }
+
+        function getRangeInfo(percent){
+          if (percent <= 20) return {
+            label:"0–20% • Super grounded ✅",
+            examples:["You don’t assume tone from one word.","You don’t chase for replies.","Your mood stays steady even if they’re slow."],
+            advice:"Keep doing you. If something feels off, ask once and watch actions."
+          };
+          if (percent <= 40) return {
+            label:"21–40% • Slight overthink",
+            examples:["You analyze a bit sometimes (timing/tone).","You still keep control most of the time.","You want clarity but don’t fully spiral."],
+            advice:"Don’t read into small stuff. Look at patterns over time."
+          };
+          if (percent <= 60) return {
+            label:"41–60% • Half-delulu 😭",
+            examples:["You reread texts and overthink silence.","You feel tempted to double-text.","You start guessing instead of asking."],
+            advice:"Ask one clear question then stop. No chasing. Match energy."
+          };
+          if (percent <= 80) return {
+            label:"61–80% • High delulu (spiral risk)",
+            examples:["Your mood depends on their replies.","You ignore red flags because you want it to work.","You overthink punctuation/response time hard."],
+            advice:"Pause before replying. One message max. If it’s inconsistent, detach."
+          };
+          return {
+            label:"81–100% • MAX delulu 🚨",
+            examples:["Detective mode 24/7.","Chasing clarity from someone inconsistent.","Forgiving disrespect / bare minimum."],
+            advice:"Stop chasing. Protect your dignity. Watch actions, not words."
+          };
+        }
+
+        function render(){
+          const done = countAnswered();
+          qCount.textContent = `Question ${i+1}/${questions.length}`;
+          progressBadge.textContent = `${Math.round((done/questions.length)*100)}% done`;
+
+          questionText.textContent = questions[i].q;
+          questionHint.textContent = questions[i].h;
+
+          prevBtn.disabled = (i === 0);
+          resultArea.style.display = "none";
+        }
+
+        function finish(){
+          const max = 3 * questions.length;
+          const percent = Math.round((scoreNow() / max) * 100);
+          const info = getRangeInfo(percent);
+
+          // save
+          const data = getAppData();
+          data.lastQuiz = { percent, answers, savedAt: Date.now(), rangeLabel: info.label };
+          setAppData(data);
+
+          // show results
+          resultArea.style.display = "block";
+          bar.style.width = `${percent}%`;
+          percentText.textContent = `${percent}% • ${info.label}`;
+          adviceText.textContent = info.advice;
+
+          rangeLabelEl.textContent = info.label;
+          examplesBoxEl.innerHTML = `
+            <h3 style="margin:0 0 8px;">What this score looks like</h3>
+            <ul style="margin:0; padding-left:18px;">
+              ${info.examples.map(e => `<li>${e}</li>`).join("")}
+            </ul>
+          `;
+        }
+
+        function goNext(){
+          // if last question -> finish only if all answered
+          if (i >= questions.length - 1){
+            const firstUnanswered = answers.findIndex(v => v === null);
+            if (firstUnanswered !== -1){
+              i = firstUnanswered;
+              render();
+              return;
+            }
+            finish();
+            return;
+          }
+          i++;
+          render();
+        }
+
+        choiceButtons.forEach(btn => {
+          btn.addEventListener("click", () => {
+            const val = Number(btn.dataset.val);
+            answers[i] = val;
+            goNext();
+          });
+        });
+
+        prevBtn.addEventListener("click", () => {
+          if (i > 0) i--;
+          render();
+        });
+
+        function restartAll(){
+          for (let k=0;k<answers.length;k++) answers[k] = null;
+          i = 0;
+          resultArea.style.display = "none";
+          examplesBoxEl.innerHTML = "";
+          rangeLabelEl.textContent = "";
+          render();
+        }
+
+        restartQuiz.addEventListener("click", restartAll);
+        restartBtnTop.addEventListener("click", restartAll);
+
+        render();
+      } catch (err) {
+        console.error(err);
+        debug("Quiz crashed. Open Console (Inspect) and screenshot the red error for me.");
+      }
+    });
+  </script>
 </body>
 </html>
