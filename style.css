@@ -280,3 +280,21 @@ canvas{
   border: 1px solid rgba(255,255,255,.12);
   background: rgba(10,12,22,.35);
 }
+
+
+/* ===== Clickability fixes ===== */
+.container, .card, nav {
+  position: relative;
+  z-index: 1;
+}
+
+.btn, input, textarea, label, a {
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+/* If ANY decorative overlay exists, it must not block clicks */
+.bg, .overlay-decor, .glow, .blur-layer {
+  pointer-events: none !important;
+}
