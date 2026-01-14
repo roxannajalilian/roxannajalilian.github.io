@@ -1,150 +1,181 @@
-const APP_KEY = "dd_app_v1";
-function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
+// plan.js (FULL FILE) — loader + real plan from saved quiz result
 
-const box = document.getElementById("planOut");
-const data = getAppData();
-const last = data.lastQuiz;
+(() => {
+  const APP_KEY = "dd_app_v1";
+  function getAppData() {
+    try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); }
+    catch { return {}; }
+  }
 
-function li(x){ return `<li>${x}</li>`; }
+  // Age gate
+  const data = getAppData();
+  if (!data.age || Number(data.age) < 18) {
+    window.location.replace("start.html");
+    return;
+  }
 
-function buildPlan(p){
-  if (p <= 20) {
+  const loadingWrap = document.getElementById("loadingWrap");
+  const emptyWrap = document.getElementById("emptyWrap");
+  const resultWrap = document.getElementById("resultWrap");
+
+  const scoreBadge = document.getElementById("scoreBadge");
+  const planBar = document.getElementById("planBar");
+  const savedAtText = document.getElementById("savedAtText");
+
+  const meaningText = document.getElementById("meaningText");
+  const ruleText = document.getElementById("ruleText");
+  const todayList = document.getElementById("todayList");
+  const boundariesList = document.getElementById("boundariesList");
+  const linesBox = document.getElementById("linesBox");
+
+  const lastQuiz = data.lastQuiz;
+
+  function fmtTime(ts) {
+    try {
+      const d = new Date(ts);
+      return d.toLocaleString();
+    } catch {
+      return "";
+    }
+  }
+
+  function setList(ul, items) {
+    ul.innerHTML = items.map(x => `<li>${x}</li>`).join("");
+  }
+
+  function quoteCards(lines) {
+    return lines.map(l => `<div class="quote">${l}</div>`).join("");
+  }
+
+  function planFor(percent) {
+    if (percent >= 80) {
+      return {
+        meaning: "You’re in full spiral mode. Your brain is writing stories from tiny signals.",
+        rule: "One message max. If they’re inconsistent, detach — do not chase.",
+        today: [
+          "Mute notifications for 2 hours and do something physical (walk / shower / clean).",
+          "Write the facts only (what they DID, not what you THINK it means).",
+          "If you need clarity: ask ONE clear question, then stop."
+        ],
+        boundaries: [
+          "No double texting for at least 6 hours.",
+          "No checking views / activity like a detective.",
+          "If they’re rude/dry twice: match energy or step back."
+        ],
+        lines: [
+          "“Hey, are we good? Just want clarity.”",
+          "“No worries — I’ll give you space.”",
+          "“I’m not into mixed signals. If you’re down, be consistent.”"
+        ]
+      };
+    }
+    if (percent >= 60) {
+      return {
+        meaning: "High delulu. You get triggered by silence/tone and start overfilling gaps.",
+        rule: "Ask once. Then wait. Your peace > their reply.",
+        today: [
+          "Before replying: wait 5 minutes and reread with neutral tone.",
+          "Do one distraction task (music, notes, shower) before texting back.",
+          "Only respond when you’re calm — not when you’re annoyed/anxious."
+        ],
+        boundaries: [
+          "No paragraphs when they send one word.",
+          "If they disappear: don’t reward it with extra attention.",
+          "Consistency matters more than cute words."
+        ],
+        lines: [
+          "“I’m not sure what you meant — can you be direct?”",
+          "“Okay, I’ll let you get back to me when you’re free.”",
+          "“I like consistent communication. If that’s not your thing, it’s okay.”"
+        ]
+      };
+    }
+    if (percent >= 40) {
+      return {
+        meaning: "Half-delulu. You’re mostly okay, but certain triggers make you spiral.",
+        rule: "Patterns > moments. Don’t treat one text like a prophecy.",
+        today: [
+          "Stop rereading the same chat. Read once, then close it.",
+          "If you want clarity: ask a simple question, don’t hint.",
+          "Do something that makes you feel in control (tidy, plan, gym)."
+        ],
+        boundaries: [
+          "No texting when you’re emotionally heated.",
+          "If they’re dry: mirror the energy, don’t chase it.",
+          "Your time is valuable — don’t beg for replies."
+        ],
+        lines: [
+          "“All good — just checking what the plan is.”",
+          "“If you’re busy, we can talk later.”",
+          "“I’m not guessing. Just tell me straight.”"
+        ]
+      };
+    }
+    if (percent >= 20) {
+      return {
+        meaning: "Slight overthink. You notice signals, but you don’t fully lose control.",
+        rule: "Stay chill and let people show you who they are.",
+        today: [
+          "Reply normally — no over-explaining.",
+          "Give them time to respond without checking constantly.",
+          "Do something fun and don’t stare at your phone."
+        ],
+        boundaries: [
+          "Don’t assume tone from punctuation.",
+          "Don’t change your mood based on one reply.",
+          "If it bothers you, ask politely instead of guessing."
+        ],
+        lines: [
+          "“No worries, talk later.”",
+          "“What did you mean by that?”",
+          "“Cool — let me know.”"
+        ]
+      };
+    }
     return {
-      title: "Stay-grounded plan ✅",
-      vibe: "You’re already calm. This plan keeps you steady and prevents random spirals.",
-      doThis: [
-        "Ask once if something feels off — no guessing games.",
-        "Watch patterns over time (effort, consistency).",
-        "Keep your routine strong (sleep, friends, goals).",
-        "If they go cold, don’t chase — let actions speak."
+      meaning: "Super grounded. You’re not spiraling — you watch reality, not fantasy.",
+      rule: "Keep your standards. Don’t entertain inconsistency.",
+      today: [
+        "Stay consistent with how you normally act.",
+        "Keep your life busy and your energy protected.",
+        "Choose people who match effort."
       ],
-      dont: [
-        "Don’t analyze punctuation or “seen” like it’s a crime scene.",
-        "Don’t lower your standards for attention."
+      boundaries: [
+        "Don’t over-invest early.",
+        "Watch actions, not promises.",
+        "If it feels off, step back sooner."
       ],
-      script: [
-        "“Hey, are we good? Just checking.”",
-        "“I like consistency. If you’re not feeling it, just be honest.”"
+      lines: [
+        "“I like clear communication.”",
+        "“Let me know when you’re free.”",
+        "“I’m not into guessing games.”"
       ]
     };
   }
-  if (p <= 40) {
-    return {
-      title: "Slight-overthink plan",
-      vibe: "You’re mostly fine, you just overthink sometimes. This keeps you confident.",
-      doThis: [
-        "Wait 10 minutes before replying if you feel anxious.",
-        "If you’re confused: ask ONE clear question.",
-        "Match energy: don’t give paragraphs to dry replies.",
-        "Focus on what they do, not what you hope they mean."
-      ],
-      dont: [
-        "Don’t stalk activity for clues.",
-        "Don’t fill silence with extra messages."
-      ],
-      script: [
-        "“I’m a little confused — what are you thinking?”",
-        "“All good, just wanted clarity.”"
-      ]
-    };
-  }
-  if (p <= 60) {
-    return {
-      title: "Half-delulu plan 😭",
-      vibe: "You’re in the zone where people start chasing. We’re stopping that.",
-      doThis: [
-        "No double-texting. If you already said it, stop.",
-        "If they’re inconsistent: step back and watch.",
-        "Put your phone down after texting (30 minutes).",
-        "Protect your dignity: calm messages only."
-      ],
-      dont: [
-        "Don’t apologize for asking basic respect.",
-        "Don’t ignore red flags because you want it to work."
-      ],
-      script: [
-        "“Are you interested or not? I’d rather you be straight.”",
-        "“I like consistent communication — if that’s not you, it’s okay.”"
-      ]
-    };
-  }
-  if (p <= 80) {
-    return {
-      title: "High-delulu plan (spiral risk)",
-      vibe: "Your mood is getting controlled by their replies. This plan puts you back in control.",
-      doThis: [
-        "Pause before replying (30–60 mins if emotional).",
-        "Send one message max, then wait.",
-        "Mute notifications for a bit to reset your brain.",
-        "If they disappear repeatedly: detach fully."
-      ],
-      dont: [
-        "Don’t beg, spam, or explain yourself 10 times.",
-        "Don’t accept disrespect because you’re attached."
-      ],
-      script: [
-        "“I’m not doing mixed signals. If you want this, be consistent.”",
-        "“No worries. Take care.”"
-      ]
-    };
-  }
-  return {
-    title: "MAX delulu plan 🚨",
-    vibe: "You’re deep in detective mode. This is damage control + self-respect.",
-    doThis: [
-      "Stop chasing. Observe actions only.",
-      "Write your feelings in Notes — do NOT send.",
-      "Do something physical to reset (walk/shower/clean).",
-      "Choose self-respect over curiosity."
-    ],
-    dont: [
-      "Don’t tolerate bare minimum.",
-      "Don’t keep forgiving disrespect."
-    ],
-    script: [
-      "“I’m stepping back. If you want to talk, be clear.”",
-      "“I’m good. Take care.”"
-    ]
-  };
-}
 
-if(!last){
-  box.innerHTML = `
-    <h2>No saved quiz result yet</h2>
-    <p class="muted">Take the quiz first so your plan can be generated.</p>
-    <div class="row" style="margin-top:12px;">
-      <a class="btn primary" href="quiz.html">Take Quiz</a>
-      <a class="btn" href="menu.html">Menu</a>
-    </div>
-  `;
-} else {
-  const p = last.percent;
-  const label = last.rangeLabel || "";
-  const plan = buildPlan(p);
+  // Show loader for a “real app” feel, then render
+  setTimeout(() => {
+    if (!lastQuiz || typeof lastQuiz.percent !== "number") {
+      loadingWrap.style.display = "none";
+      emptyWrap.style.display = "block";
+      return;
+    }
 
-  box.innerHTML = `
-    <div class="row" style="justify-content:space-between; margin-bottom:8px;">
-      <h2 style="margin:0;">${plan.title}</h2>
-      <div class="badge">${p}%</div>
-    </div>
-    ${label ? `<p class="muted" style="margin-top:0;">${label}</p>` : ""}
-    <p>${plan.vibe}</p>
+    const percent = lastQuiz.percent;
+    const plan = planFor(percent);
 
-    <div class="section">
-      <h3>Do this</h3>
-      <ul>${plan.doThis.map(li).join("")}</ul>
-    </div>
+    loadingWrap.style.display = "none";
+    resultWrap.style.display = "block";
 
-    <div class="section">
-      <h3>Don’t do this</h3>
-      <ul>${plan.dont.map(li).join("")}</ul>
-    </div>
+    scoreBadge.textContent = `${percent}%`;
+    planBar.style.width = `${percent}%`;
+    savedAtText.textContent = lastQuiz.savedAt ? `Saved: ${fmtTime(lastQuiz.savedAt)}` : "";
 
-    <div class="section">
-      <h3>Quick scripts</h3>
-      <div class="item">
-        ${plan.script.map(s => `<p style="margin:0 0 8px;"><b>${s}</b></p>`).join("")}
-      </div>
-    </div>
-  `;
-}
+    meaningText.textContent = plan.meaning;
+    ruleText.textContent = plan.rule;
+
+    setList(todayList, plan.today);
+    setList(boundariesList, plan.boundaries);
+    linesBox.innerHTML = quoteCards(plan.lines);
+  }, 850);
+})();
