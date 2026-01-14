@@ -1,187 +1,185 @@
-const APP_KEY = "dd_app_v1";
-function getAppData(){ try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); } catch { return {}; } }
-function setAppData(data){ localStorage.setItem(APP_KEY, JSON.stringify(data)); }
+// quiz.js (FULL FILE)
+// Adds: selected color when you click an answer + stays selected when going Previous
 
-const questions = [
-  { q: "Do you reread texts to find hidden meaning?", h: "Like searching for clues in one word." },
-  { q: "Do you assume silence means they’re mad or losing interest?", h: "No reply = panic." },
-  { q: "Do you overthink punctuation (… / lol / k)?", h: "Dot dot dot trauma." },
-  { q: "Do you check activity (views, snaps, followers) for hints?", h: "Detective mode." },
-  { q: "Do you type a reply, delete it, retype it 10 times?", h: "Pressure to be perfect." },
-  { q: "Do you double-text because you feel ignored?", h: "Chase mode." },
-  { q: "Do you replay the convo in your head for hours?", h: "Looping thoughts." },
-  { q: "Do you ignore obvious signs because you want it to work?", h: "Hope goggles." },
-  { q: "Does your mood depend on their reply?", h: "High/low based on texts." },
-  { q: "Do you excuse disrespect (dry, rude, disappearing)?", h: "Bare minimum defense." }
-];
+(() => {
+  const APP_KEY = "dd_app_v1";
 
-// state
-let i = 0;
-const answers = new Array(questions.length).fill(null); // store vals per question
-
-// DOM
-const qCount = document.getElementById("qCount");
-const progressBadge = document.getElementById("progressBadge");
-const questionText = document.getElementById("questionText");
-const questionHint = document.getElementById("questionHint");
-
-const resultArea = document.getElementById("resultArea");
-const bar = document.getElementById("bar");
-const percentText = document.getElementById("percentText");
-const adviceText = document.getElementById("adviceText");
-const rangeLabelEl = document.getElementById("rangeLabel");
-const examplesBoxEl = document.getElementById("examplesBox");
-
-const prevBtn = document.getElementById("prevBtn");
-const restartQuiz = document.getElementById("restartQuiz");
-const restartBtnTop = document.getElementById("restartBtnTop");
-
-function countAnswered(){
-  return answers.filter(v => v !== null).length;
-}
-
-function currentScore(){
-  // recompute from answers so "Previous" works correctly
-  return answers.reduce((sum, v) => sum + (v ?? 0), 0);
-}
-
-function getRangeInfo(percent){
-  if (percent <= 20){
-    return {
-      label: "0–20% • Super grounded ✅",
-      examples: [
-        "You don’t assume tone from one word.",
-        "You don’t chase for replies.",
-        "You keep your mood steady even if they’re slow."
-      ],
-      advice: "Keep doing you. If something feels off, ask once and watch actions."
-    };
+  function getAppData() {
+    try { return JSON.parse(localStorage.getItem(APP_KEY) || "{}"); }
+    catch { return {}; }
   }
-  if (percent <= 40){
-    return {
-      label: "21–40% • Slight overthink",
-      examples: [
-        "You analyze a bit sometimes (timing, tone).",
-        "You still keep control most of the time.",
-        "You want clarity but don’t fully spiral."
-      ],
-      advice: "Don’t read into small stuff. Look at patterns over time."
-    };
+  function setAppData(d) {
+    localStorage.setItem(APP_KEY, JSON.stringify(d));
   }
-  if (percent <= 60){
-    return {
-      label: "41–60% • Half-delulu 😭",
-      examples: [
-        "You reread texts and overthink silence.",
-        "You feel tempted to double-text.",
-        "You start guessing instead of asking."
-      ],
-      advice: "Ask one clear question then stop. No chasing. Match energy."
-    };
+
+  const $ = (id) => document.getElementById(id);
+
+  // Status + debug
+  const jsStatus = $("jsStatus");
+  const debugMsg = $("debugMsg");
+  function debug(text) {
+    if (!debugMsg) return;
+    debugMsg.style.display = "block";
+    debugMsg.textContent = text;
   }
-  if (percent <= 80){
-    return {
-      label: "61–80% • High delulu (spiral risk)",
-      examples: [
-        "Your mood depends on their replies.",
-        "You ignore red flags because you want it to work.",
-        "You overthink punctuation/response time hard."
-      ],
-      advice: "Pause before replying. One message max. If it’s inconsistent, detach."
-    };
-  }
-  return {
-    label: "81–100% • MAX delulu 🚨",
-    examples: [
-      "Detective mode 24/7.",
-      "Chasing clarity from someone inconsistent.",
-      "Forgiving disrespect / bare minimum."
-    ],
-    advice: "Stop chasing. Protect your dignity. Watch actions, not words."
-  };
-}
 
-function render(){
-  const done = countAnswered();
-  qCount.textContent = `Question ${i+1}/${questions.length}`;
-  progressBadge.textContent = `${Math.round((done/questions.length)*100)}% done`;
+  // show script loaded
+  if (jsStatus) jsStatus.textContent = "JS: LOADED ✅";
 
-  questionText.textContent = questions[i].q;
-  questionHint.textContent = questions[i].h;
-
-  prevBtn.disabled = (i === 0);
-
-  // hide results while taking quiz
-  resultArea.style.display = "none";
-}
-
-function finish(){
-  const max = 3 * questions.length;
-  const score = currentScore();
-  const percent = Math.round((score / max) * 100);
-  const info = getRangeInfo(percent);
-
-  // Save for Plan
-  const data = getAppData();
-  data.lastQuiz = { percent, answers, savedAt: Date.now(), rangeLabel: info.label };
-  setAppData(data);
-
-  // show
-  resultArea.style.display = "block";
-  bar.style.width = `${percent}%`;
-  percentText.textContent = `${percent}% • ${info.label}`;
-  adviceText.textContent = info.advice;
-
-  if (rangeLabelEl) rangeLabelEl.textContent = info.label;
-  if (examplesBoxEl){
-    examplesBoxEl.innerHTML = `
-      <h3 style="margin:0 0 8px;">What this score looks like</h3>
-      <ul style="margin:0; padding-left:18px;">
-        ${info.examples.map(e => `<li>${e}</li>`).join("")}
-      </ul>
-    `;
-  }
-}
-
-function goNext(){
-  // if reached end and all answered, finish
-  if (i >= questions.length - 1){
-    // If user skipped somehow, force to last unanswered
-    const firstUnanswered = answers.findIndex(v => v === null);
-    if (firstUnanswered !== -1){
-      i = firstUnanswered;
-      render();
-      return;
-    }
-    finish();
+  // Age gate
+  const user = getAppData();
+  if (!user.age || Number(user.age) < 18) {
+    window.location.replace("start.html");
     return;
   }
-  i++;
-  render();
-}
 
-document.querySelectorAll("button[data-val]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const val = Number(btn.dataset.val);
-    answers[i] = val;
-    goNext();
+  // Required DOM
+  const qCount = $("qCount");
+  const progressBadge = $("progressBadge");
+  const questionText = $("questionText");
+  const questionHint = $("questionHint");
+  const prevBtn = $("prevBtn");
+  const restartBtnTop = $("restartBtnTop");
+  const restartQuiz = $("restartQuiz");
+
+  const resultArea = $("resultArea");
+  const bar = $("bar");
+  const percentText = $("percentText");
+  const adviceText = $("adviceText");
+
+  const choiceButtons = Array.from(document.querySelectorAll("button[data-val]"));
+
+  if (
+    !qCount || !progressBadge || !questionText || !questionHint ||
+    !prevBtn || !restartBtnTop || !resultArea || !bar ||
+    !percentText || !adviceText || choiceButtons.length === 0
+  ) {
+    debug("Quiz page HTML is missing required elements. Make sure you pasted quiz.html exactly.");
+    if (jsStatus) jsStatus.textContent = "JS: ERROR ❌";
+    return;
+  }
+
+  // Questions
+  const questions = [
+    { q: "Do you reread texts to find hidden meaning?", h: "Searching for clues in one word." },
+    { q: "Do you assume silence means they’re mad or losing interest?", h: "No reply = panic." },
+    { q: "Do you overthink punctuation (… / lol / k)?", h: "Dot dot dot trauma." },
+    { q: "Do you check activity for hints?", h: "Detective mode." },
+    { q: "Do you type/delete/retype a reply a lot?", h: "Pressure to be perfect." },
+    { q: "Do you double-text because you feel ignored?", h: "Chase mode." },
+    { q: "Do you replay the convo in your head for hours?", h: "Looping thoughts." },
+    { q: "Do you ignore signs because you want it to work?", h: "Hope goggles." },
+    { q: "Does your mood depend on their reply?", h: "High/low based on texts." },
+    { q: "Do you excuse disrespect (dry/rude/disappearing)?", h: "Bare minimum defense." }
+  ];
+
+  // State
+  let idx = 0;
+  const answers = new Array(questions.length).fill(null);
+
+  function answeredCount() {
+    return answers.filter(v => v !== null).length;
+  }
+
+  function scoreNow() {
+    return answers.reduce((s, v) => s + (v ?? 0), 0);
+  }
+
+  // ✅ NEW: highlight chosen answer
+  function highlightSelected() {
+    choiceButtons.forEach(btn => btn.classList.remove("selected"));
+    if (answers[idx] !== null) {
+      const match = choiceButtons.find(b => Number(b.dataset.val) === answers[idx]);
+      if (match) match.classList.add("selected");
+    }
+  }
+
+  function render() {
+    const done = answeredCount();
+
+    qCount.textContent = `Question ${idx + 1}/${questions.length}`;
+    progressBadge.textContent = `${Math.round((done / questions.length) * 100)}% done`;
+
+    questionText.textContent = questions[idx].q;
+    questionHint.textContent = questions[idx].h;
+
+    prevBtn.disabled = (idx === 0);
+    resultArea.style.display = "none";
+
+    highlightSelected(); // ✅ keeps selected color when you go back
+
+    if (jsStatus) jsStatus.textContent = "JS: RUNNING ✅";
+    if (debugMsg) debugMsg.style.display = "none";
+  }
+
+  function finish() {
+    const max = 3 * questions.length;
+    const percent = Math.round((scoreNow() / max) * 100);
+
+    const advice =
+      percent >= 80 ? "MAX delulu 🚨 — stop chasing, watch actions." :
+      percent >= 60 ? "High delulu — pause before replying, don’t double-text." :
+      percent >= 40 ? "Half-delulu 😭 — ask once then step back." :
+      percent >= 20 ? "Slight overthink — focus on patterns." :
+                      "Super grounded ✅ — keep standards.";
+
+    const data = getAppData();
+    data.lastQuiz = { percent, answers, savedAt: Date.now() };
+    setAppData(data);
+
+    resultArea.style.display = "block";
+    bar.style.width = `${percent}%`;
+    percentText.textContent = `${percent}%`;
+    adviceText.textContent = advice;
+
+    if (jsStatus) jsStatus.textContent = "JS: DONE ✅";
+  }
+
+  function next() {
+    if (idx >= questions.length - 1) {
+      const firstUnanswered = answers.findIndex(v => v === null);
+      if (firstUnanswered !== -1) {
+        idx = firstUnanswered;
+        render();
+        debug("Answer the skipped question before finishing.");
+        return;
+      }
+      finish();
+      return;
+    }
+    idx++;
+    render();
+  }
+
+  // ✅ NEW: click handler highlights then moves next after a tiny delay
+  choiceButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const val = Number(btn.dataset.val);
+      answers[idx] = val;
+
+      highlightSelected(); // show selected state
+
+      // delay so you SEE the color before switching questions
+      setTimeout(() => {
+        next();
+      }, 180);
+    });
   });
-});
 
-prevBtn.addEventListener("click", () => {
-  if (i > 0) i--;
+  prevBtn.addEventListener("click", () => {
+    if (idx > 0) idx--;
+    render();
+  });
+
+  function restartAll() {
+    for (let k = 0; k < answers.length; k++) answers[k] = null;
+    idx = 0;
+    render();
+  }
+
+  restartBtnTop.addEventListener("click", restartAll);
+  if (restartQuiz) restartQuiz.addEventListener("click", restartAll);
+
+  // Start
   render();
-});
-
-function restartAll(){
-  for (let k=0;k<answers.length;k++) answers[k] = null;
-  i = 0;
-  if (examplesBoxEl) examplesBoxEl.innerHTML = "";
-  if (rangeLabelEl) rangeLabelEl.textContent = "";
-  render();
-}
-
-restartQuiz.addEventListener("click", restartAll);
-restartBtnTop.addEventListener("click", restartAll);
-
-render();
+})();
