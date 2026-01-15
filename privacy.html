@@ -126,3 +126,78 @@
   </script>
 </body>
 </html>
+
+<script>
+  // If locked, go locked
+  if (isLocked()) location.replace("locked.html");
+
+  // If already verified, go in
+  if (hasAcceptedTerms() && isAdultVerified()) {
+    location.replace(safeNextFromURL("menu.html"));
+  }
+
+  const ageEl = document.getElementById("age");
+  const agreeEl = document.getElementById("agree");
+  const btn = document.getElementById("continue");
+  const msg = document.getElementById("msg");
+
+  function ageNum(){
+    const n = Number(ageEl.value);
+    return Number.isFinite(n) ? Math.floor(n) : 0;
+  }
+
+  function setMsg(text, kind=""){
+    msg.textContent = text || "";
+    msg.className = "mock-msg " + (kind || "");
+  }
+
+  // IMPORTANT: if user ever enters under 18, lock and leave instantly
+  function lockIfUnder18(age){
+    if (age > 0 && age < 18) {
+      // save locked state
+      verifyAge(age);
+      // immediately leave, don't allow changing
+      location.replace("locked.html");
+      return true;
+    }
+    return false;
+  }
+
+  function sync(){
+    const age = ageNum();
+
+    // instant kick
+    if (lockIfUnder18(age)) return;
+
+    const ok = agreeEl.checked && age >= 18;
+    btn.disabled = !ok;
+
+    if (!ageEl.value) setMsg("");
+    else if (age >= 18 && !agreeEl.checked) setMsg("Check the box to continue.", "bad");
+    else if (age >= 18 && agreeEl.checked) setMsg("Verified inputs. You can continue.", "ok");
+  }
+
+  // Listen to ALL changes
+  ["input","change","keyup"].forEach(evt => ageEl.addEventListener(evt, sync));
+  agreeEl.addEventListener("change", sync);
+
+  // If button is enabled, clicking should ALWAYS work
+  btn.addEventListener("click", () => {
+    const age = ageNum();
+
+    if (lockIfUnder18(age)) return;
+
+    if (age < 18) { setMsg("Enter a valid age (18+).", "bad"); return; }
+    if (!agreeEl.checked) { setMsg("You must accept the Terms.", "bad"); return; }
+
+    acceptTerms();
+    verifyAge(age);
+
+    // go to app
+    location.replace(safeNextFromURL("menu.html"));
+  });
+
+  // initial state
+  sync();
+</script>
+
