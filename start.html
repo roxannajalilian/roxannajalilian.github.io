@@ -4,40 +4,38 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Age Check</title>
-
-  <!-- IMPORTANT: bump version to force GitHub Pages to reload CSS -->
-  <link rel="stylesheet" href="style.css?v=55555" />
-  <script src="shared.js?v=55555"></script>
+  <link rel="stylesheet" href="style.css?v=70001" />
+  <script src="shared.js?v=70001"></script>
 </head>
-
 <body class="start-page">
+  <!-- no nav here so you can't skip verification -->
   <main class="gate">
     <section class="gate-card">
       <div class="gate-head">
         <div class="logo">DD</div>
         <div>
           <h1 class="gate-title">Delulu Detector</h1>
-          <p class="gate-sub muted">18+ only</p>
+          <p class="muted" style="margin:2px 0 0;">18+ only</p>
         </div>
       </div>
 
-      <p class="muted gate-text">
-        Confirm you’re <b>18 or older</b> to access the Menu, Quiz, Plan, Analysis, and Game.
+      <p class="muted" style="margin:0 0 14px;">
+        Enter your age to access the app.
       </p>
 
       <label for="ageInput">Enter your age</label>
       <input id="ageInput" type="number" inputmode="numeric" placeholder="18+" />
 
-      <p id="errorText" class="gate-error" style="display:none;"></p>
+      <p id="errorText" style="display:none; margin:10px 0 0; color:#ffb4b4; font-weight:900;"></p>
 
       <div class="row" style="margin-top:14px;">
         <button class="btn primary" id="continueBtn" type="button">Continue</button>
-        <a class="btn ghost" href="privacy.html">Privacy + Terms</a>
+        <a class="btn ghost" href="index.html">Back</a>
       </div>
 
       <div class="hr"></div>
       <p class="muted small" style="margin:0;">
-        Stored on this device only (localStorage). Nothing is uploaded.
+        Stored on your device only (localStorage).
       </p>
     </section>
   </main>
@@ -55,8 +53,8 @@
 
     continueBtn.addEventListener("click", () => {
       const age = Number(ageInput.value);
-
       if (!age || age < 1) return showError("Enter a real age first.");
+
       if (age < 18) {
         const d = getAppData();
         d.age = age;
@@ -67,7 +65,6 @@
         return;
       }
 
-      errorText.style.display = "none";
       const d = getAppData();
       d.age = age;
       d.ageVerifiedAt = Date.now();
