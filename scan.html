@@ -4,13 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Analysis</title>
-
-  <link rel="stylesheet" href="style.css?v=900" />
-  <script src="shared.js?v=900"></script>
+  <link rel="stylesheet" href="style.css?v=20" />
+  <script src="shared.js?v=20"></script>
   <script>requireAdult("scan.html");</script>
 </head>
-
-<body class="scan-page">
+<body>
   <nav>
     <div class="brand">
       <div class="logo">DD</div>
@@ -19,7 +17,6 @@
         <div class="sub">Paste convo + optional screenshot</div>
       </div>
     </div>
-
     <div class="nav-actions">
       <a class="btn ghost" href="menu.html">Menu</a>
       <a class="btn ghost" href="plan.html">Plan</a>
@@ -28,67 +25,49 @@
   </nav>
 
   <div class="container">
-    <div class="card">
-      <div class="grid-2">
-        <!-- LEFT -->
-        <div class="tile">
-          <h2 style="margin:0 0 6px;">Paste the messages</h2>
-          <p class="muted" style="margin:0 0 12px;">
-            This scores patterns from your pasted text (dry replies, "k", "seen", question marks, mixed signals, etc.).
-          </p>
+    <div class="card grid-2">
+      <div>
+        <h2 style="margin:0 0 6px;">Paste the messages</h2>
+        <p class="muted" style="margin:0 0 10px;">
+          It checks for patterns (dry replies, mixed signals, shutdown words, chasing, etc.).
+        </p>
 
-          <label for="scanText">Conversation text</label>
-          <textarea id="scanText" rows="7" placeholder="Paste conversation text here..."></textarea>
+        <textarea id="scanText" rows="8" placeholder="Paste conversation text here..."></textarea>
 
-          <div style="height:10px"></div>
-
+        <div class="section">
           <label for="scanFile">Optional screenshot</label>
           <input id="scanFile" type="file" accept="image/*" />
-
-          <div class="row" style="margin-top:14px;">
-            <button class="btn primary" id="analyzeBtn" type="button">Analyze</button>
-            <button class="btn ghost" id="clearBtn" type="button">Clear</button>
-          </div>
-
-          <p class="muted small" id="scanError" style="display:none; margin-top:10px; color:#ffb4b4; font-weight:800;"></p>
+          <div id="fileInfo" class="muted small" style="margin-top:8px;"></div>
+          <img id="preview" alt="" style="display:none; margin-top:10px; width:100%; border-radius:16px; border:1px solid rgba(255,255,255,.12);" />
         </div>
 
-        <!-- RIGHT -->
+        <div class="row" style="margin-top:12px;">
+          <button class="btn primary" id="analyzeBtn" type="button">Analyze</button>
+          <button class="btn ghost" id="clearBtn" type="button">Clear</button>
+          <a class="btn ghost" href="menu.html">Back</a>
+        </div>
+      </div>
+
+      <div>
+        <h2 style="margin:0 0 6px;">Result</h2>
+        <p class="muted" style="margin:0 0 12px;">Score + explanation + signals it found.</p>
+
         <div class="tile">
-          <h2 style="margin:0 0 6px;">Result</h2>
-          <p class="muted" style="margin:0 0 12px;">Score + explanation + signals it found.</p>
-
-          <div class="tile" style="background:rgba(255,255,255,.04);">
-            <div class="row" style="justify-content:space-between;">
-              <div style="font-weight:900;">Delulu Signal %</div>
-              <div class="muted small" id="scanStatus">No scan yet</div>
-            </div>
-
-            <div class="progress" style="margin:10px 0;">
-              <div id="scanBar"></div>
-            </div>
-
-            <div style="font-size:40px; font-weight:1000; line-height:1;" id="scanPercent">--%</div>
-            <div class="muted" id="scanOneLiner" style="margin-top:6px;">Paste text and press Analyze.</div>
-
-            <div class="hr"></div>
-
-            <div id="signalsWrap">
-              <div style="font-weight:900; margin-bottom:8px;">Signals found</div>
-              <div class="plan-quotes" id="signalsGrid"></div>
-            </div>
-
-            <div class="hr"></div>
-
-            <div style="font-weight:900; margin-bottom:6px;">Bestie explanation</div>
-            <p class="muted" id="scanExplain" style="margin:0;">—</p>
+          <div class="row" style="justify-content:space-between;">
+            <div style="font-weight:900;">Delulu Signal %</div>
+            <div class="muted small" id="scanMeta">No scan yet</div>
           </div>
+          <div class="progress" style="margin:10px 0;"><div id="scanBar"></div></div>
+          <div style="font-size:28px; font-weight:950;" id="scanPercent">--%</div>
+          <div class="muted" id="scanSummary">Paste text and press Analyze.</div>
+
+          <div class="hr"></div>
+          <div id="signalsList" class="plan-quotes"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- REAL JS -->
-  <script src="scan.js?v=900"></script>
+  <script src="scan.js?v=20"></script>
 </body>
 </html>
