@@ -6,51 +6,64 @@
   <title>Terms & Conditions</title>
   <link rel="stylesheet" href="style.css" />
   <script src="shared.js"></script>
+
+  <style>
+    /* ensures checkbox shows even if style.css is aggressive */
+    .terms-row{display:flex;gap:12px;align-items:flex-start;margin-top:14px;padding:12px;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:rgba(255,255,255,.04);}
+    .terms-row input[type="checkbox"]{appearance:auto !important;-webkit-appearance:checkbox !important;width:18px;height:18px;margin-top:2px;cursor:pointer;}
+    .terms-row label{cursor:pointer;line-height:1.35;user-select:none;}
+    .btn-disabled{opacity:.55;pointer-events:none;}
+  </style>
 </head>
 <body>
+
   <div class="container">
     <div class="card">
       <h1>Terms & Conditions</h1>
-      <p class="muted">You must agree before continuing.</p>
+      <p class="muted">You must agree to continue.</p>
 
       <div class="card" style="margin-top:12px;">
-        <p><strong>18+ Only:</strong> This app is intended for users aged 18 or older.</p>
-        <p><strong>Local storage:</strong> Your responses may be saved in your browser on this device.</p>
-        <p><strong>No selling/sharing:</strong> We do not sell or share your data.</p>
-        <p><strong>Safety:</strong> If content suggests harm or danger, the app may restrict access and suggest support resources.</p>
+        <p><strong>Age requirement:</strong> This app is intended for users aged <strong>18+</strong>.</p>
+        <p><strong>Privacy:</strong> Info you enter may be stored locally in your browser on this device.</p>
+        <p><strong>No selling/sharing:</strong> We do not sell or share personal data.</p>
+        <p><strong>Safety:</strong> If content suggests harm or danger, access may be restricted and support resources may be suggested.</p>
       </div>
 
-      <div style="display:flex; gap:10px; align-items:flex-start; margin-top:14px;">
-        <input id="agree" type="checkbox" style="width:18px;height:18px;" />
-        <label for="agree" style="cursor:pointer;">
-          I have read and agree to the Terms & Conditions and Privacy Policy.
-        </label>
+      <div class="terms-row">
+        <input id="agree" type="checkbox">
+        <label for="agree">I have read and agree to the Terms & Conditions and Privacy Policy.</label>
       </div>
 
-      <button id="continueBtn" disabled style="margin-top:14px; opacity:.6;">Continue</button>
+      <button id="continueBtn" class="btn-disabled" type="button" style="margin-top:14px;">Continue</button>
     </div>
   </div>
 
   <script>
-    // If already locked, go locked
+    // If locked, always go locked
     if (isLocked()) location.replace("locked.html");
 
-    // If already accepted, skip to age page
-    if (hasAcceptedTerms()) location.replace("age.html?next=" + encodeURIComponent(safeNextFromURL()));
+    // If already accepted terms, go to age page
+    const already = hasAcceptedTerms();
+    if (already) {
+      location.replace("age.html?next=" + encodeURIComponent(safeNextFromURL("index.html")));
+    }
 
     const agree = document.getElementById("agree");
     const btn = document.getElementById("continueBtn");
 
-    agree.addEventListener("change", () => {
-      btn.disabled = !agree.checked;
-      btn.style.opacity = agree.checked ? "1" : ".6";
-    });
+    function sync() {
+      if (agree.checked) btn.classList.remove("btn-disabled");
+      else btn.classList.add("btn-disabled");
+    }
+    agree.addEventListener("change", sync);
+    sync();
 
     btn.addEventListener("click", () => {
       if (!agree.checked) return;
       acceptTerms();
-      location.href = "age.html?next=" + encodeURIComponent(safeNextFromURL());
+      location.href = "age.html?next=" + encodeURIComponent(safeNextFromURL("index.html"));
     });
   </script>
+
 </body>
 </html>
