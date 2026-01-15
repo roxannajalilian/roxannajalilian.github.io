@@ -2,28 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Access Denied</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Locked</title>
   <link rel="stylesheet" href="style.css">
+  <script src="shared.js"></script>
 </head>
 <body>
-
-<div class="container">
-  <div class="card center">
-    <h1>Access Restricted</h1>
-    <p>
-      Sorry — this app is restricted to users 18 and older.
-    </p>
-    <p>
-      You cannot access this content at this time.
-    </p>
+  <div class="container">
+    <div class="card center">
+      <h1>Access Locked</h1>
+      <p>Sorry — you must be 18 or older to use this app.</p>
+    </div>
   </div>
-</div>
 
-<script>
-if (localStorage.getItem("blocked") !== "true") {
-  window.location.href = "privacy.html";
-}
-</script>
-
+  <script>
+    const g = getGate();
+    if (!g.locked) window.location.href = "privacy.html";
+  </script>
 </body>
 </html>
