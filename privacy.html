@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Deleyhlu Detector • Verify</title>
+  <title>Delulu Detector • Age + Terms</title>
   <link rel="stylesheet" href="style.css" />
   <script src="shared.js"></script>
 
   <style>
-    /* big glowy title */
+    /* make the big title glow */
     .hero-title{
       margin: 0 0 6px;
       font-size: clamp(2.2rem, 5vw, 3.2rem);
@@ -58,8 +58,6 @@
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.02);
     }
-
-    /* make sure checkbox shows even if CSS hides it */
     .terms-row input[type="checkbox"]{
       appearance: auto !important;
       -webkit-appearance: checkbox !important;
@@ -68,12 +66,11 @@
       margin-top: 2px;
       cursor: pointer;
     }
-
     .terms-row label{ cursor:pointer; line-height:1.35; user-select:none; }
 
-    .actions{ display:flex; gap:10px; margin-top:14px; }
-    .btn-wide{ width:100%; }
-    .msg{ margin-top:10px; color: rgba(255,255,255,.85); min-height: 18px; }
+    .msg{ margin-top:10px; min-height: 18px; }
+    .msg.bad{ color: rgba(255,160,160,.95); }
+    .msg.ok{ color: rgba(180,255,200,.95); }
   </style>
 </head>
 
@@ -81,23 +78,24 @@
   <div class="container">
     <div class="card">
 
-      <h1 class="hero-title">Deleyhlu Detector</h1>
+      <h1 class="hero-title">Delulu Detector</h1>
       <p class="hero-sub">Age verification + Terms required to continue.</p>
 
       <!-- AGE -->
       <div class="box">
-        <label for="age">Enter your age</label>
-        <input id="age" type="number" min="1" placeholder="e.g., 18" />
-        <p class="small muted" style="margin:10px 0 0;">You must be 18+ to access this app.</p>
+        <h2 style="margin:0 0 8px;">Enter your age</h2>
+        <p class="muted" style="margin:0 0 10px;">You must be 18+ to continue.</p>
+
+        <input id="age" type="number" min="1" inputmode="numeric" placeholder="e.g., 18" />
       </div>
 
       <!-- TERMS -->
-      <div class="box" style="margin-top:14px;">
-        <h2 style="margin:0 0 10px; font-size:1.05rem;">Terms & Conditions</h2>
+      <div class="box">
+        <h2 style="margin:0 0 10px;">Terms & Conditions</h2>
         <p style="margin:0 0 8px;"><strong>18+ only:</strong> This app is intended for adults.</p>
-        <p style="margin:0 0 8px;"><strong>Privacy:</strong> Anything you enter is stored locally in your browser on this device.</p>
+        <p style="margin:0 0 8px;"><strong>Privacy:</strong> Your inputs may be stored locally in your browser on this device.</p>
         <p style="margin:0 0 8px;"><strong>No selling/sharing:</strong> We do not collect or sell personal data.</p>
-        <p style="margin:0;"><strong>Safety:</strong> Harm-related content may restrict access and show support resources.</p>
+        <p style="margin:0;"><strong>Safety:</strong> Harm-related content may restrict access and suggest support resources.</p>
 
         <div class="terms-row">
           <input id="agree" type="checkbox" />
@@ -105,20 +103,17 @@
         </div>
       </div>
 
-      <div class="actions">
-        <button id="continue" class="btn btn-wide" type="button" disabled>Continue</button>
-      </div>
-
+      <button id="continue" class="btn primary" type="button" disabled>Continue</button>
       <div id="msg" class="msg small"></div>
 
     </div>
   </div>
 
   <script>
-    // If locked, go locked
+    // If locked, always go to locked page
     if (isLocked()) location.replace("locked.html");
 
-    // If already verified, enter app
+    // If already verified, go into app
     if (hasAcceptedTerms() && isAdultVerified()) {
       location.replace(safeNextFromURL("menu.html"));
     }
@@ -128,36 +123,55 @@
     const btn = document.getElementById("continue");
     const msg = document.getElementById("msg");
 
-    function sync(){
-      const age = Number(ageEl.value);
-      btn.disabled = !(agreeEl.checked && age > 0);
+    function readAge() {
+      const v = Number(ageEl.value);
+      if (!Number.isFinite(v)) return 0;
+      return Math.floor(v);
     }
-    ageEl.addEventListener("input", sync);
-    agreeEl.addEventListener("change", sync);
-    sync();
 
-    btn.addEventListener("click", () => {
-      msg.textContent = "";
+    function setMsg(text, kind="") {
+      msg.textContent = text || "";
+      msg.className = "msg small " + (kind || "");
+    }
 
-      const age = Number(ageEl.value);
-      if (!age || age <= 0) { msg.textContent = "Enter a valid age."; return; }
-      if (!agreeEl.checked) { msg.textContent = "You must accept the Terms to continue."; return; }
+    function sync() {
+      const age = readAge();
+      const ok = agreeEl.checked && age >= 18;
+      btn.disabled = !ok;
 
-      acceptTerms();
-      const res = verifyAge(age);
+      // live feedback
+      if (!ageEl.value) setMsg("");
+      else if (age > 0 && age < 18) setMsg("Under 18 → access will be locked.", "bad");
+      else if (age >= 18 && agreeEl.checked) setMsg("You can continue.", "ok");
+      else if (age >= 18 && !agreeEl.checked) setMsg("Check the box to continue.", "bad");
+    }
 
-      if (!res.ok && res.reason === "under18") {
+    // IMPORTANT: handle EVERY way numbers change
+    ["input","change","keyup"].forEach(evt => ageEl.addEventListener(evt, () => {
+      const age = readAge();
+
+      // if they enter under 18, lock + redirect immediately (what you asked)
+      if (age > 0 && age < 18) {
+        verifyAge(age);      // sets locked=true in storage
         location.replace("locked.html");
         return;
       }
-      if (!res.ok) {
-        msg.textContent = "Enter a valid age.";
-        return;
-      }
+      sync();
+    }));
 
+    agreeEl.addEventListener("change", sync);
+
+    btn.addEventListener("click", () => {
+      const age = readAge();
+      if (age < 18) { verifyAge(age); location.replace("locked.html"); return; }
+      if (!agreeEl.checked) { setMsg("You must accept the Terms to continue.", "bad"); return; }
+
+      acceptTerms();
+      verifyAge(age);
       location.replace(safeNextFromURL("menu.html"));
     });
+
+    sync();
   </script>
 </body>
 </html>
-
