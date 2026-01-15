@@ -3,121 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Verify</title>
+  <title>Delulu Detector • Locked</title>
   <link rel="stylesheet" href="style.css" />
   <script src="shared.js"></script>
 </head>
 <body>
-
   <div class="app-shell">
-
-    <div class="statusbar">
-      <span>● ● ●</span>
-      <span>Secure gate • Local-only</span>
-    </div>
-
     <div class="app-top">
       <div class="brand-left">
         <div class="app-icon">DD</div>
         <div>
           <h1 class="hero-title">Delulu Detector</h1>
-          <p class="hero-sub">Verify age + accept Terms to continue</p>
+          <p class="hero-sub">Access restricted</p>
         </div>
       </div>
-      <div class="chip">18+ Required</div>
+      <div class="chip">Locked</div>
     </div>
 
     <div class="stack">
       <div class="panel">
-        <h2>Enter your age</h2>
-        <p class="help">You must be 18+ to use this app.</p>
-        <input id="age" type="number" min="1" inputmode="numeric" placeholder="e.g., 18" />
+        <h2>Access Locked</h2>
+        <p class="help">This app is restricted to users 18 and older.</p>
+        <button class="btn" data-reset-app type="button">Reset</button>
       </div>
-
-      <div class="panel">
-        <h2>Terms & Conditions</h2>
-        <p class="help"><strong>Privacy:</strong> Inputs may be stored locally in your browser on this device.</p>
-        <p class="help"><strong>No selling/sharing:</strong> We do not collect or sell personal data.</p>
-        <p class="help"><strong>Safety:</strong> Harm-related content may restrict access and suggest support resources.</p>
-
-        <div class="terms-row">
-          <input id="agree" type="checkbox" />
-          <label for="agree">I agree to the Terms & Conditions and Privacy Policy.</label>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="bottom-bar">
-    <div class="bottom-inner">
-      <div id="msg" class="msg"></div>
-      <button id="continue" class="btn primary" type="button" disabled>Continue</button>
     </div>
   </div>
 
   <script>
-    // already locked? go locked
-    if (isLocked()) location.replace("locked.html");
-
-    // already verified? go in
-    if (hasAcceptedTerms() && isAdultVerified()) {
-      location.replace(safeNextFromURL("menu.html"));
-    }
-
-    const ageEl = document.getElementById("age");
-    const agreeEl = document.getElementById("agree");
-    const btn = document.getElementById("continue");
-    const msg = document.getElementById("msg");
-
-    function ageNum(){
-      const n = Number(ageEl.value);
-      return Number.isFinite(n) ? Math.floor(n) : 0;
-    }
-
-    function setMsg(text, kind=""){
-      msg.textContent = text || "";
-      msg.className = "msg " + (kind || "");
-    }
-
-    function sync(){
-      const age = ageNum();
-      const ok = agreeEl.checked && age >= 18;
-      btn.disabled = !ok;
-
-      if (!ageEl.value && !agreeEl.checked) setMsg("");
-      else if (age > 0 && age < 18) setMsg("Under 18 → access will be locked.", "bad");
-      else if (age >= 18 && !agreeEl.checked) setMsg("Check the box to continue.", "bad");
-      else if (age >= 18 && agreeEl.checked) setMsg("Ready.", "ok");
-    }
-
-    // IMPORTANT: fire on every change style
-    ["input","change","keyup"].forEach(evt => ageEl.addEventListener(evt, () => {
-      const age = ageNum();
-
-      // instant lockout under 18
-      if (age > 0 && age < 18) {
-        verifyAge(age);
-        location.replace("locked.html");
-        return;
-      }
-      sync();
-    }));
-
-    agreeEl.addEventListener("change", sync);
-
-    btn.addEventListener("click", () => {
-      const age = ageNum();
-      if (age < 18) { verifyAge(age); location.replace("locked.html"); return; }
-      if (!agreeEl.checked) { setMsg("You must accept the Terms.", "bad"); return; }
-
-      acceptTerms();
-      verifyAge(age);
-      location.replace(safeNextFromURL("menu.html"));
-    });
-
-    sync();
+    if (!isLocked()) location.replace("privacy.html");
   </script>
-
 </body>
 </html>
