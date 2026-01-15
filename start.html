@@ -4,51 +4,46 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Age Check</title>
-  <link rel="stylesheet" href="style.css?v=20" />
-  <script src="shared.js?v=20"></script>
-</head>
-<body>
-  <!-- NO NAV ON PURPOSE: you can't click into the app without verifying -->
 
-  <div class="container">
-    <div class="card gate-card">
+  <!-- IMPORTANT: bump version to force GitHub Pages to reload CSS -->
+  <link rel="stylesheet" href="style.css?v=55555" />
+  <script src="shared.js?v=55555"></script>
+</head>
+
+<body class="start-page">
+  <main class="gate">
+    <section class="gate-card">
       <div class="gate-head">
         <div class="logo">DD</div>
         <div>
           <h1 class="gate-title">Delulu Detector</h1>
-          <p class="muted gate-sub">18+ only</p>
+          <p class="gate-sub muted">18+ only</p>
         </div>
       </div>
 
-      <p class="muted" style="margin-top:0;">
-        This app is intended for adults. Confirm you are <b>18 or older</b> to access the Menu, Quiz, Plan, Analysis, and Game.
+      <p class="muted gate-text">
+        Confirm you’re <b>18 or older</b> to access the Menu, Quiz, Plan, Analysis, and Game.
       </p>
 
-      <div class="section">
-        <label for="ageInput">Enter your age (18+)</label>
-        <input id="ageInput" type="number" inputmode="numeric" min="18" placeholder="18+" />
-        <p id="errorText" class="error" style="display:none;"></p>
-      </div>
+      <label for="ageInput">Enter your age</label>
+      <input id="ageInput" type="number" inputmode="numeric" placeholder="18+" />
+
+      <p id="errorText" class="gate-error" style="display:none;"></p>
 
       <div class="row" style="margin-top:14px;">
         <button class="btn primary" id="continueBtn" type="button">Continue</button>
-        <a class="btn ghost" href="privacy.html">Privacy</a>
+        <a class="btn ghost" href="privacy.html">Privacy + Terms</a>
       </div>
 
       <div class="hr"></div>
       <p class="muted small" style="margin:0;">
-        Your age is stored only to verify access (in your browser). No data is sent anywhere.
+        Stored on this device only (localStorage). Nothing is uploaded.
       </p>
-    </div>
-  </div>
+    </section>
+  </main>
 
   <script>
-    // If already verified, go straight where they intended
-    if (isAdultVerified()) {
-      location.replace(safeNextFromURL());
-    }
-
-    const NEXT = safeNextFromURL();
+    const NEXT = safeNextFromURL("menu.html");
     const ageInput = document.getElementById("ageInput");
     const continueBtn = document.getElementById("continueBtn");
     const errorText = document.getElementById("errorText");
@@ -61,24 +56,29 @@
     continueBtn.addEventListener("click", () => {
       const age = Number(ageInput.value);
 
-      if (!age) return showError("Enter your age first.");
-      if (age < 18) return showError("Sorry — this app is 18+ only.");
+      if (!age || age < 1) return showError("Enter a real age first.");
+      if (age < 18) {
+        const d = getAppData();
+        d.age = age;
+        d.lockedOut = true;
+        d.lockedOutAt = Date.now();
+        setAppData(d);
+        location.replace("locked.html");
+        return;
+      }
 
       errorText.style.display = "none";
+      const d = getAppData();
+      d.age = age;
+      d.ageVerifiedAt = Date.now();
+      d.lockedOut = false;
+      setAppData(d);
 
-      const data = getAppData();
-      data.age = age;
-      data.ageVerifiedAt = Date.now();
-      setAppData(data);
-
-      location.href = NEXT; // go to intended page (or menu.html)
+      location.replace(NEXT);
     });
 
     ageInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        continueBtn.click();
-      }
+      if (e.key === "Enter") continueBtn.click();
     });
   </script>
 </body>
