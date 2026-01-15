@@ -27,12 +27,13 @@ function isLocked() {
 }
 
 /* ---------- Safe "next" handling ---------- */
-function safeNextFromURL() {
+function safeNextFromURL(defaultNext = "index.html") {
   const params = new URLSearchParams(location.search);
-  const next = params.get("next") || "menu.html";
+  const next = params.get("next") || defaultNext;
 
-  // allow ONLY these pages
+  // allow ONLY these pages (add more if you have them)
   const allowed = new Set([
+    "index.html",
     "menu.html",
     "quiz.html",
     "plan.html",
@@ -40,40 +41,27 @@ function safeNextFromURL() {
     "game.html",
     "privacy.html",
     "age.html",
-    "locked.html",
-    "start.html",
-    "index.html"
+    "locked.html"
   ]);
 
-  // normalize to filename only
   const file = next.split("/").pop().split("?")[0].split("#")[0];
-  return allowed.has(file) ? file : "menu.html";
+  return allowed.has(file) ? file : defaultNext;
 }
 
-/* ---------- Main guard (use on protected pages) ---------- */
-/**
- * Use on ALL protected pages (menu/quiz/plan/scan/game/etc):
- * <script src="shared.js"></script>
- * <script>requireGate("menu.html");</script>
- *
- * Do NOT use on: privacy.html, age.html, locked.html, start.html
- */
-function requireGate(currentPage = "menu.html") {
+
+function requireGate(currentPage = "index.html") {
   const d = getAppData();
 
-  // If locked, always redirect to locked page
   if (d.locked === true) {
     location.replace("locked.html");
     return;
   }
 
-  // Must accept terms first
   if (d.termsAccepted !== true) {
     location.replace(`privacy.html?next=${encodeURIComponent(currentPage)}`);
     return;
   }
 
-  // Then must verify age
   if (d.ageVerified !== true || Number(d.age) < 18) {
     location.replace(`age.html?next=${encodeURIComponent(currentPage)}`);
     return;
@@ -119,5 +107,4 @@ function wireResetButtons() {
     btn.addEventListener("click", () => resetApp(true));
   });
 }
-
 document.addEventListener("DOMContentLoaded", wireResetButtons);
