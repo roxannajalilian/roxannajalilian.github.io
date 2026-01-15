@@ -2,78 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Delulu Detector • Age Check</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Delulu Detector</title>
   <link rel="stylesheet" href="style.css" />
+
   <script src="shared.js"></script>
-</head>
-<body>
-
-  <div class="container">
-    <div class="card" style="max-width:520px; margin:80px auto;">
-
-      <div style="display:flex; gap:14px; align-items:center; margin-bottom:14px;">
-        <div class="logo">DD</div>
-        <div>
-          <h1 style="margin:0;">Delulu Detector</h1>
-          <p class="muted" style="margin:2px 0 0;">18+ only</p>
-        </div>
-      </div>
-
-      <p class="muted">
-        You must verify you are <b>18 or older</b> to access this website.
-      </p>
-
-      <label for="ageInput">Enter your age</label>
-      <input
-        id="ageInput"
-        type="number"
-        min="18"
-        placeholder="18+ only"
-      />
-
-      <p id="errorText" style="display:none; color:#ff7a7a; font-weight:700; margin-top:8px;"></p>
-
-      <div class="row" style="margin-top:14px;">
-        <button class="btn primary" id="continueBtn">Continue</button>
-      </div>
-
-      <div class="hr"></div>
-
-      <p class="muted small">
-        Your age is stored locally only for access verification.
-      </p>
-
-    </div>
-  </div>
-
   <script>
-    const ageInput = document.getElementById("ageInput");
-    const continueBtn = document.getElementById("continueBtn");
-    const errorText = document.getElementById("errorText");
-
-    continueBtn.addEventListener("click", () => {
-      const age = Number(ageInput.value);
-
-      if (!age) {
-        errorText.textContent = "Please enter your age.";
-        errorText.style.display = "block";
+    // index.html is ONLY a gate — no UI access here
+    (function gateIndex() {
+      if (isLocked()) {
+        location.replace("locked.html");
         return;
       }
 
-      if (age < 18) {
-        errorText.textContent = "Sorry — this website is 18+ only.";
-        errorText.style.display = "block";
+      if (!hasAcceptedTerms()) {
+        location.replace("privacy.html?next=menu.html");
         return;
       }
 
-      const data = getAppData();
-      data.age = age;
-      data.verifiedAt = Date.now();
-      setAppData(data);
+      if (!isAdultVerified()) {
+        location.replace("age.html?next=menu.html");
+        return;
+      }
 
-      window.location.href = "menu.html";
-    });
+      // Fully verified → enter app
+      location.replace("menu.html");
+    })();
   </script>
+</head>
+
+<body>
+  <!-- Blank on purpose -->
 </body>
 </html>
