@@ -7,19 +7,15 @@
   --stroke: rgba(255,255,255,.12);
 
   --text: rgba(255,255,255,.92);
-  --muted: rgba(255,255,255,.68);
-
-  --accent1: rgba(185,131,255,.85);
-  --accent2: rgba(255,122,217,.75);
-  --cyan: rgba(60,200,255,.55);
+  --muted: rgba(255,255,255,.66);
 
   --shadow: 0 18px 60px rgba(0,0,0,.28);
   --r: 22px;
-  --r2: 18px;
 }
 
 *{ box-sizing:border-box; }
 html,body{ height:100%; }
+
 body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
@@ -31,11 +27,11 @@ body{
   overflow-x:hidden;
 }
 
-/* ===== APP SHELL ===== */
+/* app shell */
 .app-shell{
   max-width: 980px;
   margin: 18px auto;
-  padding: 0 16px 84px; /* space for bottom bar */
+  padding: 0 16px 84px;
 }
 
 .statusbar{
@@ -48,7 +44,7 @@ body{
   padding: 0 6px;
 }
 
-/* ===== TOP APP HEADER ===== */
+/* top header */
 .app-top{
   display:flex;
   align-items:center;
@@ -70,11 +66,9 @@ body{
 }
 
 .app-icon{
-  width:44px;
-  height:44px;
+  width:44px; height:44px;
   border-radius:14px;
-  display:grid;
-  place-items:center;
+  display:grid; place-items:center;
   font-weight:900;
   letter-spacing:.6px;
   background: linear-gradient(135deg, rgba(185,131,255,.45), rgba(255,122,217,.35));
@@ -123,7 +117,6 @@ body{
 .chip{
   display:inline-flex;
   align-items:center;
-  gap:8px;
   padding: 8px 12px;
   border-radius: 999px;
   border: 1px solid var(--stroke);
@@ -134,8 +127,8 @@ body{
   white-space: nowrap;
 }
 
-/* ===== PANELS / CARDS ===== */
-.stack{ margin-top: 14px; display:flex; flex-direction:column; gap: 12px; }
+/* panels */
+.stack{ margin-top:14px; display:flex; flex-direction:column; gap:12px; }
 
 .panel{
   border-radius: 18px;
@@ -148,11 +141,9 @@ body{
 
 .panel h2{ margin:0 0 6px; font-size:16px; letter-spacing:.2px; }
 .help{ margin:0 0 10px; font-size:12px; color: rgba(255,255,255,.62); }
+.small{ font-size:12px; }
 
-.muted{ color: var(--muted); }
-.small{ font-size: 12px; }
-
-/* ===== INPUTS ===== */
+/* inputs */
 input, textarea{
   width:100%;
   padding: 12px 14px;
@@ -167,7 +158,7 @@ input:focus, textarea:focus{
   box-shadow: 0 0 0 4px rgba(185,131,255,.12);
 }
 
-/* ===== CHECKBOX ROW ===== */
+/* checkbox row */
 .terms-row{
   display:flex;
   gap: 10px;
@@ -181,8 +172,7 @@ input:focus, textarea:focus{
 .terms-row input[type="checkbox"]{
   appearance:auto !important;
   -webkit-appearance: checkbox !important;
-  width:18px;
-  height:18px;
+  width:18px; height:18px;
   margin-top:2px;
   cursor:pointer;
 }
@@ -194,10 +184,10 @@ input:focus, textarea:focus{
   font-weight: 650;
 }
 
-/* ===== BOTTOM ACTION BAR ===== */
+/* bottom bar */
 .bottom-bar{
   position: fixed;
-  left: 0; right: 0; bottom: 0;
+  left:0; right:0; bottom:0;
   padding: 14px 16px;
   background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.52));
   backdrop-filter: blur(10px);
@@ -216,7 +206,7 @@ input:focus, textarea:focus{
   background: rgba(0,0,0,.22);
 }
 
-/* ===== BUTTONS ===== */
+/* buttons */
 .btn{
   border: 1px solid rgba(255,255,255,.14);
   background: rgba(255,255,255,.08);
@@ -240,6 +230,6 @@ input:focus, textarea:focus{
   box-shadow: 0 10px 28px rgba(0,0,0,.22), 0 0 22px rgba(185,131,255,.18);
 }
 
-.msg{ min-height: 18px; font-size: 12px; color: rgba(255,255,255,.74); }
+.msg{ min-height:18px; font-size:12px; color: rgba(255,255,255,.74); }
 .msg.bad{ color: rgba(255,160,160,.95); }
 .msg.ok{ color: rgba(180,255,200,.95); }
