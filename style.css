@@ -259,3 +259,26 @@ label{
 .gate-title{ margin:0; }
 .gate-sub{ margin:2px 0 0; }
 .error{ margin:8px 0 0; color:#ff8a8a; font-weight:900; }
+
+
+/* --- FIX: make sure buttons always clickable --- */
+.btn, .choice { pointer-events: auto; }
+.card, .tile { position: relative; }
+
+/* --- Stronger selected colors so you SEE it --- */
+.choice.selected.sel-3{
+  background: linear-gradient(135deg, rgba(255,60,120,.55), rgba(255,120,80,.40)) !important;
+  border-color: rgba(255,120,140,.55) !important;
+}
+.choice.selected.sel-2{
+  background: linear-gradient(135deg, rgba(255,170,50,.55), rgba(255,230,120,.35)) !important;
+  border-color: rgba(255,200,90,.55) !important;
+}
+.choice.selected.sel-1{
+  background: linear-gradient(135deg, rgba(180,160,255,.50), rgba(120,170,255,.35)) !important;
+  border-color: rgba(170,170,255,.55) !important;
+}
+.choice.selected.sel-0{
+  background: linear-gradient(135deg, rgba(90,230,160,.40), rgba(70,160,255,.25)) !important;
+  border-color: rgba(120,240,190,.45) !important;
+}
