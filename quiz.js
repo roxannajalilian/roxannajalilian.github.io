@@ -35,7 +35,6 @@ function answeredCount(){ return answers.filter(v => v !== null).length; }
 function scoreNow(){ return answers.reduce((s,v) => s + (v ?? 0), 0); }
 
 function highlightSelected() {
-  // remove previous visuals
   choiceButtons.forEach(btn => {
     btn.classList.remove("selected","sel-0","sel-1","sel-2","sel-3","tap");
   });
@@ -63,25 +62,83 @@ function render(){
   highlightSelected();
 }
 
+function buildAdvice(percent){
+  if (percent >= 85) {
+    return {
+      label: "MAX Delulu 🚨",
+      why: "You’re reading into EVERYTHING and chasing clarity through texts.",
+      do: [
+        "Stop double-texting. Ask once, then wait.",
+        "Mute/limit checking activity (views/snaps/followers) for 24 hours.",
+        "If they’re inconsistent: match energy or walk."
+      ]
+    };
+  }
+  if (percent >= 65) {
+    return {
+      label: "High Delulu",
+      why: "You spiral fast when there’s silence and try to “fix” it by replying more.",
+      do: [
+        "Write the message, WAIT 10 minutes, then decide.",
+        "Only respond to clear effort, not crumbs.",
+        "Get one direct answer instead of decoding tone."
+      ]
+    };
+  }
+  if (percent >= 45) {
+    return {
+      label: "Half-Delulu 😭",
+      why: "You’re sometimes calm, sometimes detective-mode.",
+      do: [
+        "Focus on patterns (days/weeks), not one reply.",
+        "If you feel anxious: do NOT text — do something else for 20 minutes.",
+        "Ask a simple clarity question, then step back."
+      ]
+    };
+  }
+  if (percent >= 25) {
+    return {
+      label: "Slight Overthink",
+      why: "You overanalyze sometimes, but you can still stay grounded.",
+      do: [
+        "Don’t treat punctuation like evidence.",
+        "Decide your standard: effort + respect + consistency.",
+        "If it’s confusing, it’s a signal."
+      ]
+    };
+  }
+  return {
+    label: "Grounded ✅",
+    why: "You’re not letting texts control your mood too much.",
+    do: [
+      "Keep your standards.",
+      "If they go dry/disrespectful: you don’t beg.",
+      "Communicate directly, not through guessing games."
+    ]
+  };
+}
+
 function finish(){
   const max = 3 * questions.length;
   const percent = Math.round((scoreNow() / max) * 100);
 
-  const advice =
-    percent >= 80 ? "MAX delulu 🚨 — stop chasing, watch actions, keep your standards." :
-    percent >= 60 ? "High delulu — pause before replying, don’t double-text, ask once." :
-    percent >= 40 ? "Half-delulu 😭 — don’t fill silence with stories, get clarity." :
-    percent >= 20 ? "Slight overthink — focus on patterns, not one message." :
-                    "Super grounded ✅ — stay calm and consistent.";
+  const pack = buildAdvice(percent);
 
   const data = getAppData();
-  data.lastQuiz = { percent, answers, savedAt: Date.now() };
+  data.lastQuiz = {
+    percent,
+    answers,
+    savedAt: Date.now(),
+    label: pack.label,
+    why: pack.why,
+    actions: pack.do
+  };
   setAppData(data);
 
   resultArea.style.display = "block";
   bar.style.width = `${percent}%`;
-  percentText.textContent = `${percent}%`;
-  adviceText.textContent = advice;
+  percentText.textContent = `${percent}% — ${pack.label}`;
+  adviceText.textContent = pack.why;
 }
 
 function next(){
@@ -106,12 +163,10 @@ choiceButtons.forEach(btn => {
     const val = Number(btn.dataset.val);
     answers[idx] = val;
 
-    // ✅ show the color instantly
     btn.classList.add("tap");
     highlightSelected();
 
-    // move forward after tiny delay so user sees it
-    setTimeout(() => next(), 160);
+    setTimeout(() => next(), 180);
   });
 });
 
