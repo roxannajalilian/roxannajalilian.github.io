@@ -2,85 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Delulu Detector • Menu</title>
-  <link rel="stylesheet" href="style.css?v=13" />
-  <script src="shared.js?v=13"></script>
+
+  <link rel="stylesheet" href="style.css?v=9999">
+  <script src="shared.js?v=9999"></script>
   <script>
-    // LOCK MENU unless verified
     requireAdult("menu.html");
   </script>
 </head>
 
 <body>
-  <nav>
-    <div class="brand">
-      <div class="logo">DD</div>
-      <div>
-        <div class="title">Delulu Detector</div>
-        <div class="sub">Menu</div>
-      </div>
-    </div>
+  <div style="padding:60px; text-align:center;">
+    <h1 style="font-size:48px;">✅ MENU PAGE</h1>
+    <p style="font-size:20px;">If you see this, your menu.html is REAL.</p>
 
-    <div class="nav-actions">
-      <a class="btn ghost" href="quiz.html">Quiz</a>
-      <a class="btn ghost" href="plan.html">Plan</a>
-      <a class="btn ghost" href="scan.html">Analysis</a>
-      <a class="btn ghost" href="game.html">Game</a>
-      <button class="btn" id="resetBtn" type="button">Reset App</button>
-    </div>
-  </nav>
-
-  <div class="container">
-    <div class="card">
-      <h1 style="margin:0 0 6px;">Pick what you want to do</h1>
-      <p class="muted" style="margin:0 0 16px;">
-        Quiz saves your % → Plan uses it → Analysis scores texts → Game is for fun.
-      </p>
-
-      <div class="grid-2">
-        <div class="tile">
-          <h3>📝 Delulu Quiz</h3>
-          <p class="muted">Answer 10 quick questions and get a % result.</p>
-          <a class="btn primary" href="quiz.html">Start Quiz</a>
-        </div>
-
-        <div class="tile">
-          <h3>📌 Your Plan</h3>
-          <p class="muted">Uses your last quiz result to generate a plan.</p>
-          <a class="btn" href="plan.html">Open Plan</a>
-        </div>
-
-        <div class="tile">
-          <h3>🔎 Text Analyzer</h3>
-          <p class="muted">Paste messages + optional screenshot for signals + score.</p>
-          <a class="btn" href="scan.html">Open Analysis</a>
-        </div>
-
-        <div class="tile">
-          <h3>🎮 Mini Game</h3>
-          <p class="muted">Delulu Dodge: avoid red flags and survive.</p>
-          <a class="btn" href="game.html">Play</a>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-
-      <p class="muted" id="ageLine" style="margin:0;"></p>
+    <div style="margin-top:30px;">
+      <a class="btn primary" href="quiz.html">Quiz</a>
+      <a class="btn" href="scan.html">Analysis</a>
+      <a class="btn" href="plan.html">Plan</a>
+      <a class="btn" href="game.html">Game</a>
     </div>
   </div>
-
-  <script>
-    // Show saved age in menu
-    const data = getAppData();
-    document.getElementById("ageLine").textContent =
-      `Verified age: ${data.age} (saved locally)`;
-
-    // Reset app
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      localStorage.removeItem(APP_KEY);
-      window.location.replace("start.html");
-    });
-  </script>
 </body>
 </html>
