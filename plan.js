@@ -1,71 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Plan</title>
-  <link rel="stylesheet" href="style.css?v=11" />
-  <script src="shared.js?v=11"></script>
-  <script>requireAdult("plan.html");</script>
-</head>
-<body>
-  <nav>
-    <div class="brand">
-      <div class="logo">DD</div>
-      <div>
-        <div class="title">Delulu Detector</div>
-        <div class="sub">Your Plan</div>
-      </div>
-    </div>
-    <div class="nav-actions">
-      <a class="btn ghost" href="menu.html">Menu</a>
-      <a class="btn ghost" href="quiz.html">Quiz</a>
-      <a class="btn ghost" href="scan.html">Analysis</a>
-      <a class="btn ghost" href="game.html">Game</a>
-    </div>
-  </nav>
+requireAdult("plan.html");
 
-  <div class="container">
-    <div class="card">
-      <div id="loadingBox" class="loading-row">
-        <div class="spinner"></div>
-        <div>
-          <div style="font-weight:900;">Generating your plan…</div>
-          <div class="muted small">Using your saved quiz score</div>
-        </div>
-      </div>
+const loadingBox = document.getElementById("loadingBox");
+const planContent = document.getElementById("planContent");
 
-      <div id="planContent" style="display:none;">
-        <h2 style="margin:14px 0 6px;">Your Plan</h2>
-        <p class="muted" id="planMeta" style="margin:0 0 12px;"></p>
+const planBar = document.getElementById("planBar");
+const planPercent = document.getElementById("planPercent");
+const planMeta = document.getElementById("planMeta");
 
-        <div class="progress"><div id="planBar"></div></div>
-        <h3 id="planPercent" style="margin:10px 0 6px;"></h3>
+const nextSteps = document.getElementById("nextSteps");
+const rule = document.getElementById("rule");
+const reality = document.getElementById("reality");
 
-        <div class="grid-2 section">
-          <div class="tile">
-            <h3>Do this next</h3>
-            <p class="muted" id="nextSteps"></p>
-          </div>
-          <div class="tile">
-            <h3>Texting rule</h3>
-            <p class="muted" id="rule"></p>
-          </div>
-        </div>
+function buildPlan(percent){
+  if (percent >= 80) {
+    return {
+      next: "Stop texting for 24 hours. Do NOT chase. If they want you, you’ll see effort.",
+      rule: "1 text = 1 wait. No double-texting. Your dignity stays.",
+      reality: "Your brain is filling silence with stories. Look at patterns: effort, consistency, respect."
+    };
+  }
+  if (percent >= 60) {
+    return {
+      next: "Ask a clear question once, then step back. Don’t argue with confusion.",
+      rule: "No paragraphs. Keep it simple. Let them reveal themselves.",
+      reality: "Mixed signals are a signal. If it’s not clear, it’s not secure."
+    };
+  }
+  if (percent >= 40) {
+    return {
+      next: "Take a breath before replying. Assume neutral, not negative.",
+      rule: "If you feel anxious, wait 10 minutes before sending anything.",
+      reality: "One message doesn’t define their feelings. Consistency does."
+    };
+  }
+  if (percent >= 20) {
+    return {
+      next: "You’re mostly okay—just don’t spiral when timing is off.",
+      rule: "Don’t check for ‘clues’ (views/likes). Ask directly if needed.",
+      reality: "Respect > attention. If it drains you, it’s not for you."
+    };
+  }
+  return {
+    next: "You’re grounded. Keep standards and don’t tolerate disrespect.",
+    rule: "No over-explaining. Matching effort is the best move.",
+    reality: "You’re reading reality well—stay calm and consistent."
+  };
+}
 
-        <div class="tile section">
-          <h3>Reality check</h3>
-          <p class="muted" id="reality"></p>
-        </div>
+(function run(){
+  const data = getAppData();
+  const lastQuiz = data.lastQuiz;
 
-        <div class="row" style="margin-top:12px;">
-          <a class="btn primary" href="quiz.html">Retake Quiz</a>
-          <a class="btn" href="menu.html">Back to Menu</a>
-        </div>
-      </div>
-    </div>
-  </div>
+  // fake “real app” loading
+  setTimeout(() => {
+    loadingBox.style.display = "none";
+    planContent.style.display = "block";
 
-  <script src="plan.js?v=11"></script>
-</body>
-</html>
+    if (!lastQuiz || typeof lastQuiz.percent !== "number") {
+      planMeta.textContent = "No saved quiz result found. Take the quiz first.";
+      planBar.style.width = "0%";
+      planPercent.textContent = "0%";
+      nextSteps.textContent = "Go take the quiz so I can generate your plan.";
+      rule.textContent = "Complete the quiz first.";
+      reality.textContent = "Plan needs a saved score.";
+      return;
+    }
+
+    const percent = lastQuiz.percent;
+    const p = buildPlan(percent);
+
+    planMeta.textContent = "Based on your last quiz score:";
+    planBar.style.width = `${percent}%`;
+    planPercent.textContent = `${percent}% delulu risk`;
+
+    nextSteps.textContent = p.next;
+    rule.textContent = p.rule;
+    reality.textContent = p.reality;
+  }, 900);
+})();
