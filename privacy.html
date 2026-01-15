@@ -3,116 +3,161 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Age + Terms</title>
+  <title>Deleyhlu Detector • Verify</title>
   <link rel="stylesheet" href="style.css" />
   <script src="shared.js"></script>
 
   <style>
-    .ddHeader{display:flex;gap:14px;align-items:center;margin-bottom:18px}
-    .ddLogo{width:48px;height:48px;border-radius:12px;
-      background:linear-gradient(135deg,#b983ff,#ff7ad9);
-      display:flex;align-items:center;justify-content:center;font-weight:800}
-    .ddHeader h1{margin:0;font-size:1.6rem}
-    .ddHeader .sub{margin:2px 0 0;opacity:.7}
+    /* big glowy title */
+    .hero-title{
+      margin: 0 0 6px;
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 950;
+      letter-spacing: .8px;
+      color: #f6e9ff;
+      text-shadow:
+        0 0 6px rgba(185,131,255,.70),
+        0 0 14px rgba(185,131,255,.75),
+        0 0 28px rgba(255,122,217,.60),
+        0 0 44px rgba(255,122,217,.55);
+      animation: heroGlow 2.6s ease-in-out infinite alternate;
+    }
+    @keyframes heroGlow{
+      from{
+        text-shadow:
+          0 0 4px rgba(185,131,255,.55),
+          0 0 10px rgba(185,131,255,.60),
+          0 0 20px rgba(255,122,217,.45);
+      }
+      to{
+        text-shadow:
+          0 0 8px rgba(185,131,255,.95),
+          0 0 18px rgba(185,131,255,.95),
+          0 0 34px rgba(255,122,217,.80),
+          0 0 52px rgba(255,122,217,.70);
+      }
+    }
 
-    .box{margin-top:12px;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,.15)}
-    .row{display:flex;gap:10px;align-items:flex-start;margin-top:12px}
-    .row input[type="checkbox"]{appearance:auto !important;-webkit-appearance:checkbox !important;width:18px;height:18px;margin-top:2px}
-    .error{margin-top:10px;opacity:.85}
-    button:disabled{opacity:.55}
+    .hero-sub{ margin:0 0 16px; color: var(--muted); }
+
+    .box{
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.03);
+    }
+
+    .terms-row{
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.02);
+    }
+
+    /* make sure checkbox shows even if CSS hides it */
+    .terms-row input[type="checkbox"]{
+      appearance: auto !important;
+      -webkit-appearance: checkbox !important;
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      cursor: pointer;
+    }
+
+    .terms-row label{ cursor:pointer; line-height:1.35; user-select:none; }
+
+    .actions{ display:flex; gap:10px; margin-top:14px; }
+    .btn-wide{ width:100%; }
+    .msg{ margin-top:10px; color: rgba(255,255,255,.85); min-height: 18px; }
   </style>
 </head>
+
 <body>
+  <div class="container">
+    <div class="card">
 
-<div class="container">
-  <div class="card">
+      <h1 class="hero-title">Deleyhlu Detector</h1>
+      <p class="hero-sub">Age verification + Terms required to continue.</p>
 
-    <div class="ddHeader">
-      <div class="ddLogo">DD</div>
-      <div>
-        <h1>Delulu Detector</h1>
-        <p class="sub">Age Verification + Terms</p>
+      <!-- AGE -->
+      <div class="box">
+        <label for="age">Enter your age</label>
+        <input id="age" type="number" min="1" placeholder="e.g., 18" />
+        <p class="small muted" style="margin:10px 0 0;">You must be 18+ to access this app.</p>
       </div>
-    </div>
 
-    <!-- AGE BOX (TOP) -->
-    <div class="box">
-      <h2 style="margin:0 0 8px;">Enter your age</h2>
-      <p class="muted" style="margin:0 0 10px;">You must be 18+ to continue.</p>
+      <!-- TERMS -->
+      <div class="box" style="margin-top:14px;">
+        <h2 style="margin:0 0 10px; font-size:1.05rem;">Terms & Conditions</h2>
+        <p style="margin:0 0 8px;"><strong>18+ only:</strong> This app is intended for adults.</p>
+        <p style="margin:0 0 8px;"><strong>Privacy:</strong> Anything you enter is stored locally in your browser on this device.</p>
+        <p style="margin:0 0 8px;"><strong>No selling/sharing:</strong> We do not collect or sell personal data.</p>
+        <p style="margin:0;"><strong>Safety:</strong> Harm-related content may restrict access and show support resources.</p>
 
-      <input id="age" type="number" min="1" placeholder="e.g., 18" />
-    </div>
-
-    <!-- TERMS (BOTTOM) -->
-    <div class="box" style="margin-top:14px;">
-      <h2 style="margin:0 0 8px;">Terms & Conditions</h2>
-      <p style="margin:0 0 8px;"><strong>18+ only:</strong> This app is intended for adults.</p>
-      <p style="margin:0 0 8px;"><strong>Privacy:</strong> Your inputs may be stored locally in your browser on this device.</p>
-      <p style="margin:0 0 8px;"><strong>No selling/sharing:</strong> We do not collect or sell personal data.</p>
-      <p style="margin:0;"><strong>Safety:</strong> Harm-related content may restrict access and suggest support resources.</p>
-
-      <div class="row">
-        <input id="agree" type="checkbox" />
-        <label for="agree" style="cursor:pointer;">
-          I agree to the Terms & Conditions and Privacy Policy.
-        </label>
+        <div class="terms-row">
+          <input id="agree" type="checkbox" />
+          <label for="agree">I agree to the Terms & Conditions and Privacy Policy.</label>
+        </div>
       </div>
+
+      <div class="actions">
+        <button id="continue" class="btn btn-wide" type="button" disabled>Continue</button>
+      </div>
+
+      <div id="msg" class="msg small"></div>
+
     </div>
-
-    <button id="continue" disabled style="margin-top:14px;" type="button">Continue</button>
-    <div id="msg" class="error"></div>
-
   </div>
-</div>
 
-<script>
-  // If locked, go locked
-  if (isLocked()) location.replace("locked.html");
+  <script>
+    // If locked, go locked
+    if (isLocked()) location.replace("locked.html");
 
-  // If already verified, go straight in
-  if (hasAcceptedTerms() && isAdultVerified()) {
-    location.replace(safeNextFromURL("menu.html"));
-  }
-
-  const ageEl = document.getElementById("age");
-  const agreeEl = document.getElementById("agree");
-  const btn = document.getElementById("continue");
-  const msg = document.getElementById("msg");
-
-  function sync() {
-    // enable when checkbox checked AND age has some value
-    const ageVal = Number(ageEl.value);
-    const ok = agreeEl.checked && ageVal > 0;
-    btn.disabled = !ok;
-  }
-
-  ageEl.addEventListener("input", sync);
-  agreeEl.addEventListener("change", sync);
-  sync();
-
-  btn.addEventListener("click", () => {
-    msg.textContent = "";
-
-    const ageVal = Number(ageEl.value);
-    if (!ageVal || ageVal <= 0) { msg.textContent = "Enter a valid age."; return; }
-    if (!agreeEl.checked) { msg.textContent = "You must agree to continue."; return; }
-
-    // Save terms + age result
-    acceptTerms();
-    const res = verifyAge(ageVal);
-
-    if (!res.ok && res.reason === "under18") {
-      location.replace("locked.html");
-      return;
-    }
-    if (!res.ok) {
-      msg.textContent = "Enter a valid age.";
-      return;
+    // If already verified, enter app
+    if (hasAcceptedTerms() && isAdultVerified()) {
+      location.replace(safeNextFromURL("menu.html"));
     }
 
-    location.replace(safeNextFromURL("menu.html"));
-  });
-</script>
+    const ageEl = document.getElementById("age");
+    const agreeEl = document.getElementById("agree");
+    const btn = document.getElementById("continue");
+    const msg = document.getElementById("msg");
 
+    function sync(){
+      const age = Number(ageEl.value);
+      btn.disabled = !(agreeEl.checked && age > 0);
+    }
+    ageEl.addEventListener("input", sync);
+    agreeEl.addEventListener("change", sync);
+    sync();
+
+    btn.addEventListener("click", () => {
+      msg.textContent = "";
+
+      const age = Number(ageEl.value);
+      if (!age || age <= 0) { msg.textContent = "Enter a valid age."; return; }
+      if (!agreeEl.checked) { msg.textContent = "You must accept the Terms to continue."; return; }
+
+      acceptTerms();
+      const res = verifyAge(age);
+
+      if (!res.ok && res.reason === "under18") {
+        location.replace("locked.html");
+        return;
+      }
+      if (!res.ok) {
+        msg.textContent = "Enter a valid age.";
+        return;
+      }
+
+      location.replace(safeNextFromURL("menu.html"));
+    });
+  </script>
 </body>
 </html>
+
