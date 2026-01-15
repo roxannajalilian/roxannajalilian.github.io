@@ -8,19 +8,15 @@
   <script src="shared.js"></script>
 </head>
 <body>
-
-<div class="container">
-  <div class="card center">
-    <h1>Access Locked</h1>
-    <p>Sorry — this app is restricted to users 18 or older.</p>
-
-    <button data-reset-app type="button" style="margin-top:12px;">Reset</button>
+  <div class="container">
+    <div class="card center">
+      <h1 class="glow-title">Delulu Detector</h1>
+      <p>Access locked. This app is 18+ only.</p>
+      <button class="btn" data-reset-app type="button">Reset</button>
+    </div>
   </div>
-</div>
-
-<script>
-  if (!isLocked()) location.replace("privacy.html");
-</script>
-
+  <script>
+    if (!isLocked()) location.replace("privacy.html");
+  </script>
 </body>
 </html>
