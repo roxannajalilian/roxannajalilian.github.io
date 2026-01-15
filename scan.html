@@ -6,10 +6,7 @@
   <title>Delulu Detector • Analysis</title>
   <link rel="stylesheet" href="style.css?v=9999" />
   <script src="shared.js?v=9999"></script>
-  <script>
-    // lock out if not verified
-    requireAdult("scan.html");
-  </script>
+  <script>requireAdult("scan.html");</script>
 </head>
 <body>
   <nav>
@@ -51,8 +48,9 @@
           </div>
 
           <div class="row" style="margin-top:14px;">
-            <button class="btn primary" id="analyzeBtn" type="button">Analyze</button>
-            <button class="btn ghost" id="clearBtn" type="button">Clear</button>
+            <!-- ✅ inline click = cannot “not work” -->
+            <button class="btn primary" id="analyzeBtn" type="button" onclick="runAnalyze()">Analyze</button>
+            <button class="btn ghost" id="clearBtn" type="button" onclick="runClear()">Clear</button>
           </div>
 
           <p class="muted small" id="scanDebug" style="display:none; margin-top:10px;"></p>
@@ -74,13 +72,10 @@
   </div>
 
   <script>
-    // ✅ If you see "JS OK ✅", then the button WILL work.
+    // show JS loaded
     document.getElementById("jsBadge").textContent = "JS OK ✅";
 
     const textInput = document.getElementById("textInput");
-    const analyzeBtn = document.getElementById("analyzeBtn");
-    const clearBtn = document.getElementById("clearBtn");
-
     const scanBar = document.getElementById("scanBar");
     const scanPercent = document.getElementById("scanPercent");
     const scanSummary = document.getElementById("scanSummary");
@@ -102,7 +97,6 @@
     function analyzeText(raw){
       const text = (raw || "").trim();
       const lower = text.toLowerCase();
-
       const signals = [];
       let score = 0;
 
@@ -116,13 +110,6 @@
 
       if (/(fine\.|whatever|k\.)/i.test(text)) { score += 12; signals.push("Dismissive wording (fine., whatever, k.)"); }
 
-      const lines = text.split("\n").map(s => s.trim()).filter(Boolean);
-      let rapid = 0;
-      for (let i=1;i<lines.length;i++){
-        if (lines[i].length < 30 && lines[i-1].length < 30) rapid++;
-      }
-      if (rapid >= 3) { score += 12; signals.push("Back-to-back short messages (chase / spiral pattern)"); }
-
       if (/(are you mad|do you hate|why are you|what did i do)/i.test(text)) {
         score += 18; signals.push("Reassurance-seeking lines (are you mad / what did I do)");
       }
@@ -132,11 +119,11 @@
       if (score > 100) score = 100;
 
       let label, summary;
-      if (score >= 80) { label = "MAX delulu 🚨"; summary = "This looks like anxiety + chasing energy. Don’t fill the silence — watch patterns."; }
+      if (score >= 80) { label = "MAX delulu 🚨"; summary = "This is giving anxiety + chase energy. Don’t fill silence — watch actions."; }
       else if (score >= 60) { label = "High delulu"; summary = "Mixed signals are triggering you. Ask once, then step back."; }
-      else if (score >= 40) { label = "Half-delulu 😭"; summary = "Not constant, but uncertainty is making you connect dots too fast."; }
-      else if (score >= 20) { label = "Slight overthink"; summary = "Some signs, but you can fix it by slowing down + checking reality."; }
-      else { label = "Grounded ✅"; summary = "Not many delulu signals. Keep it calm and watch consistency."; }
+      else if (score >= 40) { label = "Half-delulu 😭"; summary = "Not constant, but uncertainty makes you connect dots too fast."; }
+      else if (score >= 20) { label = "Slight overthink"; summary = "Some signs, but slowing down fixes most of it."; }
+      else { label = "Grounded ✅"; summary = "Not many delulu signals. Keep it calm + consistent."; }
 
       return { score, label, summary, signals };
     }
@@ -148,31 +135,36 @@
 
       signalsBox.innerHTML = "";
       if (!res.signals.length) addSignal("No big delulu signals found — keep it calm.");
-      res.signals.slice(0, 6).forEach(s => addSignal(s));
+      res.signals.slice(0, 6).forEach(addSignal);
 
       const d = getAppData();
       d.lastScan = { score: res.score, label: res.label, summary: res.summary, signals: res.signals, savedAt: Date.now() };
       setAppData(d);
     }
 
-    analyzeBtn.addEventListener("click", () => {
-      const raw = textInput.value;
-      if (!raw.trim()) {
-        showDebug("Paste some messages first.");
-        return;
+    // ✅ global functions for inline buttons
+    window.runAnalyze = function(){
+      try{
+        const raw = textInput.value;
+        if (!raw.trim()){
+          showDebug("Paste some messages first.");
+          return;
+        }
+        scanDebug.style.display = "none";
+        renderResult(analyzeText(raw));
+      } catch(e){
+        showDebug("Analyze crashed: " + (e && e.message ? e.message : e));
       }
-      scanDebug.style.display = "none";
-      renderResult(analyzeText(raw));
-    });
+    }
 
-    clearBtn.addEventListener("click", () => {
+    window.runClear = function(){
       textInput.value = "";
       scanDebug.style.display = "none";
       scanBar.style.width = "0%";
       scanPercent.textContent = "--%";
       scanSummary.textContent = "Paste text and press Analyze.";
       signalsBox.innerHTML = "";
-    });
+    }
   </script>
 </body>
 </html>
