@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Menu</title>
-  <link rel="stylesheet" href="style.css?v=11" />
-  <script src="shared.js?v=11"></script>
-  <script>requireAdult("menu.html");</script>
+  <title>Delulu Detector • Quiz</title>
+  <link rel="stylesheet" href="style.css?v=20" />
+
+  <!-- 🔒 lock -->
+  <script src="shared.js?v=20"></script>
+  <script>requireAdult();</script>
 </head>
 <body>
   <nav>
@@ -14,58 +16,36 @@
       <div class="logo">DD</div>
       <div>
         <div class="title">Delulu Detector</div>
-        <div class="sub">Menu</div>
+        <div class="sub">Quiz</div>
       </div>
     </div>
+
     <div class="nav-actions">
-      <a class="btn ghost" href="privacy.html">Privacy</a>
-      <button class="btn ghost" id="logoutBtn" type="button">Log out</button>
+      <a class="btn ghost" href="menu.html">Menu</a>
+      <a class="btn ghost" href="plan.html">Plan</a>
+      <a class="btn ghost" href="scan.html">Analysis</a>
+      <a class="btn ghost" href="game.html">Game</a>
     </div>
   </nav>
 
   <div class="container">
     <div class="card">
+      <div class="row" style="justify-content:space-between;">
+        <div class="row">
+          <span class="badge" id="qCount">Question …</span>
+          <span class="badge" id="progressBadge">…</span>
+        </div>
+        <div class="row">
+          <button class="btn ghost" id="prevBtn" type="button">Previous</button>
+          <button class="btn ghost" id="restartBtn" type="button">Restart</button>
+        </div>
+      </div>
+
       <div class="section">
-        <h1 style="margin:0 0 6px;">Pick what you want to do</h1>
-        <p class="muted" style="margin:0;">Everything is locked until age is verified ✅</p>
-      </div>
+        <h2 id="questionText" style="margin:0 0 6px;">Loading…</h2>
+        <p class="muted" id="questionHint" style="margin:0;">Tap a choice.</p>
 
-      <div class="grid-2 section">
-        <div class="tile">
-          <h3>Quiz</h3>
-          <p class="muted">Get your delulu % and save it for Plan.</p>
-          <a class="btn primary" href="quiz.html">Open Quiz</a>
-        </div>
-
-        <div class="tile">
-          <h3>Your Plan</h3>
-          <p class="muted">Uses your last quiz score to generate advice.</p>
-          <a class="btn primary" href="plan.html">Open Plan</a>
-        </div>
-
-        <div class="tile">
-          <h3>Text + Photo Analysis</h3>
-          <p class="muted">Paste convo + optional screenshot/photo.</p>
-          <a class="btn primary" href="scan.html">Open Analysis</a>
-        </div>
-
-        <div class="tile">
-          <h3>Mini Game</h3>
-          <p class="muted">Delulu Dodge: avoid red flags.</p>
-          <a class="btn primary" href="game.html">Play</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      const d = getAppData();
-      delete d.age;
-      delete d.ageVerifiedAt;
-      setAppData(d);
-      window.location.replace("start.html?next=menu.html");
-    });
-  </script>
-</body>
-</html>
+        <div class="choice-grid">
+          <button class="btn choice primary" data-val="3" type="button"><b>Yes (a lot)</b><span>Strong signal</span></button>
+          <button class="btn choice" data-val="2" type="button"><b>Sometimes</b><span>Not always</span></button>
+          <button class="btn choice"
