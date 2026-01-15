@@ -1,5 +1,6 @@
 requireAdult("scan.html");
 
+// Elements (IDs MUST match scan.html)
 const scanText = document.getElementById("scanText");
 const scanFile = document.getElementById("scanFile");
 const fileInfo = document.getElementById("fileInfo");
@@ -14,8 +15,13 @@ const scanSummary = document.getElementById("scanSummary");
 const scanMeta = document.getElementById("scanMeta");
 const signalsList = document.getElementById("signalsList");
 
+const debugLine = document.getElementById("debugLine");
+
+function dbg(msg){ if (debugLine) debugLine.textContent = msg; }
+
 let hasImage = false;
 
+// Photo preview (does NOT read text from images — just preview)
 scanFile.addEventListener("change", () => {
   const f = scanFile.files && scanFile.files[0];
   hasImage = !!f;
@@ -28,7 +34,6 @@ scanFile.addEventListener("change", () => {
   }
 
   fileInfo.textContent = `Selected: ${f.name}`;
-
   const reader = new FileReader();
   reader.onload = () => {
     preview.src = reader.result;
@@ -44,25 +49,25 @@ function addSignal(text){
   signalsList.appendChild(div);
 }
 
-function analyzeText(t){
-  const text = (t || "").toLowerCase();
-
+function analyzeText(raw){
+  const text = (raw || "").toLowerCase();
   let score = 0;
   const found = [];
 
+  // simple keyword/pattern scoring
   const rules = [
-    { name: "Dry replies / shutdown", re: /\b(k|ok|kk|sure|fine|idk|whatever)\b/g, pts: 10 },
-    { name: "Seen / left on read vibes", re: /\b(seen|read|delivered|opened)\b/g, pts: 8 },
-    { name: "Mixed signals", re: /\b(i miss you|i like you|but|however|not ready)\b/g, pts: 12 },
-    { name: "Ghosting / disappearing", re: /\b(ghost|disappear|ignored|no reply|didn't reply)\b/g, pts: 12 },
-    { name: "Chasing / double-texting", re: /\b(again\?|hello\?|answer|why aren't you)\b/g, pts: 10 },
-    { name: "Drama punctuation", re: /(\.\.\.|??+|!!+)/g, pts: 6 }
+    { name: "Dry replies / shutdown words", re: /\b(k|ok|kk|sure|fine|idk|whatever)\b/g, pts: 12 },
+    { name: "Mixed signals phrases", re: /\b(i miss you|i like you|but|however|not ready)\b/g, pts: 14 },
+    { name: "Ghosting / ignored vibes", re: /\b(ghost|ignored|no reply|didn't reply|left me)\b/g, pts: 14 },
+    { name: "Chasing language", re: /\b(answer|why aren't you|hello\?|are you ignoring)\b/g, pts: 12 },
+    { name: "Overthinking punctuation", re: /(\.\.\.|??+|!!+)/g, pts: 8 },
+    { name: "Apology / guilt loop", re: /\b(sorry|my fault|i shouldn't|please)\b/g, pts: 8 }
   ];
 
   rules.forEach(r => {
     const m = text.match(r.re);
     if (m && m.length) {
-      score += r.pts + Math.min(10, m.length); // a little scaling
+      score += r.pts + Math.min(12, m.length);
       found.push(`${r.name} (${m.length}x)`);
     }
   });
@@ -73,38 +78,38 @@ function analyzeText(t){
   return { score, found };
 }
 
-analyzeBtn.addEventListener("click", () => {
-  const t = scanText.value.trim();
-  signalsList.innerHTML = "";
-
-  if (!t) {
-    scanSummary.textContent = "Paste some messages first.";
-    scanMeta.textContent = "No scan";
-    scanBar.style.width = "0%";
-    scanPercent.textContent = "--%";
-    return;
-  }
-
-  const { score, found } = analyzeText(t);
-
+function setResult(score, found){
   scanMeta.textContent = hasImage ? "Text + screenshot added" : "Text only";
   scanBar.style.width = `${score}%`;
   scanPercent.textContent = `${score}%`;
 
-  if (score >= 75) scanSummary.textContent = "Major mixed signals / chasing risk. Slow down and protect your peace.";
-  else if (score >= 50) scanSummary.textContent = "Some red flags. Look at patterns, not one moment.";
-  else if (score >= 25) scanSummary.textContent = "Light signals. Don’t spiral—stay direct.";
-  else scanSummary.textContent = "Low signals. Stay calm and keep standards.";
+  if (score >= 75) scanSummary.textContent = "High signals. Slow down — don’t chase. Watch actions + consistency.";
+  else if (score >= 50) scanSummary.textContent = "Medium signals. Some red flags — focus on patterns, not one message.";
+  else if (score >= 25) scanSummary.textContent = "Low-medium signals. Don’t spiral — keep it direct.";
+  else scanSummary.textContent = "Low signals. Stay calm and keep your standards.";
 
-  if (!found.length) {
-    addSignal("No strong patterns detected from the text you pasted.");
-  } else {
-    found.forEach(addSignal);
+  signalsList.innerHTML = "";
+  if (!found.length) addSignal("No strong patterns detected from your text.");
+  else found.forEach(addSignal);
+
+  if (hasImage) addSignal("Screenshot preview added (this version doesn’t read text from images yet).");
+}
+
+analyzeBtn.addEventListener("click", () => {
+  dbg("Analyze clicked ✅");
+
+  const t = scanText.value.trim();
+  if (!t) {
+    scanMeta.textContent = "No scan";
+    scanBar.style.width = "0%";
+    scanPercent.textContent = "--%";
+    scanSummary.textContent = "Paste some messages first.";
+    signalsList.innerHTML = "";
+    return;
   }
 
-  if (hasImage) {
-    addSignal("Screenshot added (preview only). This version doesn’t read text from images yet.");
-  }
+  const { score, found } = analyzeText(t);
+  setResult(score, found);
 });
 
 clearBtn.addEventListener("click", () => {
@@ -115,9 +120,13 @@ clearBtn.addEventListener("click", () => {
   preview.src = "";
   hasImage = false;
 
-  signalsList.innerHTML = "";
   scanMeta.textContent = "No scan yet";
   scanBar.style.width = "0%";
   scanPercent.textContent = "--%";
   scanSummary.textContent = "Paste text and press Analyze.";
+  signalsList.innerHTML = "";
+
+  dbg("Cleared ✅");
 });
+
+dbg("scan.js loaded ✅");
