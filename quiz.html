@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Quiz</title>
-  <link rel="stylesheet" href="style.css?v=11" />
-  <script src="shared.js?v=11"></script>
+  <link rel="stylesheet" href="style.css?v=20" />
+  <script src="shared.js?v=20"></script>
   <script>requireAdult("quiz.html");</script>
 </head>
 <body>
@@ -43,10 +43,11 @@
         <p class="muted" id="questionHint" style="margin:0;">Tap a choice.</p>
 
         <div class="choice-grid">
-          <button class="btn choice primary" data-val="3" type="button"><b>Yes (a lot)</b><span>Strong signal</span></button>
+          <!-- IMPORTANT: no "primary" here, CSS will color selected instead -->
+          <button class="btn choice" data-val="3" type="button"><b>Yes (a lot)</b><span>Strong signal</span></button>
           <button class="btn choice" data-val="2" type="button"><b>Sometimes</b><span>Not always</span></button>
           <button class="btn choice" data-val="1" type="button"><b>Rarely</b><span>Once in a while</span></button>
-          <button class="btn choice ghost" data-val="0" type="button"><b>No</b><span>Doesn’t apply</span></button>
+          <button class="btn choice" data-val="0" type="button"><b>No</b><span>Doesn’t apply</span></button>
         </div>
       </div>
 
@@ -66,6 +67,6 @@
     </div>
   </div>
 
-  <script src="quiz.js?v=11"></script>
+  <script src="quiz.js?v=20"></script>
 </body>
 </html>
