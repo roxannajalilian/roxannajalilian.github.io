@@ -3,38 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Privacy & Terms</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Terms & Conditions</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="shared.js"></script>
 </head>
 <body>
   <div class="container">
     <div class="card">
       <h1>Terms & Conditions</h1>
+      <p class="muted">You must agree before continuing.</p>
 
-      <p><strong>18+ only:</strong> This app is intended for users aged 18 or older.</p>
-      <p><strong>Local-only:</strong> Anything you type stays on your device (saved in your browser).</p>
-      <p><strong>No selling/sharing:</strong> We do not collect or sell personal data.</p>
-      <p><strong>Safety:</strong> If content suggests harm or danger, the app may restrict access and show support resources.</p>
+      <div class="card" style="margin-top:12px;">
+        <p><strong>18+ Only:</strong> This app is intended for users aged 18 or older.</p>
+        <p><strong>Local storage:</strong> Your responses may be saved in your browser on this device.</p>
+        <p><strong>No selling/sharing:</strong> We do not sell or share your data.</p>
+        <p><strong>Safety:</strong> If content suggests harm or danger, the app may restrict access and suggest support resources.</p>
+      </div>
 
       <div style="display:flex; gap:10px; align-items:flex-start; margin-top:14px;">
-        <input id="agree" type="checkbox" style="width:18px;height:18px;">
+        <input id="agree" type="checkbox" style="width:18px;height:18px;" />
         <label for="agree" style="cursor:pointer;">
-          I have read and agree to the Terms & Privacy Policy.
+          I have read and agree to the Terms & Conditions and Privacy Policy.
         </label>
       </div>
 
-      <button id="btn" disabled style="margin-top:14px; opacity:.6;">Continue</button>
+      <button id="continueBtn" disabled style="margin-top:14px; opacity:.6;">Continue</button>
     </div>
   </div>
 
   <script>
+    // If already locked, go locked
+    if (isLocked()) location.replace("locked.html");
+
     // If already accepted, skip to age page
-    const g = getGate();
-    if (g.termsAccepted) window.location.href = "age.html";
+    if (hasAcceptedTerms()) location.replace("age.html?next=" + encodeURIComponent(safeNextFromURL()));
 
     const agree = document.getElementById("agree");
-    const btn = document.getElementById("btn");
+    const btn = document.getElementById("continueBtn");
 
     agree.addEventListener("change", () => {
       btn.disabled = !agree.checked;
@@ -42,10 +47,9 @@
     });
 
     btn.addEventListener("click", () => {
-      const gate = getGate();
-      gate.termsAccepted = true;
-      setGate(gate);
-      window.location.href = "age.html";
+      if (!agree.checked) return;
+      acceptTerms();
+      location.href = "age.html?next=" + encodeURIComponent(safeNextFromURL());
     });
   </script>
 </body>
