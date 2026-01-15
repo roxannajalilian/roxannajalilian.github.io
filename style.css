@@ -473,8 +473,9 @@ input:focus, textarea:focus{
 .mock-msg.ok{ color: rgba(180,255,210,.95); }
 .mock-msg.bad{ color: rgba(255,170,170,.95); }
 
-/* gradient "Continue" pill */
+
 .mock-cta{
+  pointer-events: auto !important; 
   border: 1px solid rgba(255,255,255,.16);
   background: radial-gradient(120px 60px at 30% 30%, rgba(255,255,255,.22), transparent 60%),
               linear-gradient(135deg, rgba(185,131,255,.55), rgba(255,122,217,.35));
@@ -495,6 +496,7 @@ input:focus, textarea:focus{
 .mock-cta:hover{ transform: translateY(-1px); filter: brightness(1.06); }
 .mock-cta:active{ transform: translateY(0); }
 .mock-cta:disabled{ opacity:.45; cursor:not-allowed; transform:none; filter:none; box-shadow:none; }
+
 
 .mock-arrow{
   width: 28px;
