@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Locked</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <script src="shared.js"></script>
 </head>
 <body>
+
   <div class="container">
     <div class="card center">
       <h1>Access Locked</h1>
-      <p>Sorry — you must be 18 or older to use this app.</p>
+      <p>Sorry.. this app is restricted to users 18 or older.</p>
+      <p class="muted">If you think this is a mistake, you can reset the app data.</p>
+
+      <button data-reset-app type="button" style="margin-top:12px;">Reset</button>
     </div>
   </div>
 
   <script>
-    const g = getGate();
-    if (!g.locked) window.location.href = "privacy.html";
+    if (!isLocked()) location.replace("privacy.html");
   </script>
+
 </body>
 </html>
