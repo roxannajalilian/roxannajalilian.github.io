@@ -4,25 +4,64 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Delulu Detector • Menu</title>
-
-  <link rel="stylesheet" href="style.css?v=9999">
-  <script src="shared.js?v=9999"></script>
+  <link rel="stylesheet" href="style.css" />
+  <script src="shared.js"></script>
   <script>
-    requireAdult("menu.html");
+    requireAdult(); // 🔒 lock menu
   </script>
 </head>
-
 <body>
-  <div style="padding:60px; text-align:center;">
-    <h1 style="font-size:48px;">✅ MENU PAGE</h1>
-    <p style="font-size:20px;">If you see this, your menu.html is REAL.</p>
 
-    <div style="margin-top:30px;">
-      <a class="btn primary" href="quiz.html">Quiz</a>
-      <a class="btn" href="scan.html">Analysis</a>
-      <a class="btn" href="plan.html">Plan</a>
-      <a class="btn" href="game.html">Game</a>
+  <nav>
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div>
+        <div class="title">Delulu Detector</div>
+        <div class="sub">Menu</div>
+      </div>
+    </div>
+
+    <button class="btn ghost" id="logoutBtn">Log out</button>
+  </nav>
+
+  <div class="container">
+    <div class="card">
+      <h1 style="margin:0 0 10px;">Choose what you want to do</h1>
+      <p class="muted">You’re verified and inside the app.</p>
+
+      <div class="grid-2" style="margin-top:16px;">
+        <div class="tile">
+          <h3>Quiz</h3>
+          <p class="muted">Get your delulu percentage.</p>
+          <a class="btn primary" href="quiz.html">Start Quiz</a>
+        </div>
+
+        <div class="tile">
+          <h3>Plan</h3>
+          <p class="muted">Personal advice based on your quiz.</p>
+          <a class="btn" href="plan.html">View Plan</a>
+        </div>
+
+        <div class="tile">
+          <h3>Analysis</h3>
+          <p class="muted">Scan messages & screenshots.</p>
+          <a class="btn" href="scan.html">Open Analysis</a>
+        </div>
+
+        <div class="tile">
+          <h3>Game</h3>
+          <p class="muted">Play the mini game.</p>
+          <a class="btn" href="game.html">Play Game</a>
+        </div>
+      </div>
     </div>
   </div>
+
+  <script>
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      clearAppData();
+      window.location.href = "index.html";
+    });
+  </script>
 </body>
 </html>
