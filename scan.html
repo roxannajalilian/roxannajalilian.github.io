@@ -5,64 +5,64 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Analysis</title>
   <link rel="stylesheet" href="style.css?v=20" />
-
-  <!-- 🔒 lock -->
   <script src="shared.js?v=20"></script>
-  <script>requireAdult();</script>
+  <script>requireAdult("scan.html");</script>
 </head>
 <body>
   <nav>
     <div class="brand">
       <div class="logo">DD</div>
       <div>
-        <div class="title">Delulu Detector</div>
-        <div class="sub">Analysis</div>
+        <div class="title">Text Analyzer</div>
+        <div class="sub">Paste convo + optional screenshot</div>
       </div>
     </div>
-
     <div class="nav-actions">
       <a class="btn ghost" href="menu.html">Menu</a>
-      <a class="btn ghost" href="quiz.html">Quiz</a>
       <a class="btn ghost" href="plan.html">Plan</a>
-      <a class="btn ghost" href="game.html">Game</a>
+      <a class="btn ghost" href="quiz.html">Quiz</a>
     </div>
   </nav>
 
   <div class="container">
-    <div class="card">
-      <h2 style="margin:0 0 6px;">Scan a convo</h2>
-      <p class="muted" style="margin:0 0 12px;">Paste text + optional screenshot/photo preview.</p>
+    <div class="card grid-2">
+      <div>
+        <h2 style="margin:0 0 6px;">Paste the messages</h2>
+        <p class="muted" style="margin:0 0 10px;">
+          It checks for patterns (dry replies, mixed signals, shutdown words, chasing, etc.).
+        </p>
 
-      <label for="textBox">Conversation text</label>
-      <textarea id="textBox" rows="6" placeholder="Paste the convo here..."></textarea>
+        <textarea id="scanText" rows="8" placeholder="Paste conversation text here..."></textarea>
 
-      <div class="section">
-        <label for="photoInput">Optional photo/screenshot</label>
-        <input id="photoInput" type="file" accept="image/*" />
-
-        <div id="preview" class="preview" style="display:none;">
-          <img id="previewImg" alt="Preview" />
+        <div class="section">
+          <label for="scanFile">Optional screenshot</label>
+          <input id="scanFile" type="file" accept="image/*" />
+          <div id="fileInfo" class="muted small" style="margin-top:8px;"></div>
+          <img id="preview" alt="" style="display:none; margin-top:10px; width:100%; border-radius:16px; border:1px solid rgba(255,255,255,.12);" />
         </div>
 
-        <p class="muted small" id="photoNote" style="margin:8px 0 0;"></p>
+        <div class="row" style="margin-top:12px;">
+          <button class="btn primary" id="analyzeBtn" type="button">Analyze</button>
+          <button class="btn ghost" id="clearBtn" type="button">Clear</button>
+          <a class="btn ghost" href="menu.html">Back</a>
+        </div>
       </div>
 
-      <div class="row">
-        <button class="btn primary" id="analyzeBtn" type="button">Analyze</button>
-        <button class="btn ghost" id="clearBtn" type="button">Clear</button>
-      </div>
+      <div>
+        <h2 style="margin:0 0 6px;">Result</h2>
+        <p class="muted" style="margin:0 0 12px;">Score + explanation + signals it found.</p>
 
-      <div class="section" id="resultBox" style="display:none;">
-        <div class="hr"></div>
-        <h2 style="margin:0 0 8px;">Result</h2>
+        <div class="tile">
+          <div class="row" style="justify-content:space-between;">
+            <div style="font-weight:900;">Delulu Signal %</div>
+            <div class="muted small" id="scanMeta">No scan yet</div>
+          </div>
+          <div class="progress" style="margin:10px 0;"><div id="scanBar"></div></div>
+          <div style="font-size:28px; font-weight:950;" id="scanPercent">--%</div>
+          <div class="muted" id="scanSummary">Paste text and press Analyze.</div>
 
-        <div class="progress"><div id="scanBar"></div></div>
-        <h3 id="scanPercent" style="margin:10px 0 6px;">0%</h3>
-        <p class="muted" id="scanSummary" style="margin:0;"></p>
-
-        <div class="tile section">
-          <h3>What I noticed</h3>
-          <ul id="signals" style="margin:8px 0 0; color:var(--muted); line-height:1.6;"></ul>
+          <div class="hr"></div>
+          <div id="signalsList" class="plan-quotes"></div>
         </div>
       </div>
     </div>
