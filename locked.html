@@ -3,20 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Locked</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="shared.js"></script>
+  <title>Delulu Detector • Blocked</title>
+  <link rel="stylesheet" href="style.css?v=70001" />
+  <script src="shared.js?v=70001"></script>
 </head>
 <body>
   <div class="container">
-    <div class="card center">
-      <h1 class="glow-title">Delulu Detector</h1>
-      <p>Access locked. This app is 18+ only.</p>
-      <button class="btn" data-reset-app type="button">Reset</button>
+    <div class="card" style="max-width:640px; margin:70px auto;">
+      <h1 style="margin:0 0 8px;">Sorry — 18+ only.</h1>
+      <p class="muted" style="margin:0 0 12px;">
+        You can’t access this app if you’re under 18.
+      </p>
+
+      <div class="row" style="margin-top:14px;">
+        <a class="btn primary" href="index.html">Back to Home</a>
+        <button class="btn ghost" id="resetBtn" type="button">Reset</button>
+      </div>
+
+      <p class="muted small" style="margin-top:12px;">
+        Reset clears saved age verification on this device.
+      </p>
     </div>
   </div>
+
   <script>
-    if (!isLocked()) location.replace("privacy.html");
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      clearAppData();
+      location.replace("index.html");
+    });
   </script>
 </body>
 </html>
