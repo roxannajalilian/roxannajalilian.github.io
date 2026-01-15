@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Privacy + Terms</title>
-  <link rel="stylesheet" href="style.css?v=999" />
-  <script src="shared.js?v=999"></script>
+  <title>Delulu Detector • Privacy</title>
+  <link rel="stylesheet" href="style.css?v=20" />
+  <script src="shared.js?v=20"></script>
 </head>
 <body>
   <nav>
@@ -13,67 +13,39 @@
       <div class="logo">DD</div>
       <div>
         <div class="title">Delulu Detector</div>
-        <div class="sub">Privacy + Terms</div>
+        <div class="sub">Privacy</div>
       </div>
     </div>
     <div class="nav-actions">
       <a class="btn ghost" href="start.html">Start</a>
-      <a class="btn" href="menu.html">Menu</a>
+      <a class="btn ghost" href="menu.html">Menu</a>
+      <button class="btn" data-reset-app type="button">Reset App</button>
     </div>
   </nav>
 
   <div class="container">
     <div class="card">
-      <h1 style="margin:0 0 10px;">Privacy + Terms</h1>
-      <p class="muted" style="margin:0 0 16px;">
-        This is a school project-style web app. It stores some info only on your device so the app can work.
+      <h1 style="margin:0 0 8px;">Privacy & Concerns</h1>
+      <p class="muted">
+        This app stores information only in your browser (localStorage) so it can remember your quiz score and access verification.
+        It does not send your messages anywhere.
       </p>
-
       <div class="tile">
-        <h3>What we store</h3>
-        <p class="muted" style="margin:0;">
-          • Your age (only to verify 18+ access)<br/>
-          • Your latest quiz score + answers (to build the Plan)<br/>
-          • Optional analysis results (if you use the analyzer)
-        </p>
+        <h3 style="margin:0 0 8px;">What we store</h3>
+        <ul class="muted" style="margin:0; padding-left:18px;">
+          <li>Your age (to verify 18+ access)</li>
+          <li>Your last quiz score + answers</li>
+          <li>Optional analyzer results (not your files)</li>
+        </ul>
       </div>
 
       <div class="tile" style="margin-top:12px;">
-        <h3>Where it’s stored</h3>
+        <h3 style="margin:0 0 8px;">If something is unsafe</h3>
         <p class="muted" style="margin:0;">
-          Everything is stored in <b>localStorage</b> on your browser/device. Nothing is sent anywhere.
+          If you’re in danger or feel unsafe, talk to a trusted adult or local emergency services.
         </p>
-      </div>
-
-      <div class="tile" style="margin-top:12px;">
-        <h3>18+ only</h3>
-        <p class="muted" style="margin:0;">
-          If you enter an age under 18, you’ll be blocked and redirected back to Start.
-        </p>
-      </div>
-
-      <div class="tile" style="margin-top:12px;">
-        <h3>Safety note</h3>
-        <p class="muted" style="margin:0;">
-          This app can’t provide emergency help. If you’re in danger or feel unsafe, contact local emergency
-          services or someone you trust.
-        </p>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="row">
-        <button class="btn" id="resetLocal" type="button">Reset Stored Data</button>
-        <a class="btn primary" href="start.html">Back to Start</a>
       </div>
     </div>
   </div>
-
-  <script>
-    document.getElementById("resetLocal").addEventListener("click", () => {
-      clearAppData();
-      alert("Local data cleared.");
-    });
-  </script>
 </body>
 </html>
