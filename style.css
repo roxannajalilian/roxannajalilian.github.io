@@ -283,3 +283,17 @@ label{
   border-color: rgba(120,240,190,.45) !important;
 }
 
+/* ===== Glow title ===== */
+.glow-title{
+  font-weight: 950;
+  letter-spacing: .2px;
+  text-shadow:
+    0 0 10px rgba(124,77,255,.55),
+    0 0 26px rgba(124,77,255,.35),
+    0 0 52px rgba(60,200,255,.22);
+}
+.glow-sub{
+  text-shadow: 0 0 16px rgba(255,255,255,.12);
+}
+
+
