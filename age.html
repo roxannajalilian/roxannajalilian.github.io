@@ -2,45 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Age Verification</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Age Check</title>
   <link rel="stylesheet" href="style.css">
+  <script src="shared.js"></script>
 </head>
 <body>
+  <div class="container">
+    <div class="card">
+      <h1>Age Verification</h1>
+      <p>You must be 18+ to continue.</p>
 
-<div class="container">
-  <div class="card">
-    <h1>Age Verification</h1>
-    <p>You must be 18 or older to continue.</p>
-
-    <input type="number" id="age" placeholder="Enter your age" />
-
-    <button onclick="verifyAge()">Enter</button>
+      <input id="age" type="number" placeholder="Enter age" />
+      <button id="enter">Enter</button>
+    </div>
   </div>
-</div>
 
-<script>
-if (localStorage.getItem("termsAccepted") !== "true") {
-  window.location.href = "privacy.html";
-}
+  <script>
+    // Must accept terms before age
+    const g = getGate();
+    if (!g.termsAccepted) window.location.href = "privacy.html";
+    if (g.locked) window.location.href = "locked.html";
+    if (g.ageVerified) window.location.href = "index.html";
 
-function verifyAge() {
-  const age = Number(document.getElementById("age").value);
+    document.getElementById("enter").addEventListener("click", () => {
+      const age = Number(document.getElementById("age").value);
 
-  if (!age) {
-    alert("Enter a valid age.");
-    return;
-  }
+      if (!age) return alert("Enter a valid age.");
 
-  if (age < 18) {
-    localStorage.setItem("blocked", "true");
-    window.location.href = "locked.html";
-    return;
-  }
+      const gate = getGate();
 
-  localStorage.setItem("ageVerified", "true");
-  window.location.href = "index.html";
-}
-</script>
+      if (age < 18) {
+        gate.locked = true;
+        setGate(gate);
+        window.location.href = "locked.html";
+        return;
+      }
 
+      gate.ageVerified = true;
+      setGate(gate);
+      window.location.href = "index.html";
+    });
+  </script>
 </body>
 </html>
