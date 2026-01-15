@@ -6,306 +6,74 @@
   <title>Delulu Detector • Verify</title>
   <link rel="stylesheet" href="style.css" />
   <script src="shared.js"></script>
-
-  <style>
-    /* ===== APP SHELL ===== */
-    .app-shell{
-      max-width: 980px;
-      margin: 18px auto;
-      padding: 0 16px 72px; /* leave space for bottom bar */
-    }
-
-    .statusbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      font-size:12px;
-      color: rgba(255,255,255,.65);
-      margin: 6px 0 10px;
-      padding: 0 6px;
-    }
-
-    .app-top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding: 14px 14px 12px;
-      border-radius: 18px;
-      border:1px solid rgba(255,255,255,.12);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      box-shadow: 0 20px 60px rgba(0,0,0,.22);
-      backdrop-filter: blur(10px);
-    }
-
-    .brand-left{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width: 0;
-    }
-
-    .app-icon{
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      display:grid;
-      place-items:center;
-      font-weight: 900;
-      letter-spacing: .6px;
-      background: linear-gradient(135deg, rgba(185,131,255,.45), rgba(255,122,217,.35));
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow:
-        0 0 18px rgba(185,131,255,.25),
-        0 0 28px rgba(255,122,217,.18);
-    }
-
-    .brand-text{min-width:0;}
-    .hero-title{
-      margin:0;
-      font-size: 20px;
-      font-weight: 950;
-      letter-spacing: .7px;
-      color: #f6e9ff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      text-shadow:
-        0 0 6px rgba(185,131,255,.70),
-        0 0 14px rgba(185,131,255,.75),
-        0 0 28px rgba(255,122,217,.60),
-        0 0 44px rgba(255,122,217,.55);
-      animation: heroGlow 2.6s ease-in-out infinite alternate;
-    }
-    @keyframes heroGlow{
-      from{
-        text-shadow:
-          0 0 4px rgba(185,131,255,.55),
-          0 0 10px rgba(185,131,255,.60),
-          0 0 20px rgba(255,122,217,.45);
-      }
-      to{
-        text-shadow:
-          0 0 8px rgba(185,131,255,.95),
-          0 0 18px rgba(185,131,255,.95),
-          0 0 34px rgba(255,122,217,.80),
-          0 0 52px rgba(255,122,217,.70);
-      }
-    }
-
-    .hero-sub{
-      margin:2px 0 0;
-      font-size: 12px;
-      color: rgba(255,255,255,.65);
-    }
-
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.16);
-      color: rgba(255,255,255,.78);
-      font-weight: 700;
-      font-size: 12px;
-      white-space: nowrap;
-    }
-
-    /* ===== CARDS ===== */
-    .stack{
-      margin-top: 14px;
-      display:flex;
-      flex-direction:column;
-      gap: 12px;
-    }
-
-    .panel{
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      padding: 14px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.18);
-    }
-
-    .panel h2{
-      margin:0 0 6px;
-      font-size: 16px;
-      letter-spacing: .2px;
-    }
-
-    .help{
-      margin:0 0 10px;
-      font-size: 12px;
-      color: rgba(255,255,255,.65);
-    }
-
-    .terms-row{
-      display:flex;
-      gap: 10px;
-      align-items:flex-start;
-      margin-top: 10px;
-      padding: 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.14);
-    }
-    .terms-row input[type="checkbox"]{
-      appearance: auto !important;
-      -webkit-appearance: checkbox !important;
-      width: 18px;
-      height: 18px;
-      margin-top: 2px;
-      cursor: pointer;
-    }
-    .terms-row label{
-      cursor:pointer;
-      line-height:1.35;
-      user-select:none;
-      color: rgba(255,255,255,.78);
-      font-weight: 650;
-    }
-
-    /* ===== BOTTOM BAR ===== */
-    .bottom-bar{
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      padding: 14px 16px;
-      background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.52));
-      backdrop-filter: blur(10px);
-      z-index: 99999;
-    }
-
-    .bottom-inner{
-      max-width: 980px;
-      margin: 0 auto;
-      display:flex;
-      gap: 12px;
-      align-items:center;
-      justify-content:space-between;
-      padding: 12px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.22);
-    }
-
-    .msg{
-      min-height: 18px;
-      font-size: 12px;
-      color: rgba(255,255,255,.75);
-    }
-    .msg.bad{ color: rgba(255,160,160,.95); }
-    .msg.ok{ color: rgba(180,255,200,.95); }
-
-    /* premium continue button */
-    .continue{
-      border: 1px solid rgba(255,255,255,.14);
-      background: linear-gradient(135deg, rgba(124,77,255,.40), rgba(255,122,217,.22));
-      color: rgba(255,255,255,.92);
-      padding: 10px 16px;
-      border-radius: 999px;
-      font-weight: 850;
-      cursor: pointer;
-      display:inline-flex;
-      align-items:center;
-      gap: 10px;
-      min-height: 42px;
-      box-shadow:
-        0 10px 28px rgba(0,0,0,.22),
-        0 0 22px rgba(185,131,255,.18);
-      transition: transform .12s ease, filter .12s ease, opacity .12s ease;
-    }
-    .continue:hover{ transform: translateY(-1px); filter: brightness(1.06); }
-    .continue:active{ transform: translateY(0); }
-
-    .continue:disabled{
-      opacity: .45;
-      cursor: not-allowed;
-      filter: none;
-      transform: none;
-      box-shadow: none;
-    }
-
-    .arrow{
-      width: 18px;
-      height: 18px;
-      border-radius: 999px;
-      display:grid;
-      place-items:center;
-      background: rgba(255,255,255,.16);
-      border: 1px solid rgba(255,255,255,.16);
-      font-weight: 900;
-      line-height: 1;
-    }
-  </style>
 </head>
 
 <body>
-  <div class="app-shell">
+  <div class="mock-wrap">
+    <div class="mock-app">
+      <div class="stars"></div>
 
-    <div class="statusbar">
-      <span>● ● ●</span>
-      <span>Secure gate • Local-only</span>
-    </div>
-
-    <div class="app-top">
-      <div class="brand-left">
-        <div class="app-icon">DD</div>
-        <div class="brand-text">
-          <h1 class="hero-title">Delulu Detector</h1>
-          <p class="hero-sub">Verify age + accept Terms to continue</p>
+      <!-- HEADER -->
+      <div class="mock-header">
+        <div class="mock-brand">
+          <div class="mock-icon">DD</div>
+          <div style="min-width:0;">
+            <h1 class="mock-title">Delulu Detector</h1>
+            <p class="mock-sub">Verify age + accept Terms to continue</p>
+          </div>
         </div>
+
+        <div class="mock-chip">18+ Required</div>
       </div>
 
-      <div class="chip">18+ Required</div>
-    </div>
+      <!-- PANELS -->
+      <div class="mock-panels">
 
-    <div class="stack">
-      <!-- AGE -->
-      <div class="panel">
-        <h2>Enter your age</h2>
-        <p class="help">You must be 18+ to use this app.</p>
-        <input id="age" type="number" min="1" inputmode="numeric" placeholder="e.g., 18" />
-      </div>
+        <div class="mock-panel">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+            <div>
+              <h2>Enter your age</h2>
+              <p class="help">You must be 18+ to use this app.</p>
+            </div>
+          </div>
 
-      <!-- TERMS -->
-      <div class="panel">
-        <h2>Terms & Conditions</h2>
-        <p class="help"><strong>Privacy:</strong> Inputs may be stored locally in your browser on this device.</p>
-        <p class="help"><strong>No selling/sharing:</strong> We do not collect or sell personal data.</p>
-        <p class="help"><strong>Safety:</strong> Harm-related content may restrict access and suggest support resources.</p>
-
-        <div class="terms-row">
-          <input id="agree" type="checkbox" />
-          <label for="agree">I agree to the Terms & Conditions and Privacy Policy.</label>
+          <div class="mock-input">
+            <input id="age" type="number" min="1" inputmode="numeric" placeholder="e.g., 18" />
+            <div class="in-ic">▣</div>
+          </div>
         </div>
+
+        <div class="mock-panel">
+          <h2>Terms & Conditions</h2>
+          <p class="help"><strong>Privacy:</strong> Inputs may be stored locally in your browser on this device.</p>
+          <p class="help"><strong>No selling/sharing:</strong> We do not collect or sell personal data.</p>
+          <p class="help"><strong>Safety:</strong> Harm-related content may restrict access and suggest support resources.</p>
+
+          <div class="mock-check">
+            <input id="agree" type="checkbox" />
+            <label for="agree">I agree to the Terms & Conditions and Privacy Policy.</label>
+          </div>
+        </div>
+
+        <!-- BOTTOM TRAY (inside) -->
+        <div class="mock-tray">
+          <div id="msg" class="mock-msg"> </div>
+          <button id="continue" class="mock-cta" type="button" disabled>
+            Continue <span class="mock-arrow">›</span>
+          </button>
+        </div>
+
       </div>
-    </div>
-
-  </div>
-
-  <!-- bottom action bar -->
-  <div class="bottom-bar">
-    <div class="bottom-inner">
-      <div id="msg" class="msg"></div>
-      <button id="continue" class="continue" type="button" disabled>
-        Continue <span class="arrow">›</span>
-      </button>
     </div>
   </div>
 
   <script>
-    // If locked, always go locked
-    if (typeof isLocked === "function" && isLocked()) location.replace("locked.html");
+    // locked? go locked
+    if (isLocked()) location.replace("locked.html");
 
-    // If already verified, go into app
-    if (typeof hasAcceptedTerms === "function" && typeof isAdultVerified === "function") {
-      if (hasAcceptedTerms() && isAdultVerified()) {
-        location.replace(safeNextFromURL("menu.html"));
-      }
+    // already verified? go into app
+    if (hasAcceptedTerms() && isAdultVerified()) {
+      location.replace(safeNextFromURL("menu.html"));
     }
 
     const ageEl = document.getElementById("age");
@@ -313,38 +81,29 @@
     const btn = document.getElementById("continue");
     const msg = document.getElementById("msg");
 
-    function readAge() {
-      const v = Number(ageEl.value);
-      if (!Number.isFinite(v)) return 0;
-      return Math.floor(v);
+    function ageNum(){
+      const n = Number(ageEl.value);
+      return Number.isFinite(n) ? Math.floor(n) : 0;
     }
-
-    function setMsg(text, kind="") {
+    function setMsg(text, kind=""){
       msg.textContent = text || "";
-      msg.className = "msg " + (kind || "");
+      msg.className = "mock-msg " + (kind || "");
     }
-
-    function sync() {
-      const age = readAge();
-
-      // enable button only if age 18+ AND checkbox checked
+    function sync(){
+      const age = ageNum();
       const ok = agreeEl.checked && age >= 18;
       btn.disabled = !ok;
 
-      // status text
       if (!ageEl.value && !agreeEl.checked) setMsg("");
       else if (age > 0 && age < 18) setMsg("Under 18 → access will be locked.", "bad");
-      else if (age >= 18 && !agreeEl.checked) setMsg("Check the Terms box to continue.", "bad");
+      else if (age >= 18 && !agreeEl.checked) setMsg("Check the box to continue.", "bad");
       else if (age >= 18 && agreeEl.checked) setMsg("Verified inputs. You can continue.", "ok");
     }
 
-    // handle all ways number input changes
     ["input","change","keyup"].forEach(evt => ageEl.addEventListener(evt, () => {
-      const age = readAge();
-
-      // immediate lockout for under 18
+      const age = ageNum();
       if (age > 0 && age < 18) {
-        verifyAge(age); // sets locked in storage
+        verifyAge(age);
         location.replace("locked.html");
         return;
       }
@@ -354,10 +113,9 @@
     agreeEl.addEventListener("change", sync);
 
     btn.addEventListener("click", () => {
-      const age = readAge();
-
+      const age = ageNum();
       if (age < 18) { verifyAge(age); location.replace("locked.html"); return; }
-      if (!agreeEl.checked) { setMsg("You must accept the Terms to continue.", "bad"); return; }
+      if (!agreeEl.checked) { setMsg("You must accept the Terms.", "bad"); return; }
 
       acceptTerms();
       verifyAge(age);
