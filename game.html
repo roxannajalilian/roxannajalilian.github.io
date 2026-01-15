@@ -4,11 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Game</title>
-  <link rel="stylesheet" href="style.css?v=20" />
-
-  <!-- 🔒 lock -->
-  <script src="shared.js?v=20"></script>
-  <script>requireAdult();</script>
+  <link rel="stylesheet" href="style.css?v=999" />
+  <script src="shared.js?v=999"></script>
+  <script>requireAdult("game.html");</script>
+  <style>
+    .game-wrap{
+      display:grid;
+      gap:14px;
+    }
+    canvas{
+      width:100%;
+      height:auto;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      box-shadow: 0 16px 40px rgba(0,0,0,.25);
+    }
+    .hud{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(8px);
+      z-index:999;
+    }
+    .modal .box{
+      width:min(560px, 100%);
+      border-radius: 22px;
+      border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      box-shadow: 0 24px 70px rgba(0,0,0,.45);
+      padding:18px;
+    }
+    .modal h2{ margin:0 0 10px; }
+  </style>
 </head>
 <body>
   <nav>
@@ -16,10 +55,9 @@
       <div class="logo">DD</div>
       <div>
         <div class="title">Delulu Detector</div>
-        <div class="sub">Game</div>
+        <div class="sub">Game • Delulu Dodge</div>
       </div>
     </div>
-
     <div class="nav-actions">
       <a class="btn ghost" href="menu.html">Menu</a>
       <a class="btn ghost" href="quiz.html">Quiz</a>
@@ -29,30 +67,39 @@
   </nav>
 
   <div class="container">
-    <div class="card">
-      <h2 style="margin:0 0 6px;">Delulu Dodge</h2>
-      <p class="muted" style="margin:0 0 12px;">Move ← → (or A/D). Avoid the red flags.</p>
-
-      <div style="border-radius:18px; border:1px solid rgba(255,255,255,.12); overflow:hidden; background:rgba(0,0,0,.18);">
-        <canvas id="c" width="920" height="440" style="width:100%; display:block;"></canvas>
-      </div>
-
-      <div class="row" style="margin-top:12px;">
-        <button class="btn primary" id="restartGame" type="button">Restart</button>
-        <a class="btn" href="menu.html">Back to Menu</a>
-      </div>
-
-      <div id="loseOverlay" class="tile section" style="display:none;">
-        <h3 style="margin:0 0 6px;">You lost 😭</h3>
-        <p class="muted" style="margin:0 0 12px;">Good try. Want to run it back?</p>
+    <div class="card game-wrap">
+      <div class="hud">
         <div class="row">
-          <button class="btn primary" id="overlayRestart" type="button">Restart</button>
-          <a class="btn" href="menu.html">Menu</a>
+          <span class="badge">Score: <span id="scoreText">0</span></span>
+          <span class="badge">High score: <span id="highText">0</span></span>
         </div>
+        <div class="row">
+          <button class="btn ghost" id="btnRestart" type="button">Restart</button>
+        </div>
+      </div>
+
+      <p class="muted" style="margin:0;">
+        Move with <b>← →</b> (or <b>A / D</b>). Dodge the red flags. Survive longer = higher score.
+      </p>
+
+      <canvas id="game" width="920" height="520"></canvas>
+    </div>
+  </div>
+
+  <div class="modal" id="loseModal">
+    <div class="box">
+      <h2 class="glow-title">You crashed 😭</h2>
+      <p class="muted" style="margin:0 0 14px;">
+        Score: <b id="finalScore">0</b> • High score: <b id="finalHigh">0</b>
+      </p>
+      <div class="row">
+        <button class="btn primary" id="btnReplay" type="button">Replay</button>
+        <a class="btn" href="game.html">Return to Game</a>
+        <a class="btn ghost" href="menu.html">Menu</a>
       </div>
     </div>
   </div>
 
-  <script src="game.js?v=20"></script>
+  <script src="game.js?v=999"></script>
 </body>
 </html>
