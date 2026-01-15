@@ -4,34 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector</title>
-  <link rel="stylesheet" href="style.css" />
 
   <script src="shared.js"></script>
   <script>
-    // index.html is ONLY a gate — no UI access here
-    (function gateIndex() {
-      if (isLocked()) {
-        location.replace("locked.html");
-        return;
-      }
-
-      if (!hasAcceptedTerms()) {
-        location.replace("privacy.html?next=menu.html");
-        return;
-      }
-
-      if (!isAdultVerified()) {
-        location.replace("age.html?next=menu.html");
-        return;
-      }
-
-      // Fully verified → enter app
-      location.replace("menu.html");
-    })();
+    if (isLocked()) location.replace("locked.html");
+    else if (!hasAcceptedTerms() || !isAdultVerified()) location.replace("privacy.html?next=menu.html");
+    else location.replace("menu.html");
   </script>
 </head>
-
-<body>
-  <!-- Blank on purpose -->
-</body>
+<body></body>
 </html>
