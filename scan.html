@@ -4,9 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Analysis</title>
-  <link rel="stylesheet" href="style.css?v=1000" />
-  <script src="shared.js?v=1000"></script>
-  <script>requireAdult("scan.html");</script>
+  <link rel="stylesheet" href="style.css?v=9999" />
+  <script src="shared.js?v=9999"></script>
+  <script>
+    // lock out if not verified
+    requireAdult("scan.html");
+  </script>
 </head>
 <body>
   <nav>
@@ -19,6 +22,7 @@
     </div>
 
     <div class="nav-actions">
+      <span class="badge" id="jsBadge">JS: …</span>
       <a class="btn ghost" href="menu.html">Menu</a>
       <a class="btn ghost" href="plan.html">Plan</a>
       <a class="btn ghost" href="quiz.html">Quiz</a>
@@ -42,7 +46,7 @@
             <label class="muted">Optional screenshot</label>
             <input id="imgInput" type="file" accept="image/*" />
             <p class="muted small" style="margin:6px 0 0;">
-              Screenshot is optional. This demo won’t OCR it — it’s just for your teacher/proof.
+              Screenshot is optional. This demo won’t OCR it — it’s just for proof.
             </p>
           </div>
 
@@ -69,6 +73,106 @@
     </div>
   </div>
 
-  <script src="scan.js?v=1000"></script>
+  <script>
+    // ✅ If you see "JS OK ✅", then the button WILL work.
+    document.getElementById("jsBadge").textContent = "JS OK ✅";
+
+    const textInput = document.getElementById("textInput");
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    const clearBtn = document.getElementById("clearBtn");
+
+    const scanBar = document.getElementById("scanBar");
+    const scanPercent = document.getElementById("scanPercent");
+    const scanSummary = document.getElementById("scanSummary");
+    const signalsBox = document.getElementById("signalsBox");
+    const scanDebug = document.getElementById("scanDebug");
+
+    function showDebug(msg){
+      scanDebug.style.display = "block";
+      scanDebug.textContent = msg;
+    }
+
+    function addSignal(text){
+      const d = document.createElement("div");
+      d.className = "quote";
+      d.textContent = text;
+      signalsBox.appendChild(d);
+    }
+
+    function analyzeText(raw){
+      const text = (raw || "").trim();
+      const lower = text.toLowerCase();
+
+      const signals = [];
+      let score = 0;
+
+      const qmarks = (text.match(/\?/g) || []).length;
+      if (qmarks >= 5) { score += 20; signals.push("Lots of question marks (pressure / anxiety vibe)"); }
+
+      if (/(seen|delivered|read at)/i.test(text)) { score += 15; signals.push("Mentioning seen/delivered/read receipts"); }
+
+      const dryHits = (lower.match(/\b(k|kk|ok|okay|sure|nm|idk|lol|lmao)\b/g) || []).length;
+      if (dryHits >= 3) { score += 18; signals.push("Many short/dry replies (k/ok/sure/idk etc.)"); }
+
+      if (/(fine\.|whatever|k\.)/i.test(text)) { score += 12; signals.push("Dismissive wording (fine., whatever, k.)"); }
+
+      const lines = text.split("\n").map(s => s.trim()).filter(Boolean);
+      let rapid = 0;
+      for (let i=1;i<lines.length;i++){
+        if (lines[i].length < 30 && lines[i-1].length < 30) rapid++;
+      }
+      if (rapid >= 3) { score += 12; signals.push("Back-to-back short messages (chase / spiral pattern)"); }
+
+      if (/(are you mad|do you hate|why are you|what did i do)/i.test(text)) {
+        score += 18; signals.push("Reassurance-seeking lines (are you mad / what did I do)");
+      }
+
+      if (/[A-Z]{6,}/.test(text)) { score += 10; signals.push("All caps/emotion spike (stress moment)"); }
+
+      if (score > 100) score = 100;
+
+      let label, summary;
+      if (score >= 80) { label = "MAX delulu 🚨"; summary = "This looks like anxiety + chasing energy. Don’t fill the silence — watch patterns."; }
+      else if (score >= 60) { label = "High delulu"; summary = "Mixed signals are triggering you. Ask once, then step back."; }
+      else if (score >= 40) { label = "Half-delulu 😭"; summary = "Not constant, but uncertainty is making you connect dots too fast."; }
+      else if (score >= 20) { label = "Slight overthink"; summary = "Some signs, but you can fix it by slowing down + checking reality."; }
+      else { label = "Grounded ✅"; summary = "Not many delulu signals. Keep it calm and watch consistency."; }
+
+      return { score, label, summary, signals };
+    }
+
+    function renderResult(res){
+      scanBar.style.width = `${res.score}%`;
+      scanPercent.textContent = `${res.score}%`;
+      scanSummary.textContent = `${res.label} — ${res.summary}`;
+
+      signalsBox.innerHTML = "";
+      if (!res.signals.length) addSignal("No big delulu signals found — keep it calm.");
+      res.signals.slice(0, 6).forEach(s => addSignal(s));
+
+      const d = getAppData();
+      d.lastScan = { score: res.score, label: res.label, summary: res.summary, signals: res.signals, savedAt: Date.now() };
+      setAppData(d);
+    }
+
+    analyzeBtn.addEventListener("click", () => {
+      const raw = textInput.value;
+      if (!raw.trim()) {
+        showDebug("Paste some messages first.");
+        return;
+      }
+      scanDebug.style.display = "none";
+      renderResult(analyzeText(raw));
+    });
+
+    clearBtn.addEventListener("click", () => {
+      textInput.value = "";
+      scanDebug.style.display = "none";
+      scanBar.style.width = "0%";
+      scanPercent.textContent = "--%";
+      scanSummary.textContent = "Paste text and press Analyze.";
+      signalsBox.innerHTML = "";
+    });
+  </script>
 </body>
 </html>
