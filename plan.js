@@ -18,18 +18,23 @@ function formatTime(ms){
 
 function makeWhy(percent){
   if (percent >= 80) {
-    return "You overanalyze heavily when things feel unclear. You tend to chase clarity through texts, reread messages, and react emotionally to silence or mixed signals.";
+    return "Okay this is like MAX delulu 😭 — you overanalyze hard when things feel unclear. You’re probably rereading messages, reacting to silence, and trying to get clarity through texts instead of just watching actions.";
   }
+
   if (percent >= 60) {
-    return "You overthink fairly often, especially when replies feel off or delayed. Uncertainty makes you start decoding tone and meaning instead of waiting for actions.";
+    return "You overthink pretty often, especially when replies feel off or delayed. When you don’t get clear signals, you start decoding tone/meaning instead of waiting to see if their actions stay consistent.";
   }
+
+  // ✅ YOUR BESTFRIEND 1 PARAGRAPH VERSION (40–59%)
   if (percent >= 40) {
-    return "You’re sometimes calm, sometimes detective-mode. When communication isn’t clear, you start filling in gaps instead of trusting patterns.";
+    return "You’re sometimes calm, sometimes detective-mode. Most of the time you’re chill, but when communication gets unclear or replies feel off, your brain starts connecting dots that aren’t fully there. It’s not constant spiraling — it’s more triggered by uncertainty, and once you step back, you usually realize you were overthinking more than the situation actually needed.";
   }
+
   if (percent >= 20) {
-    return "You generally stay grounded, but certain situations can trigger overthinking. This usually happens when you don’t get direct reassurance.";
+    return "You’re generally grounded, but certain situations can still trigger overthinking, especially when you don’t get clear reassurance. It’s not bad — you just need a pause before reacting.";
   }
-  return "You stay pretty grounded overall and don’t let texts control your emotions too much.";
+
+  return "You’re honestly pretty grounded overall and you don’t let texts control your mood too much. Keep that energy.";
 }
 
 function renderActions(list){
@@ -42,7 +47,7 @@ function renderActions(list){
   });
 }
 
-// Simulate loading so it feels real
+// little loading delay so it feels real
 setTimeout(() => {
   loadingBox.style.display = "none";
 
@@ -56,27 +61,24 @@ setTimeout(() => {
 
   planBox.style.display = "block";
 
-  // Score
   planBar.style.width = `${quiz.percent}%`;
   planPercent.textContent = `${quiz.percent}%`;
   planLabel.textContent = quiz.label || "Your result";
 
-  // WHY YOU GOT THIS (THIS IS WHAT YOU WANTED)
+  // ✅ set your detailed “Why you got this”
   planWhy.textContent = makeWhy(quiz.percent);
 
-  // Meta
   savedAtText.textContent = quiz.savedAt
-    ? `Based on your last quiz (${formatTime(quiz.savedAt)})`
+    ? `Based on your last quiz • ${formatTime(quiz.savedAt)}`
     : "";
 
-  // Actions
   if (Array.isArray(quiz.actions) && quiz.actions.length) {
     renderActions(quiz.actions);
   } else {
     renderActions([
       "Ask once, then step back.",
       "Watch actions, not words.",
-      "Stop checking for hidden meaning."
+      "Don’t chase for clarity through texts."
     ]);
   }
 }, 700);
