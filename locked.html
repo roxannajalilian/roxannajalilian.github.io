@@ -2,35 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Blocked</title>
-  <link rel="stylesheet" href="style.css?v=70001" />
-  <script src="shared.js?v=70001"></script>
+  <title>Access Locked</title>
+  <link rel="stylesheet" href="style.css?v=1001" />
 </head>
 <body>
   <div class="container">
-    <div class="card" style="max-width:640px; margin:70px auto;">
-      <h1 style="margin:0 0 8px;">Sorry — 18+ only.</h1>
-      <p class="muted" style="margin:0 0 12px;">
-        You can’t access this app if you’re under 18.
+    <div class="card" style="max-width:500px; margin:80px auto; text-align:center;">
+      <h1>Access Locked 🔒</h1>
+      <p class="muted">
+        This app is <b>18+ only</b>.  
+        You can’t access Delulu Detector at this time.
       </p>
 
-      <div class="row" style="margin-top:14px;">
-        <a class="btn primary" href="index.html">Back to Home</a>
-        <button class="btn ghost" id="resetBtn" type="button">Reset</button>
+      <div class="row" style="justify-content:center; margin-top:16px;">
+        <a class="btn primary" href="privacy.html">Go back</a>
+        <button class="btn ghost" onclick="localStorage.removeItem('dd_app_v1')">
+          Reset
+        </button>
       </div>
-
-      <p class="muted small" style="margin-top:12px;">
-        Reset clears saved age verification on this device.
-      </p>
     </div>
   </div>
-
-  <script>
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      clearAppData();
-      location.replace("index.html");
-    });
-  </script>
 </body>
 </html>
