@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Analysis</title>
-  <link rel="stylesheet" href="style.css?v=20" />
-  <script src="shared.js?v=20"></script>
+  <link rel="stylesheet" href="style.css?v=21" />
+  <script src="shared.js?v=21"></script>
   <script>requireAdult("scan.html");</script>
 </head>
 <body>
@@ -28,11 +28,10 @@
     <div class="card grid-2">
       <div>
         <h2 style="margin:0 0 6px;">Paste the messages</h2>
-        <p class="muted" style="margin:0 0 10px;">
-          It checks for patterns (dry replies, mixed signals, shutdown words, chasing, etc.).
-        </p>
+        <p class="muted" style="margin:0 0 12px;">This version scores patterns from your pasted text.</p>
 
-        <textarea id="scanText" rows="8" placeholder="Paste conversation text here..."></textarea>
+        <label for="scanText">Conversation text</label>
+        <textarea id="scanText" rows="9" placeholder="Paste conversation text here..."></textarea>
 
         <div class="section">
           <label for="scanFile">Optional screenshot</label>
@@ -44,8 +43,9 @@
         <div class="row" style="margin-top:12px;">
           <button class="btn primary" id="analyzeBtn" type="button">Analyze</button>
           <button class="btn ghost" id="clearBtn" type="button">Clear</button>
-          <a class="btn ghost" href="menu.html">Back</a>
         </div>
+
+        <p class="muted small" id="debugLine" style="margin-top:12px;"></p>
       </div>
 
       <div>
@@ -57,6 +57,7 @@
             <div style="font-weight:900;">Delulu Signal %</div>
             <div class="muted small" id="scanMeta">No scan yet</div>
           </div>
+
           <div class="progress" style="margin:10px 0;"><div id="scanBar"></div></div>
           <div style="font-size:28px; font-weight:950;" id="scanPercent">--%</div>
           <div class="muted" id="scanSummary">Paste text and press Analyze.</div>
@@ -68,6 +69,6 @@
     </div>
   </div>
 
-  <script src="scan.js?v=20"></script>
+  <script src="scan.js?v=21"></script>
 </body>
 </html>
