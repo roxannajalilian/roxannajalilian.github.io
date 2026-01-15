@@ -14,6 +14,10 @@
 
 *{ box-sizing:border-box; }
 html,body{ height:100%; }
+
+/* IMPORTANT: isolate stacking contexts so random overlays don't trap clicks */
+html, body { isolation: isolate; }
+
 body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
@@ -23,17 +27,25 @@ body{
     radial-gradient(1100px 700px at 85% 25%, rgba(60,200,255,.35), transparent 55%),
     linear-gradient(135deg, var(--bg1), #101020 45%, var(--bg2));
   overflow-x:hidden;
+  position: relative;
+  z-index: 0;
 }
 
+/* Any decorative pseudo layers MUST NOT block clicks */
 body::before, body::after,
+nav::before, nav::after,
 .container::before, .container::after,
-.card::before, .card::after{ pointer-events:none !important; }
+.card::before, .card::after,
+.tile::before, .tile::after{
+  pointer-events:none !important;
+}
 
 a{ color:inherit; text-decoration:none; }
 
+/* NAV */
 nav{
   position:sticky; top:0;
-  z-index:20;
+  z-index: 9999;             /* super high */
   padding:14px 18px;
   display:flex;
   align-items:center;
@@ -42,6 +54,9 @@ nav{
   background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.06));
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255,255,255,.08);
+
+  /* make sure nav is clickable */
+  pointer-events:auto;
 }
 
 .brand{ display:flex; align-items:center; gap:12px; min-width:220px; }
@@ -59,7 +74,16 @@ nav{
 
 .nav-actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
 
-.container{ max-width: 980px; margin: 26px auto; padding: 0 16px 60px; }
+/* CONTENT WRAPPER */
+.container{
+  max-width: 980px;
+  margin: 26px auto;
+  padding: 0 16px 60px;
+
+  position: relative;
+  z-index: 5;          /* must sit above background */
+  pointer-events: auto;
+}
 
 .card{
   background: linear-gradient(180deg, var(--card), var(--card2));
@@ -67,6 +91,10 @@ nav{
   border-radius: var(--r);
   box-shadow: var(--shadow);
   padding: 18px;
+
+  position: relative;
+  z-index: 10;        /* sit above container */
+  pointer-events: auto;
 }
 
 .section{ padding: 12px 0; }
@@ -96,13 +124,14 @@ nav{
   transition: transform .12s ease, background .12s ease, border-color .12s ease;
   display:inline-flex; align-items:center; justify-content:center;
   min-height:40px;
+
+  position: relative;
+  z-index: 99999;  /* buttons always above */
+  pointer-events: auto !important;
 }
 .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.11); }
 .btn:active{ transform: translateY(0px) scale(.99); }
-.btn.primary{
-  background: rgba(124,77,255,.25);
-  border-color: rgba(124,77,255,.5);
-}
+.btn.primary{ background: rgba(124,77,255,.25); border-color: rgba(124,77,255,.5); }
 .btn.ghost{ background: transparent; }
 .btn:disabled{ opacity:.5; cursor:not-allowed; transform:none; }
 
@@ -114,8 +143,20 @@ input, textarea{
   background: rgba(0,0,0,.18);
   color: var(--text);
   outline:none;
+
+  position: relative;
+  z-index: 99999;
+  pointer-events: auto !important;
 }
-label{ color: var(--muted); font-weight:650; display:block; margin: 6px 0; }
+label{
+  color: var(--muted);
+  font-weight:650;
+  display:block;
+  margin: 6px 0;
+  position: relative;
+  z-index: 99999;
+  pointer-events: auto !important;
+}
 
 .hr{ height:1px; background: rgba(255,255,255,.10); margin: 10px 0; }
 
@@ -130,6 +171,9 @@ label{ color: var(--muted); font-weight:650; display:block; margin: 6px 0; }
   border-radius: var(--r2);
   border:1px solid rgba(255,255,255,.12);
   background: rgba(255,255,255,.05);
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
 }
 .tile h3{ margin:0 0 6px; }
 .tile p{ margin:0 0 12px; }
@@ -170,28 +214,16 @@ label{ color: var(--muted); font-weight:650; display:block; margin: 6px 0; }
 
 .choice.tap{ transform: scale(0.985); }
 
-/* SELECTED must override button background always */
 .choice.selected{
   border-color: rgba(255,255,255,.22) !important;
   box-shadow: 0 0 0 3px rgba(255,255,255,.08), 0 14px 34px rgba(0,0,0,.28);
   transform: scale(1.01);
 }
+.choice.selected.sel-3{ background: linear-gradient(135deg, rgba(255,60,120,.55), rgba(255,120,80,.35)) !important; }
+.choice.selected.sel-2{ background: linear-gradient(135deg, rgba(255,170,50,.50), rgba(255,230,120,.30)) !important; }
+.choice.selected.sel-1{ background: linear-gradient(135deg, rgba(180,160,255,.48), rgba(120,170,255,.28)) !important; }
+.choice.selected.sel-0{ background: linear-gradient(135deg, rgba(90,230,160,.35), rgba(70,160,255,.22)) !important; }
 
-/* 4 different selected colors */
-.choice.selected.sel-3{
-  background: linear-gradient(135deg, rgba(255,60,120,.55), rgba(255,120,80,.35)) !important;
-}
-.choice.selected.sel-2{
-  background: linear-gradient(135deg, rgba(255,170,50,.50), rgba(255,230,120,.30)) !important;
-}
-.choice.selected.sel-1{
-  background: linear-gradient(135deg, rgba(180,160,255,.48), rgba(120,170,255,.28)) !important;
-}
-.choice.selected.sel-0{
-  background: linear-gradient(135deg, rgba(90,230,160,.35), rgba(70,160,255,.22)) !important;
-}
-
-/* Plan loading */
 .plan-loading{
   display:flex; align-items:center; gap:14px;
   padding:18px;
@@ -221,13 +253,9 @@ label{ color: var(--muted); font-weight:650; display:block; margin: 6px 0; }
   background: rgba(255,255,255,.05);
 }
 
-.error{
-  margin:8px 0 0;
-  color:#ff8a8a;
-  font-weight:900;
-}
-
+/* gate */
 .gate-card{ max-width:520px; margin:60px auto; }
 .gate-head{ display:flex; gap:14px; align-items:center; margin-bottom:14px; }
 .gate-title{ margin:0; }
 .gate-sub{ margin:2px 0 0; }
+.error{ margin:8px 0 0; color:#ff8a8a; font-weight:900; }
