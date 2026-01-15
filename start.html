@@ -4,30 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Age Check</title>
-  <link rel="stylesheet" href="style.css?v=20" />
-  <script src="shared.js?v=20"></script>
+  <link rel="stylesheet" href="style.css?v=999" />
+  <script src="shared.js?v=999"></script>
 </head>
 <body>
- 
   <div class="container">
-    <div class="card gate-card">
-      <div class="gate-head">
+    <div class="card" style="max-width:560px; margin:60px auto;">
+      <div style="display:flex; gap:14px; align-items:center; margin-bottom:14px;">
         <div class="logo">DD</div>
         <div>
-          <h1 class="gate-title">Delulu Detector</h1>
-          <p class="muted gate-sub">18+ only</p>
+          <h1 class="glow-title" style="margin:0;">Delulu Detector</h1>
+          <p class="muted glow-sub" style="margin:2px 0 0;">18+ only</p>
         </div>
       </div>
 
       <p class="muted" style="margin-top:0;">
-        This app is intended for adults. Confirm you are <b>18 or older</b> to access the Menu, Quiz, Plan, Analysis, and Game.
+        Confirm you are <b>18 or older</b> to access Menu, Quiz, Plan, Analysis, and Game.
       </p>
 
       <div class="section">
-        <label for="ageInput">Enter your age (18+)</label>
-        <input id="ageInput" type="number" inputmode="numeric" min="18" placeholder="18+" />
-        <p id="errorText" class="error" style="display:none;"></p>
+        <label for="ageInput">Enter your age</label>
+        <input id="ageInput" type="number" inputmode="numeric" min="1" placeholder="18+" />
       </div>
+
+      <label class="muted" style="display:flex; gap:10px; align-items:flex-start; margin-top:10px;">
+        <input id="termsCheck" type="checkbox" style="width:auto; margin-top:3px;">
+        <span>I agree to the <a href="privacy.html"><b>Privacy + Terms</b></a>.</span>
+      </label>
+
+      <p id="errorText" style="display:none; margin:10px 0 0; color:#ff8a8a; font-weight:900;"></p>
 
       <div class="row" style="margin-top:14px;">
         <button class="btn primary" id="continueBtn" type="button">Continue</button>
@@ -36,21 +41,17 @@
 
       <div class="hr"></div>
       <p class="muted small" style="margin:0;">
-        Your age is stored only to verify access (in your browser). No data is sent anywhere.
+        Age is stored only to verify access (localStorage). No data is sent anywhere.
       </p>
     </div>
   </div>
 
   <script>
-   
-    if (isAdultVerified()) {
-      location.replace(safeNextFromURL());
-    }
-
-    const NEXT = safeNextFromURL();
+    const NEXT = safeNextFromURL ? safeNextFromURL() : "menu.html";
     const ageInput = document.getElementById("ageInput");
     const continueBtn = document.getElementById("continueBtn");
     const errorText = document.getElementById("errorText");
+    const termsCheck = document.getElementById("termsCheck");
 
     function showError(msg){
       errorText.textContent = msg;
@@ -60,8 +61,13 @@
     continueBtn.addEventListener("click", () => {
       const age = Number(ageInput.value);
 
+      if (!termsCheck.checked) return showError("You have to check the Privacy + Terms box first.");
       if (!age) return showError("Enter your age first.");
-      if (age < 18) return showError("Sorry — this app is 18+ only.");
+      if (age < 18) {
+        // lock page name you wanted:
+        window.location.href = "locked.html";
+        return;
+      }
 
       errorText.style.display = "none";
 
@@ -70,7 +76,7 @@
       data.ageVerifiedAt = Date.now();
       setAppData(data);
 
-      location.href = NEXT; 
+      window.location.href = NEXT;
     });
 
     ageInput.addEventListener("keydown", (e) => {
