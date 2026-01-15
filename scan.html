@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Analysis</title>
-  <link rel="stylesheet" href="style.css?v=21" />
-  <script src="shared.js?v=21"></script>
+  <link rel="stylesheet" href="style.css?v=999" />
+  <script src="shared.js?v=999"></script>
   <script>requireAdult("scan.html");</script>
 </head>
 <body>
@@ -27,8 +27,13 @@
   <div class="container">
     <div class="card grid-2">
       <div>
-        <h2 style="margin:0 0 6px;">Paste the messages</h2>
-        <p class="muted" style="margin:0 0 12px;">This version scores patterns from your pasted text.</p>
+        <div class="row" style="justify-content:space-between;">
+          <div>
+            <h2 style="margin:0 0 6px;">Paste the messages</h2>
+            <p class="muted" style="margin:0 0 12px;">This scores patterns from your pasted text.</p>
+          </div>
+          <span class="badge" id="jsLive">JS: …</span>
+        </div>
 
         <label for="scanText">Conversation text</label>
         <textarea id="scanText" rows="9" placeholder="Paste conversation text here..."></textarea>
@@ -69,6 +74,136 @@
     </div>
   </div>
 
-  <script src="scan.js?v=21"></script>
+  <!-- ✅ Inline JS so button always works -->
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const jsLive = $("jsLive");
+    const debugLine = $("debugLine");
+
+    function dbg(msg){ if (debugLine) debugLine.textContent = msg; }
+
+    jsLive.textContent = "JS: connected ✅";
+    dbg("Analyzer ready ✅");
+
+    const scanText = $("scanText");
+    const scanFile = $("scanFile");
+    const fileInfo = $("fileInfo");
+    const preview = $("preview");
+
+    const analyzeBtn = $("analyzeBtn");
+    const clearBtn = $("clearBtn");
+
+    const scanBar = $("scanBar");
+    const scanPercent = $("scanPercent");
+    const scanSummary = $("scanSummary");
+    const scanMeta = $("scanMeta");
+    const signalsList = $("signalsList");
+
+    let hasImage = false;
+
+    scanFile.addEventListener("change", () => {
+      const f = scanFile.files && scanFile.files[0];
+      hasImage = !!f;
+
+      if (!f) {
+        fileInfo.textContent = "";
+        preview.style.display = "none";
+        preview.src = "";
+        return;
+      }
+
+      fileInfo.textContent = `Selected: ${f.name}`;
+      const reader = new FileReader();
+      reader.onload = () => {
+        preview.src = reader.result;
+        preview.style.display = "block";
+      };
+      reader.readAsDataURL(f);
+    });
+
+    function addSignal(text){
+      const div = document.createElement("div");
+      div.className = "quote";
+      div.textContent = text;
+      signalsList.appendChild(div);
+    }
+
+    function analyzeText(raw){
+      const text = (raw || "").toLowerCase();
+      let score = 0;
+      const found = [];
+
+      const rules = [
+        { name: "Dry replies / shutdown words", re: /\b(k|ok|kk|sure|fine|idk|whatever)\b/g, pts: 12 },
+        { name: "Mixed signals phrases", re: /\b(i miss you|i like you|but|however|not ready)\b/g, pts: 14 },
+        { name: "Ghosting / ignored vibes", re: /\b(ghost|ignored|no reply|didn't reply|left me)\b/g, pts: 14 },
+        { name: "Chasing language", re: /\b(answer|why aren't you|hello\?|are you ignoring)\b/g, pts: 12 },
+        { name: "Overthinking punctuation", re: /(\.\.\.|??+|!!+)/g, pts: 8 },
+        { name: "Apology / guilt loop", re: /\b(sorry|my fault|i shouldn't|please)\b/g, pts: 8 }
+      ];
+
+      rules.forEach(r => {
+        const m = text.match(r.re);
+        if (m && m.length) {
+          score += r.pts + Math.min(12, m.length);
+          found.push(`${r.name} (${m.length}x)`);
+        }
+      });
+
+      score = Math.max(0, Math.min(100, score));
+      return { score, found };
+    }
+
+    function setResult(score, found){
+      scanMeta.textContent = hasImage ? "Text + screenshot added" : "Text only";
+      scanBar.style.width = `${score}%`;
+      scanPercent.textContent = `${score}%`;
+
+      if (score >= 75) scanSummary.textContent = "High signals. Slow down — don’t chase. Watch actions + consistency.";
+      else if (score >= 50) scanSummary.textContent = "Medium signals. Some red flags — focus on patterns, not one message.";
+      else if (score >= 25) scanSummary.textContent = "Low-medium signals. Don’t spiral — keep it direct.";
+      else scanSummary.textContent = "Low signals. Stay calm and keep your standards.";
+
+      signalsList.innerHTML = "";
+      if (!found.length) addSignal("No strong patterns detected from your text.");
+      else found.forEach(addSignal);
+
+      if (hasImage) addSignal("Screenshot preview added (this version doesn’t read text from images yet).");
+    }
+
+    analyzeBtn.addEventListener("click", () => {
+      dbg("Analyze clicked ✅");
+
+      const t = scanText.value.trim();
+      if (!t) {
+        scanMeta.textContent = "No scan";
+        scanBar.style.width = "0%";
+        scanPercent.textContent = "--%";
+        scanSummary.textContent = "Paste some messages first.";
+        signalsList.innerHTML = "";
+        return;
+      }
+
+      const { score, found } = analyzeText(t);
+      setResult(score, found);
+    });
+
+    clearBtn.addEventListener("click", () => {
+      scanText.value = "";
+      scanFile.value = "";
+      fileInfo.textContent = "";
+      preview.style.display = "none";
+      preview.src = "";
+      hasImage = false;
+
+      scanMeta.textContent = "No scan yet";
+      scanBar.style.width = "0%";
+      scanPercent.textContent = "--%";
+      scanSummary.textContent = "Paste text and press Analyze.";
+      signalsList.innerHTML = "";
+
+      dbg("Cleared ✅");
+    });
+  </script>
 </body>
 </html>
