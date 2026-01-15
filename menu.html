@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Menu</title>
-  <link rel="stylesheet" href="style.css?v=20" />
-  <script src="shared.js?v=20"></script>
+  <link rel="stylesheet" href="style.css?v=999" />
+  <script src="shared.js?v=999"></script>
   <script>requireAdult("menu.html");</script>
 </head>
 <body>
@@ -19,45 +19,51 @@
     </div>
 
     <div class="nav-actions">
-      <a class="btn ghost" href="quiz.html">Quiz</a>
-      <a class="btn ghost" href="plan.html">Plan</a>
-      <a class="btn ghost" href="scan.html">Analysis</a>
-      <a class="btn ghost" href="game.html">Game</a>
-      <button class="btn" data-reset-app type="button">Reset App</button>
+      <a class="btn ghost" href="privacy.html">Privacy</a>
+      <button class="btn ghost" id="resetBtn" type="button">Reset App</button>
     </div>
   </nav>
 
   <div class="container">
     <div class="card">
-      <h1 style="margin:0 0 8px;">Choose a mode</h1>
-      <p class="muted" style="margin:0 0 16px;">Quiz saves your score → Plan turns it into advice.</p>
+      <h1 style="margin:0 0 10px;">Choose a mode</h1>
+      <p class="muted" style="margin:0 0 18px;">
+        Quiz saves your % → Plan explains it → Analysis scores pasted messages (+ optional screenshot).
+      </p>
 
       <div class="grid-2">
         <div class="tile">
-          <h3>🧠 Quiz</h3>
-          <p class="muted">Get a Delulu % based on habits (overthinking / chasing / ignoring signs).</p>
+          <h3 style="margin:0 0 6px;">📝 Quiz</h3>
+          <p class="muted" style="margin:0 0 12px;">Get your delulu % and save it.</p>
           <a class="btn primary" href="quiz.html">Start Quiz</a>
         </div>
 
         <div class="tile">
-          <h3>📝 Plan</h3>
-          <p class="muted">Uses your last Quiz score and turns it into a plan + boundaries.</p>
+          <h3 style="margin:0 0 6px;">📌 Plan</h3>
+          <p class="muted" style="margin:0 0 12px;">Uses your last quiz result.</p>
           <a class="btn" href="plan.html">Open Plan</a>
         </div>
 
         <div class="tile">
-          <h3>🔎 Text Analysis</h3>
-          <p class="muted">Paste messages (and optionally add a screenshot) for “signals” + score.</p>
-          <a class="btn" href="scan.html">Open Analyzer</a>
+          <h3 style="margin:0 0 6px;">🔎 Analysis</h3>
+          <p class="muted" style="margin:0 0 12px;">Paste messages + optional screenshot.</p>
+          <a class="btn" href="scan.html">Open Analysis</a>
         </div>
 
         <div class="tile">
-          <h3>🎮 Game</h3>
-          <p class="muted">Delulu Dodge: avoid red flags (simple mini-game).</p>
+          <h3 style="margin:0 0 6px;">🎮 Game</h3>
+          <p class="muted" style="margin:0 0 12px;">Delulu Dodge mini game.</p>
           <a class="btn" href="game.html">Play</a>
         </div>
       </div>
     </div>
   </div>
+
+  <script>
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      clearAppData();
+      location.replace("start.html");
+    });
+  </script>
 </body>
 </html>
