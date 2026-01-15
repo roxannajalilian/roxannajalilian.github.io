@@ -1,57 +1,29 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
   <title>Access Denied</title>
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="cursorGlow"></div>
 
-  <nav>
-    <div class="brand">
-      <div class="logo">DD</div>
-      <div>
-        <div class="title">Delulu Detector</div>
-        <div class="sub">Access restricted</div>
-      </div>
-    </div>
-  </nav>
+<div class="container">
+  <div class="card center">
+    <h1>Access Restricted</h1>
+    <p>
+      Sorry — this app is restricted to users 18 and older.
+    </p>
+    <p>
+      You cannot access this content at this time.
+    </p>
+  </div>
+</div>
 
-  <main class="container">
-    <div class="card center" style="max-width: 900px; margin: 0 auto;">
-      <h1 style="margin: 6px 0 10px;">Access denied</h1>
-      <p class="muted" id="reason">Sorry — you must be 18+.</p>
+<script>
+if (localStorage.getItem("blocked") !== "true") {
+  window.location.href = "privacy.html";
+}
+</script>
 
-      <div class="row" style="justify-content:center; margin-top:16px;">
-        <button class="btn ghost" id="clearBtn" type="button">Clear & return</button>
-      </div>
-
-      <p class="tiny muted" style="margin-top:12px;">
-        If you’re under 18, this app can’t be used.
-      </p>
-    </div>
-  </main>
-
-  <script src="./glow.js"></script>
-  <script type="module">
-    import { getData, setData } from "./gate.js";
-
-    const data = getData();
-    document.getElementById("reason").textContent =
-      data?.lockReason || "Sorry — you must be 18 or older to use this app.";
-
-    // Block back navigation
-    history.pushState(null, "", location.href);
-    window.addEventListener("popstate", () => {
-      history.pushState(null, "", location.href);
-    });
-
-    document.getElementById("clearBtn").addEventListener("click", () => {
-      setData({});
-      window.location.replace("index.html");
-    });
-  </script>
 </body>
 </html>
