@@ -1,84 +1,135 @@
+// plan.js
 requireAdult("plan.html");
 
 const loadingBox = document.getElementById("loadingBox");
 const emptyBox = document.getElementById("emptyBox");
 const planBox = document.getElementById("planBox");
 
+const savedAtText = document.getElementById("savedAtText");
 const planBar = document.getElementById("planBar");
 const planPercent = document.getElementById("planPercent");
 const planLabel = document.getElementById("planLabel");
 const planWhy = document.getElementById("planWhy");
-const savedAtText = document.getElementById("savedAtText");
 const actionsGrid = document.getElementById("actionsGrid");
 
-function formatTime(ms){
-  const d = new Date(ms);
-  return d.toLocaleString();
+function fmtTime(ts){
+  try {
+    return new Date(ts).toLocaleString();
+  } catch {
+    return "";
+  }
 }
 
-function makeWhy(percent){
+function tier(percent){
+  if (percent >= 80) return "max";
+  if (percent >= 60) return "high";
+  if (percent >= 40) return "mid";
+  if (percent >= 20) return "low";
+  return "grounded";
+}
+
+function whyParagraph(percent){
   if (percent >= 80) {
-    return "Okay this is like MAX delulu 😭 — you overanalyze hard when things feel unclear. You’re probably rereading messages, reacting to silence, and trying to get clarity through texts instead of just watching actions.";
+    return "Okay bestie… you’re in FULL detective mode rn 😭. When something feels even a little off, your brain starts building a whole movie from tiny details (punctuation, timing, dryness). It’s not because you’re dumb — it’s because you want clarity so bad that uncertainty feels personal. The gag is: the more you chase the meaning, the more drained you get. We’re switching you from “prove it” energy to “watch the pattern” energy.";
   }
-
   if (percent >= 60) {
-    return "You overthink pretty often, especially when replies feel off or delayed. When you don’t get clear signals, you start decoding tone/meaning instead of waiting to see if their actions stay consistent.";
+    return "Bestie you’re not always delulu, but mixed signals have you acting like Sherlock 😭. When replies feel weird or inconsistent, you start connecting dots that aren’t fully confirmed yet. You’re basically trying to protect your feelings by figuring it out fast, but it accidentally makes you spiral more. You do way better when you step back, breathe, and watch what they consistently do — not one random text.";
   }
-
-  // ✅ YOUR BESTFRIEND 1 PARAGRAPH VERSION (40–59%)
   if (percent >= 40) {
-    return "You’re sometimes calm, sometimes detective-mode. Most of the time you’re chill, but when communication gets unclear or replies feel off, your brain starts connecting dots that aren’t fully there. It’s not constant spiraling — it’s more triggered by uncertainty, and once you step back, you usually realize you were overthinking more than the situation actually needed.";
+    return "You’re sometimes calm, sometimes detective mode. Most of the time you’re chill, but when communication gets unclear or replies feel off, your brain starts connecting dots that aren’t fully there. You end up filling in gaps instead of waiting to see the full pattern. It’s not constant spiraling — it’s triggered by uncertainty. Once you take a step back, you usually realize you were overthinking more than the situation needed.";
   }
-
   if (percent >= 20) {
-    return "You’re generally grounded, but certain situations can still trigger overthinking, especially when you don’t get clear reassurance. It’s not bad — you just need a pause before reacting.";
+    return "You’re mostly grounded, but you get little spikes of overthinking when something feels confusing. It’s like you’re fine until a dry reply or weird pause happens, then your brain tries to “solve” it. The fix isn’t to care less — it’s to stop treating one moment like the whole story.";
   }
-
-  return "You’re honestly pretty grounded overall and you don’t let texts control your mood too much. Keep that energy.";
+  return "You’re actually pretty grounded. You don’t instantly panic over every text, and you’re better at reading the *overall vibe* instead of one message. Just keep your standards and don’t let inconsistency pull you into over-explaining or chasing.";
 }
 
-function renderActions(list){
+function actionsFor(percent){
+  const t = tier(percent);
+
+  const common = [
+    "Wait for a pattern (3+ moments), not 1 weird reply.",
+    "Ask once, clearly. If they dodge it, that’s the answer.",
+    "If you feel anxious, don’t text — drink water + do something else for 15 mins first."
+  ];
+
+  if (t === "max") return [
+    "No double texting. One message max. Then stop.",
+    "Mute their notifications for a day (so you’re not jump-scared).",
+    "If it’s confusing, call it what it is: inconsistency.",
+    ...common,
+    "If they like you, you won’t be guessing this much."
+  ];
+
+  if (t === "high") return [
+    "Before you reply, reread your message: is it confident or chasing?",
+    "Don’t explain yourself 5 times. Say it once.",
+    "Match energy. Don’t overgive to under-effort.",
+    ...common
+  ];
+
+  if (t === "mid") return [
+    "When you feel triggered: don’t react in the same minute.",
+    "If they’re unclear, don’t fill the silence — let them show you.",
+    ...common,
+    "If you wouldn’t advise your best friend to chase, don’t do it."
+  ];
+
+  if (t === "low") return [
+    "Treat one dry text as “maybe they’re busy”, not “they hate me”.",
+    "Check reality: what have they done consistently?",
+    ...common,
+    "Keep it cute. Don’t overthink punctuation 😭"
+  ];
+
+  return [
+    "Keep doing what you’re doing — you read patterns well.",
+    "Stay consistent and don’t lower your standards.",
+    ...common
+  ];
+}
+
+function makeQuote(text){
+  const d = document.createElement("div");
+  d.className = "quote";
+  d.textContent = text;
+  return d;
+}
+
+function showPlan(lastQuiz){
+  const percent = Number(lastQuiz.percent ?? 0);
+  const label = lastQuiz.label || "—";
+
+  savedAtText.textContent = `Saved: ${fmtTime(lastQuiz.savedAt || Date.now())}`;
+  planPercent.textContent = `${percent}%`;
+  planLabel.textContent = label;
+  planBar.style.width = `${percent}%`;
+  planWhy.textContent = whyParagraph(percent);
+
   actionsGrid.innerHTML = "";
-  list.forEach(text => {
-    const div = document.createElement("div");
-    div.className = "quote";
-    div.textContent = text;
-    actionsGrid.appendChild(div);
-  });
+  actionsFor(percent).slice(0, 6).forEach(a => actionsGrid.appendChild(makeQuote(a)));
 }
 
-// little loading delay so it feels real
-setTimeout(() => {
-  loadingBox.style.display = "none";
+(function init(){
+  // spinner feel
+  loadingBox.style.display = "flex";
+  emptyBox.style.display = "none";
+  planBox.style.display = "none";
 
   const data = getAppData();
-  const quiz = data.lastQuiz;
+  const lastQuiz = data.lastQuiz;
 
-  if (!quiz || typeof quiz.percent !== "number") {
-    emptyBox.style.display = "block";
-    return;
-  }
+  setTimeout(() => {
+    loadingBox.style.display = "none";
 
-  planBox.style.display = "block";
+    if (!lastQuiz || typeof lastQuiz.percent !== "number") {
+      emptyBox.style.display = "block";
+      planBox.style.display = "none";
+      return;
+    }
 
-  planBar.style.width = `${quiz.percent}%`;
-  planPercent.textContent = `${quiz.percent}%`;
-  planLabel.textContent = quiz.label || "Your result";
-
-  // ✅ set your detailed “Why you got this”
-  planWhy.textContent = makeWhy(quiz.percent);
-
-  savedAtText.textContent = quiz.savedAt
-    ? `Based on your last quiz • ${formatTime(quiz.savedAt)}`
-    : "";
-
-  if (Array.isArray(quiz.actions) && quiz.actions.length) {
-    renderActions(quiz.actions);
-  } else {
-    renderActions([
-      "Ask once, then step back.",
-      "Watch actions, not words.",
-      "Don’t chase for clarity through texts."
-    ]);
-  }
-}, 700);
+    planBox.style.display = "block";
+    emptyBox.style.display = "none";
+    showPlan(lastQuiz);
+  }, 700);
+})();
