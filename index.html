@@ -3,83 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Privacy + Terms</title>
-  <link rel="stylesheet" href="style.css?v=70001" />
-  <script src="shared.js?v=70001"></script>
+  <title>Delulu Detector</title>
+  <meta http-equiv="refresh" content="0; url=privacy.html" />
 </head>
 <body>
-  <nav>
-    <div class="brand">
-      <div class="logo">DD</div>
-      <div>
-        <div class="title">Delulu Detector</div>
-        <div class="sub">Privacy + Terms</div>
-      </div>
-    </div>
-
-    <div class="nav-actions">
-      <a class="btn ghost" href="index.html">Home</a>
-      <a class="btn" href="menu.html">Menu</a>
-    </div>
-  </nav>
-
-  <div class="container">
-    <div class="card">
-      <h1 style="margin:0 0 10px;">Privacy + Terms</h1>
-      <p class="muted" style="margin:0 0 16px;">
-        This is a school/demo web app. It gives general “delulu” insights (not professional advice).
-      </p>
-
-      <div class="grid-2">
-        <div class="tile">
-          <h3 style="margin:0 0 8px;">Privacy</h3>
-          <p class="muted" style="margin:0;">
-            • Your text/results stay on <b>your device</b>.<br>
-            • No accounts. No server. Nothing is uploaded.<br>
-            • We only use <b>localStorage</b> so the app can remember your quiz/plan.
-          </p>
-        </div>
-
-        <div class="tile">
-          <h3 style="margin:0 0 8px;">What we store</h3>
-          <p class="muted" style="margin:0;">
-            • Age verification (18+ access)<br>
-            • Last quiz score + answers (to build your plan)<br>
-            • Optional analysis result (if you analyze text)
-          </p>
-        </div>
-      </div>
-
-      <div class="tile" style="margin-top:12px;">
-        <h3 style="margin:0 0 8px;">18+ Rule</h3>
-        <p class="muted" style="margin:0;">
-          You must be <b>18 or older</b> to use Menu, Quiz, Plan, Analysis, and Game.
-          If you enter an age under 18, you’ll be redirected to the blocked page.
-        </p>
-      </div>
-
-      <div class="tile" style="margin-top:12px;">
-        <h3 style="margin:0 0 8px;">Safety note</h3>
-        <p class="muted" style="margin:0;">
-          This app can’t help with emergencies. If you feel unsafe, contact local emergency services
-          or talk to a trusted person.
-        </p>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="row">
-        <a class="btn primary" href="start.html?next=menu.html">Continue to Age Check</a>
-        <button class="btn ghost" id="resetBtn" type="button">Reset Stored Data</button>
-      </div>
-    </div>
-  </div>
-
   <script>
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      clearAppData();
-      alert("Saved data cleared.");
-    });
+    // instant redirect (better than meta refresh)
+    location.replace("privacy.html");
   </script>
 </body>
 </html>
