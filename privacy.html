@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Privacy</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=20" />
+  <script src="shared.js?v=20"></script>
 </head>
 <body>
   <nav>
@@ -12,30 +13,37 @@
       <div class="logo">DD</div>
       <div>
         <div class="title">Delulu Detector</div>
-        <div class="sub">Privacy & Concerns</div>
+        <div class="sub">Privacy</div>
       </div>
     </div>
     <div class="nav-actions">
-      <a class="btn" href="start.html">Back</a>
+      <a class="btn ghost" href="start.html">Start</a>
       <a class="btn ghost" href="menu.html">Menu</a>
+      <button class="btn" data-reset-app type="button">Reset App</button>
     </div>
   </nav>
 
   <div class="container">
     <div class="card">
-      <h2 style="margin:0 0 10px;">Privacy & Concerns</h2>
-      <p class="muted" style="margin:0 0 10px;">
-        This app stores your age + quiz result <b>only in your browser</b> using localStorage.
-        Nothing is uploaded anywhere.
+      <h1 style="margin:0 0 8px;">Privacy & Concerns</h1>
+      <p class="muted">
+        This app stores information only in your browser (localStorage) so it can remember your quiz score and access verification.
+        It does not send your messages anywhere.
       </p>
-      <div class="hr"></div>
-      <p class="muted" style="margin:0 0 10px;">
-        If you’re dealing with anything dangerous, abusive, or you feel unsafe, this app can’t help with emergencies.
-        Please reach out to trusted support or emergency services.
-      </p>
-      <div class="row" style="margin-top:14px;">
-        <a class="btn primary" href="start.html">I Understand</a>
-        <a class="btn" href="menu.html">Go to Menu</a>
+      <div class="tile">
+        <h3 style="margin:0 0 8px;">What we store</h3>
+        <ul class="muted" style="margin:0; padding-left:18px;">
+          <li>Your age (to verify 18+ access)</li>
+          <li>Your last quiz score + answers</li>
+          <li>Optional analyzer results (not your files)</li>
+        </ul>
+      </div>
+
+      <div class="tile" style="margin-top:12px;">
+        <h3 style="margin:0 0 8px;">If something is unsafe</h3>
+        <p class="muted" style="margin:0;">
+          If you’re in danger or feel unsafe, talk to a trusted adult or local emergency services.
+        </p>
       </div>
     </div>
   </div>
