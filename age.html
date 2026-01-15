@@ -1,18 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Age Check</title>
+  <meta charset="UTF-8" />
+  <title>Age Verification</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <canvas id="particle-bg"></canvas>
-  <div class="box glow">
-    <h2>Are you 18 or older?</h2>
-    <button onclick="window.location.href='quiz.html'" class="glow-btn">Yes</button>
-    <button onclick="alert('You cannot enter the app if you are under 18.')" class="glow-btn">No</button>
-    <p style="margin-top:10px; font-size:0.8em;">We don’t collect personal info. This is safe and secure.</p>
+
+<div class="container">
+  <div class="card">
+    <h1>Age Verification</h1>
+    <p>You must be 18 or older to continue.</p>
+
+    <input type="number" id="age" placeholder="Enter your age" />
+
+    <button onclick="verifyAge()">Enter</button>
   </div>
-  <script src="particles.js"></script>
+</div>
+
+<script>
+if (localStorage.getItem("termsAccepted") !== "true") {
+  window.location.href = "privacy.html";
+}
+
+function verifyAge() {
+  const age = Number(document.getElementById("age").value);
+
+  if (!age) {
+    alert("Enter a valid age.");
+    return;
+  }
+
+  if (age < 18) {
+    localStorage.setItem("blocked", "true");
+    window.location.href = "blocked.html";
+    return;
+  }
+
+  localStorage.setItem("ageVerified", "true");
+  window.location.href = "index.html";
+}
+</script>
+
 </body>
 </html>
