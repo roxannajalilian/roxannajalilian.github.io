@@ -11,45 +11,72 @@ const planWhy = document.getElementById("planWhy");
 const savedAtText = document.getElementById("savedAtText");
 const actionsGrid = document.getElementById("actionsGrid");
 
-function fmtTime(ms){
-  try {
-    const d = new Date(ms);
-    return d.toLocaleString();
-  } catch { return ""; }
+function formatTime(ms){
+  const d = new Date(ms);
+  return d.toLocaleString();
 }
 
-function showActions(actions){
+function makeWhy(percent){
+  if (percent >= 80) {
+    return "You overanalyze heavily when things feel unclear. You tend to chase clarity through texts, reread messages, and react emotionally to silence or mixed signals.";
+  }
+  if (percent >= 60) {
+    return "You overthink fairly often, especially when replies feel off or delayed. Uncertainty makes you start decoding tone and meaning instead of waiting for actions.";
+  }
+  if (percent >= 40) {
+    return "You’re sometimes calm, sometimes detective-mode. When communication isn’t clear, you start filling in gaps instead of trusting patterns.";
+  }
+  if (percent >= 20) {
+    return "You generally stay grounded, but certain situations can trigger overthinking. This usually happens when you don’t get direct reassurance.";
+  }
+  return "You stay pretty grounded overall and don’t let texts control your emotions too much.";
+}
+
+function renderActions(list){
   actionsGrid.innerHTML = "";
-  actions.forEach(a => {
+  list.forEach(text => {
     const div = document.createElement("div");
     div.className = "quote";
-    div.textContent = a;
+    div.textContent = text;
     actionsGrid.appendChild(div);
   });
 }
 
+// Simulate loading so it feels real
 setTimeout(() => {
-  const data = getAppData();
-  const last = data.lastQuiz;
-
   loadingBox.style.display = "none";
 
-  if (!last || typeof last.percent !== "number") {
+  const data = getAppData();
+  const quiz = data.lastQuiz;
+
+  if (!quiz || typeof quiz.percent !== "number") {
     emptyBox.style.display = "block";
     return;
   }
 
   planBox.style.display = "block";
 
-  planBar.style.width = `${last.percent}%`;
-  planPercent.textContent = `${last.percent}%`;
-  planLabel.textContent = last.label || "Your vibe";
-  planWhy.textContent = last.why || "Based on your answers.";
-  savedAtText.textContent = last.savedAt ? `Saved: ${fmtTime(last.savedAt)}` : "";
+  // Score
+  planBar.style.width = `${quiz.percent}%`;
+  planPercent.textContent = `${quiz.percent}%`;
+  planLabel.textContent = quiz.label || "Your result";
 
-  const actions = Array.isArray(last.actions) && last.actions.length
-    ? last.actions
-    : ["Ask once, then step back.", "Watch actions, not words.", "Stop checking activity."];
+  // WHY YOU GOT THIS (THIS IS WHAT YOU WANTED)
+  planWhy.textContent = makeWhy(quiz.percent);
 
-  showActions(actions);
+  // Meta
+  savedAtText.textContent = quiz.savedAt
+    ? `Based on your last quiz (${formatTime(quiz.savedAt)})`
+    : "";
+
+  // Actions
+  if (Array.isArray(quiz.actions) && quiz.actions.length) {
+    renderActions(quiz.actions);
+  } else {
+    renderActions([
+      "Ask once, then step back.",
+      "Watch actions, not words.",
+      "Stop checking for hidden meaning."
+    ]);
+  }
 }, 700);
