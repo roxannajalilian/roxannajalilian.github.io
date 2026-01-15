@@ -2,8 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Privacy & Terms</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Safety overrides in case your CSS hides inputs */
+    .terms-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-top: 16px;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+    }
+    .terms-row input[type="checkbox"]{
+      appearance: auto !important;
+      -webkit-appearance: checkbox !important;
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      flex: 0 0 auto;
+      cursor: pointer;
+    }
+    .terms-row label{
+      cursor: pointer;
+      user-select: none;
+      line-height: 1.35;
+    }
+    .btn-disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  </style>
 </head>
 <body>
 
@@ -12,40 +44,51 @@
     <h1>Privacy Policy & Terms</h1>
 
     <p>
-      This application is intended for users who are <strong>18 years or older</strong>.
-      By continuing, you confirm that you meet this requirement.
+      This app is intended for users who are <strong>18 years or older</strong>.
+      By continuing, you confirm you meet this requirement.
     </p>
 
     <p>
-      All information entered in this app is stored <strong>locally on your device</strong>.
-      We do not collect, sell, or share personal data.
+      Anything you enter is stored <strong>locally on your device</strong>.
+      We do not upload, sell, or share your data.
     </p>
 
     <p>
-      If content suggests harm, danger, or distress, access may be restricted and
-      users may be redirected to appropriate support resources.
+      If content suggests harm or danger, access may be restricted and you may be
+      directed to appropriate support resources.
     </p>
 
-    <div class="check">
-      <input type="checkbox" id="agree">
-      <label for="agree">I agree to the Privacy Policy and Terms</label>
+    <div class="terms-row">
+      <input type="checkbox" id="agree" />
+      <label for="agree">
+        I agree to the Privacy Policy and Terms
+      </label>
     </div>
 
-    <button onclick="continueApp()">Continue</button>
+    <button id="continueBtn" class="btn-disabled" type="button">
+      Continue
+    </button>
   </div>
 </div>
 
 <script>
-function continueApp() {
   const agree = document.getElementById("agree");
-  if (!agree.checked) {
-    alert("You must agree to continue.");
-    return;
+  const btn = document.getElementById("continueBtn");
+
+  // Enable button only when checked
+  function sync() {
+    if (agree.checked) btn.classList.remove("btn-disabled");
+    else btn.classList.add("btn-disabled");
   }
 
-  localStorage.setItem("termsAccepted", "true");
-  window.location.href = "age.html";
-}
+  agree.addEventListener("change", sync);
+  sync();
+
+  btn.addEventListener("click", () => {
+    if (!agree.checked) return;
+    localStorage.setItem("termsAccepted", "true");
+    window.location.href = "age.html";
+  });
 </script>
 
 </body>
