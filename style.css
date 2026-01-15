@@ -231,3 +231,30 @@ label{ color: var(--muted); font-weight:650; display:block; margin: 6px 0; }
 .gate-head{ display:flex; gap:14px; align-items:center; margin-bottom:14px; }
 .gate-title{ margin:0; }
 .gate-sub{ margin:2px 0 0; }
+
+/* ===== CLICK FIX (if buttons won't click) ===== */
+
+/* stop any accidental overlay layers from blocking clicks */
+body::before, body::after,
+nav::before, nav::after,
+.container::before, .container::after,
+.card::before, .card::after,
+.tile::before, .tile::after{
+  pointer-events: none !important;
+}
+
+/* make sure the actual UI is clickable and on top */
+nav, .container, .card, .tile,
+button, a, input, textarea, select, label{
+  position: relative;
+  z-index: 10;
+  pointer-events: auto !important;
+}
+
+/* specifically ensure the analyzer buttons are clickable */
+#analyzeBtn, #clearBtn{
+  position: relative;
+  z-index: 9999;
+  pointer-events: auto !important;
+}
+
