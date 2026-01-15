@@ -1,106 +1,149 @@
-function buildAdvice(percent, answers){
-  // answers values:
-  // 3 = Yes a lot, 2 = Sometimes, 1 = Rarely, 0 = No
+// quiz.js
+requireAdult("quiz.html");
 
-  // Group questions into “patterns”
-  const groups = [
-    { key:"Mind-reading", idxs:[0,1,2], label:"Mind-reading & decoding" },
-    { key:"Checking", idxs:[3,6], label:"Checking / replaying loops" },
-    { key:"Chasing", idxs:[4,5,8], label:"Chasing + mood dependence" },
-    { key:"IgnoringSigns", idxs:[7,9], label:"Ignoring red flags / excusing" }
-  ];
+const questions = [
+  { q: "Do you reread texts to find hidden meaning?", h: "Searching for clues in one word." },
+  { q: "Do you assume silence means they’re mad?", h: "No reply = panic." },
+  { q: "Do you overthink punctuation (… / lol / k)?", h: "Dot dot dot trauma." },
+  { q: "Do you check activity for hints?", h: "Detective mode." },
+  { q: "Do you type/delete/retype a reply a lot?", h: "Pressure to be perfect." },
+  { q: "Do you double-text because you feel ignored?", h: "Chase mode." },
+  { q: "Do you replay the convo in your head for hours?", h: "Looping thoughts." },
+  { q: "Do you ignore signs because you want it to work?", h: "Hope goggles." },
+  { q: "Does your mood depend on their reply?", h: "High/low based on texts." },
+  { q: "Do you excuse disrespect (dry/rude/disappearing)?", h: "Bare minimum defense." }
+];
 
-  function avgFor(idxs){
-    const vals = idxs.map(i => answers[i] ?? 0);
-    return vals.reduce((a,b)=>a+b,0) / idxs.length; // 0..3
-  }
+let idx = 0;
+const answers = new Array(questions.length).fill(null);
 
-  // Pick the strongest pattern(s)
-  const scored = groups
-    .map(g => ({ ...g, avg: avgFor(g.idxs) }))
-    .sort((a,b) => b.avg - a.avg);
+const qCount = document.getElementById("qCount");
+const progressBadge = document.getElementById("progressBadge");
+const questionText = document.getElementById("questionText");
+const questionHint = document.getElementById("questionHint");
+const prevBtn = document.getElementById("prevBtn");
+const restartBtn = document.getElementById("restartBtn");
 
-  const top1 = scored[0];
-  const top2 = scored[1];
+const resultArea = document.getElementById("resultArea");
+const bar = document.getElementById("bar");
+const percentText = document.getElementById("percentText");
+const adviceText = document.getElementById("adviceText");
+const debug = document.getElementById("debug");
 
-  function patternLine(g){
-    if (g.avg >= 2.4) return `${g.label} is a BIG driver for you right now.`;
-    if (g.avg >= 1.7) return `${g.label} shows up often for you.`;
-    if (g.avg >= 1.1) return `${g.label} shows up sometimes.`;
-    return `${g.label} is not a major issue for you.`;
-  }
+const choiceButtons = Array.from(document.querySelectorAll(".choice[data-val]"));
 
-  // Stronger, more “real” explanation
-  const why = [
-    `Your score is based on how often you fall into overthinking patterns (re-reading, guessing tone, checking activity, replaying conversations) and how much you chase clarity through texting.`,
-    patternLine(top1),
-    (top2.avg >= 1.7 ? `Also: ${patternLine(top2)}` : ""),
-    `Main takeaway: your brain is treating texting like evidence, so you end up filling silence with stories instead of waiting for consistent actions.`
-  ].filter(Boolean).join(" ");
+function answeredCount(){ return answers.filter(v => v !== null).length; }
+function scoreNow(){ return answers.reduce((s,v) => s + (v ?? 0), 0); }
 
-  // Actions depend on the score, but also mention the top pattern
-  const topLabel = top1.label;
+function highlightSelected() {
+  choiceButtons.forEach(btn => {
+    btn.classList.remove("selected","sel-0","sel-1","sel-2","sel-3","tap");
+  });
 
-  if (percent >= 85) {
-    return {
-      label: "MAX Delulu 🚨",
-      why,
-      actions: [
-        `STOP decoding texts (${topLabel}). Watch actions only.`,
-        "No double-texting. Ask once, then wait.",
-        "Mute activity checking for 24 hours (views/snaps/last seen).",
-        "If they’re inconsistent: match energy or leave. No crumbs."
-      ]
-    };
-  }
+  const val = answers[idx];
+  if (val === null) return;
 
-  if (percent >= 65) {
-    return {
-      label: "High Delulu",
-      why,
-      actions: [
-        `Your biggest trap is ${topLabel}. Catch it early.`,
-        "Wait 10 minutes before replying when you feel anxious.",
-        "Ask a direct question once, not 5 messages in a row.",
-        "Don’t explain disrespect. Respect is the bare minimum."
-      ]
-    };
-  }
+  const match = choiceButtons.find(b => Number(b.dataset.val) === val);
+  if (!match) return;
 
-  if (percent >= 45) {
-    return {
-      label: "Half-Delulu 😭",
-      why,
-      actions: [
-        `You’re half calm, half ${topLabel}.`,
-        "Focus on patterns over days/weeks, not one message.",
-        "If you feel yourself spiraling: put your phone down for 20 minutes.",
-        "Get clarity once. If it stays confusing, step back."
-      ]
-    };
-  }
+  match.classList.add("selected", `sel-${val}`);
+}
 
-  if (percent >= 25) {
-    return {
-      label: "Slight Overthink",
-      why,
-      actions: [
-        `Small amount of ${topLabel}, but you can control it.`,
-        "Don’t treat punctuation like proof.",
-        "Decide your standards (effort + respect + consistency).",
-        "If it’s confusing, that’s still a signal."
-      ]
-    };
-  }
+function render(){
+  qCount.textContent = `Question ${idx + 1}/${questions.length}`;
+  progressBadge.textContent = `${Math.round((answeredCount() / questions.length) * 100)}% done`;
 
+  questionText.textContent = questions[idx].q;
+  questionHint.textContent = questions[idx].h;
+
+  prevBtn.disabled = idx === 0;
+  resultArea.style.display = "none";
+  debug.style.display = "none";
+
+  highlightSelected();
+}
+
+function getAdvice(percent){
+  if (percent >= 80) return {
+    label: "MAX delulu 🚨",
+    advice: "You’re spiraling hard. Don’t chase, don’t beg for clarity — watch actions not words. If it’s confusing, it’s a no."
+  };
+  if (percent >= 60) return {
+    label: "High delulu",
+    advice: "You get triggered by mixed signals. Pause before replying, ask once, then stop feeding the silence with stories."
+  };
+  if (percent >= 40) return {
+    label: "Half-delulu 😭",
+    advice: "You’re not always spiraling, but uncertainty sets you OFF. Slow down and let patterns show before you decide the meaning."
+  };
+  if (percent >= 20) return {
+    label: "Slight overthink",
+    advice: "You mostly stay grounded. Just don’t treat one weird text like a full personality diagnosis — wait for the pattern."
+  };
   return {
-    label: "Grounded ✅",
-    why,
-    actions: [
-      "You don’t spiral too easily — keep that.",
-      "Communicate directly instead of guessing.",
-      "If they go dry or disrespectful, you don’t beg.",
-      "Stay consistent and protect your peace."
-    ]
+    label: "Super grounded ✅",
+    advice: "You’re calm and realistic. Keep your standards and don’t let inconsistency drag you into detective mode."
   };
 }
+
+function finish(){
+  const max = 3 * questions.length;
+  const percent = Math.round((scoreNow() / max) * 100);
+
+  const pack = getAdvice(percent);
+
+  const data = getAppData();
+  data.lastQuiz = { percent, answers, savedAt: Date.now(), label: pack.label, advice: pack.advice };
+  setAppData(data);
+
+  resultArea.style.display = "block";
+  bar.style.width = `${percent}%`;
+  percentText.textContent = `${percent}%`;
+  adviceText.textContent = `${pack.label} — ${pack.advice}`;
+}
+
+function next(){
+  // if last question, either finish or go to first unanswered
+  if (idx >= questions.length - 1) {
+    const firstUnanswered = answers.findIndex(v => v === null);
+    if (firstUnanswered !== -1) {
+      idx = firstUnanswered;
+      render();
+      debug.textContent = "Answer the skipped question before finishing.";
+      debug.style.display = "block";
+      return;
+    }
+    finish();
+    return;
+  }
+  idx++;
+  render();
+}
+
+choiceButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const val = Number(btn.dataset.val);
+    answers[idx] = val;
+
+    // show highlight instantly
+    btn.classList.add("tap");
+    highlightSelected();
+
+    // tiny delay so you SEE the color
+    setTimeout(() => next(), 160);
+  });
+});
+
+prevBtn.addEventListener("click", () => {
+  if (idx > 0) { idx--; render(); }
+});
+
+restartBtn.addEventListener("click", () => {
+  for (let i = 0; i < answers.length; i++) answers[i] = null;
+  idx = 0;
+  resultArea.style.display = "none";
+  debug.style.display = "none";
+  render();
+});
+
+render();
