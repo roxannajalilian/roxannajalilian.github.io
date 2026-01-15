@@ -4,11 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Quiz</title>
-  <link rel="stylesheet" href="style.css?v=20" />
-
-  <!-- 🔒 lock -->
-  <script src="shared.js?v=20"></script>
-  <script>requireAdult();</script>
+  <link rel="stylesheet" href="style.css?v=11" />
+  <script src="shared.js?v=11"></script>
+  <script>requireAdult("quiz.html");</script>
 </head>
 <body>
   <nav>
@@ -19,7 +17,6 @@
         <div class="sub">Quiz</div>
       </div>
     </div>
-
     <div class="nav-actions">
       <a class="btn ghost" href="menu.html">Menu</a>
       <a class="btn ghost" href="plan.html">Plan</a>
@@ -30,7 +27,7 @@
 
   <div class="container">
     <div class="card">
-      <div class="row" style="justify-content:space-between;">
+      <div class="row" style="justify-content:space-between; align-items:center;">
         <div class="row">
           <span class="badge" id="qCount">Question …</span>
           <span class="badge" id="progressBadge">…</span>
@@ -48,4 +45,27 @@
         <div class="choice-grid">
           <button class="btn choice primary" data-val="3" type="button"><b>Yes (a lot)</b><span>Strong signal</span></button>
           <button class="btn choice" data-val="2" type="button"><b>Sometimes</b><span>Not always</span></button>
-          <button class="btn choice"
+          <button class="btn choice" data-val="1" type="button"><b>Rarely</b><span>Once in a while</span></button>
+          <button class="btn choice ghost" data-val="0" type="button"><b>No</b><span>Doesn’t apply</span></button>
+        </div>
+      </div>
+
+      <div class="section" id="resultArea" style="display:none;">
+        <h2 style="margin:0 0 8px;">Your Result</h2>
+        <div class="progress" style="margin:10px 0;"><div id="bar"></div></div>
+        <h3 id="percentText" style="margin:0 0 6px;">0%</h3>
+        <p class="muted" id="adviceText" style="margin:0;"></p>
+
+        <div class="row" style="margin-top:14px;">
+          <a class="btn primary" href="plan.html">Go to Plan</a>
+          <a class="btn" href="menu.html">Back to Menu</a>
+        </div>
+      </div>
+
+      <p class="muted small" id="debug" style="display:none; margin-top:12px;"></p>
+    </div>
+  </div>
+
+  <script src="quiz.js?v=11"></script>
+</body>
+</html>
