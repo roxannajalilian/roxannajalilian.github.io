@@ -3,49 +3,108 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Privacy</title>
-  <link rel="stylesheet" href="style.css?v=20" />
-  <script src="shared.js?v=20"></script>
+  <title>Delulu Detector • Privacy & Age Check</title>
+  <link rel="stylesheet" href="style.css?v=1000" />
+  <script src="shared.js?v=1000"></script>
 </head>
 <body>
-  <nav>
-    <div class="brand">
-      <div class="logo">DD</div>
-      <div>
-        <div class="title">Delulu Detector</div>
-        <div class="sub">Privacy</div>
-      </div>
-    </div>
-    <div class="nav-actions">
-      <a class="btn ghost" href="start.html">Start</a>
-      <a class="btn ghost" href="menu.html">Menu</a>
-      <button class="btn" data-reset-app type="button">Reset App</button>
-    </div>
-  </nav>
+  <!-- NO NAVBAR ON PURPOSE -->
 
   <div class="container">
-    <div class="card">
-      <h1 style="margin:0 0 8px;">Privacy & Concerns</h1>
-      <p class="muted">
-        This app stores information only in your browser (localStorage) so it can remember your quiz score and access verification.
-        It does not send your messages anywhere.
-      </p>
-      <div class="tile">
-        <h3 style="margin:0 0 8px;">What we store</h3>
-        <ul class="muted" style="margin:0; padding-left:18px;">
-          <li>Your age (to verify 18+ access)</li>
-          <li>Your last quiz score + answers</li>
-          <li>Optional analyzer results (not your files)</li>
-        </ul>
+    <div class="card" style="max-width:600px; margin:70px auto;">
+      <div style="display:flex; gap:14px; align-items:center; margin-bottom:14px;">
+        <div class="logo">DD</div>
+        <div>
+          <h1 style="margin:0;">Delulu Detector</h1>
+          <p class="muted" style="margin:4px 0 0;">Privacy + Terms • 18+ only</p>
+        </div>
       </div>
 
-      <div class="tile" style="margin-top:12px;">
-        <h3 style="margin:0 0 8px;">If something is unsafe</h3>
-        <p class="muted" style="margin:0;">
-          If you’re in danger or feel unsafe, talk to a trusted adult or local emergency services.
-        </p>
+      <p class="muted">
+        This is a school/demo app that gives general “delulu” insights.
+        It is <b>not professional advice</b>. Nothing is uploaded or shared.
+      </p>
+
+      <div class="grid-2">
+        <div class="tile">
+          <h3>Privacy</h3>
+          <ul class="muted">
+            <li>Your text & results stay on your device</li>
+            <li>No accounts, no servers</li>
+            <li>Uses <b>localStorage</b> only</li>
+          </ul>
+        </div>
+
+        <div class="tile">
+          <h3>What we store</h3>
+          <ul class="muted">
+            <li>Age verification (18+)</li>
+            <li>Last quiz score & answers</li>
+            <li>Optional analysis result</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="section">
+        <label for="ageInput">Enter your age</label>
+        <input id="ageInput" type="number" min="0" placeholder="18+" />
+      </div>
+
+      <label class="row" style="gap:10px; cursor:pointer;">
+        <input id="agreeBox" type="checkbox" style="width:18px; height:18px;" />
+        <span class="muted">
+          I am 18 or older and agree to the Privacy & Terms
+        </span>
+      </label>
+
+      <p id="errorText" style="display:none; color:#ff8a8a; font-weight:800;"></p>
+
+      <div class="row" style="margin-top:16px;">
+        <button class="btn primary" id="continueBtn">Continue</button>
+        <button class="btn ghost" id="resetBtn">Reset</button>
       </div>
     </div>
   </div>
+
+  <script>
+    const ageInput = document.getElementById("ageInput");
+    const agreeBox = document.getElementById("agreeBox");
+    const continueBtn = document.getElementById("continueBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const errorText = document.getElementById("errorText");
+
+    function showError(msg){
+      errorText.textContent = msg;
+      errorText.style.display = "block";
+    }
+
+    continueBtn.addEventListener("click", () => {
+      const age = Number(ageInput.value);
+      if (!ageInput.value) return showError("Enter your age.");
+      if (age < 18) {
+        setAppData({ age });
+        window.location.replace("blocked.html");
+        return;
+      }
+      if (!agreeBox.checked) return showError("You must accept the terms.");
+
+      setAppData({
+        age,
+        termsAccepted: true,
+        verifiedAt: Date.now()
+      });
+
+      window.location.replace("menu.html");
+    });
+
+    resetBtn.addEventListener("click", () => {
+      localStorage.removeItem("dd_app_v1");
+      ageInput.value = "";
+      agreeBox.checked = false;
+      errorText.style.display = "none";
+    });
+  </script>
 </body>
 </html>
