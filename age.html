@@ -3,46 +3,49 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Age Check</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Age Verification</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="shared.js"></script>
 </head>
 <body>
+
   <div class="container">
     <div class="card">
       <h1>Age Verification</h1>
-      <p>You must be 18+ to continue.</p>
+      <p class="muted">You must be 18+ to continue.</p>
 
-      <input id="age" type="number" placeholder="Enter age" />
-      <button id="enter">Enter</button>
+      <input id="age" type="number" min="1" placeholder="Enter your age (e.g., 18)" />
+      <button id="enterBtn" style="margin-top:12px;" type="button">Enter</button>
     </div>
   </div>
 
   <script>
     // Must accept terms before age
-    const g = getGate();
-    if (!g.termsAccepted) window.location.href = "privacy.html";
-    if (g.locked) window.location.href = "locked.html";
-    if (g.ageVerified) window.location.href = "index.html";
+    if (!hasAcceptedTerms()) {
+      location.replace("privacy.html?next=" + encodeURIComponent(safeNextFromURL("index.html")));
+    }
+    if (isLocked()) location.replace("locked.html");
+    if (isAdultVerified()) location.replace(safeNextFromURL("index.html"));
 
-    document.getElementById("enter").addEventListener("click", () => {
-      const age = Number(document.getElementById("age").value);
+    const input = document.getElementById("age");
+    const btn = document.getElementById("enterBtn");
 
-      if (!age) return alert("Enter a valid age.");
+    btn.addEventListener("click", () => {
+      const res = verifyAge(input.value);
 
-      const gate = getGate();
-
-      if (age < 18) {
-        gate.locked = true;
-        setGate(gate);
-        window.location.href = "locked.html";
+      if (!res.ok && res.reason === "invalid") {
+        alert("Enter a valid age.");
         return;
       }
 
-      gate.ageVerified = true;
-      setGate(gate);
-      window.location.href = "index.html";
+      if (!res.ok && res.reason === "under18") {
+        location.replace("locked.html");
+        return;
+      }
+
+      location.replace(safeNextFromURL("index.html"));
     });
   </script>
+
 </body>
 </html>
