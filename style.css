@@ -259,3 +259,39 @@ label{
 .gate-title{ margin:0; }
 .gate-sub{ margin:2px 0 0; }
 .error{ margin:8px 0 0; color:#ff8a8a; font-weight:900; }
+
+
+/* ===== FIX: buttons not clickable on Analysis page ===== */
+
+/* force the scan page UI above any overlay */
+.scan-page .container,
+.scan-page .card,
+.scan-page .tile{
+  position: relative !important;
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+}
+
+/* kill click-stealing overlays inside scan page */
+.scan-page *::before,
+.scan-page *::after{
+  pointer-events: none !important;
+}
+
+/* make the actual inputs/buttons always clickable */
+.scan-page button,
+.scan-page a,
+.scan-page input,
+.scan-page textarea,
+.scan-page label{
+  position: relative !important;
+  z-index: 999999 !important;
+  pointer-events: auto !important;
+}
+
+/* specifically your Analyze/Clear buttons */
+.scan-page #analyzeBtn,
+.scan-page #clearBtn{
+  z-index: 9999999 !important;
+  pointer-events: auto !important;
+}
