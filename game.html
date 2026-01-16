@@ -4,10 +4,42 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Game</title>
-  <link rel="stylesheet" href="style.css?v=99" />
-  <script src="game.js?v=99"></script>
-  <script>requireAdult("game.html");</script>
+
+  <link rel="stylesheet" href="style.css?v=777" />
+
+  <!-- OPTIONAL: keep shared.js but do NOT let it break the game -->
+  <script src="shared.js?v=777"></script>
+
+  <style>
+    .game-wrap{
+      position:relative;
+      margin-top:14px;
+      border-radius: 22px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.12);
+    }
+    #gameCanvas{ width:100%; display:block; }
+    .gameover{
+      position:absolute; inset:0;
+      display:none;
+      align-items:center; justify-content:center;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(10px);
+      padding:16px;
+    }
+    .gameover-card{
+      width:min(420px, 92%);
+      padding:18px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      box-shadow: 0 22px 60px rgba(0,0,0,.45);
+      text-align:center;
+    }
+  </style>
 </head>
+
 <body>
   <nav>
     <div class="brand">
@@ -17,6 +49,7 @@
         <div class="sub">Game • Dodge the Flags</div>
       </div>
     </div>
+
     <div class="nav-actions">
       <a class="btn ghost" href="menu.html">Menu</a>
       <a class="btn ghost" href="quiz.html">Quiz</a>
@@ -27,28 +60,28 @@
 
   <div class="container">
     <div class="card">
+
       <div class="row" style="justify-content:space-between; align-items:center; gap:12px;">
         <div class="row">
-          <span class="badge">Score: <span id="score">0</span></span>
-          <span class="badge">High: <span id="highScore">0</span></span>
-          <span class="badge">Lives: <span id="lives">3</span></span>
+          <span class="badge">Score: <b id="score">0</b></span>
+          <span class="badge">High: <b id="highScore">0</b></span>
+          <span class="badge">Lives: <b id="lives">3</b></span>
         </div>
         <button class="btn ghost" id="restartBtn" type="button">Restart</button>
       </div>
 
       <p class="muted" style="margin:10px 0 14px;">
-        Move with <b>← →</b> (or <b>A / D</b>). Avoid <b>🚩 red flags</b>. Catch <b>💚 green flags</b>.
+        Move with <b>← →</b> (or <b>A / D</b>). Avoid <b>🚩</b>. Catch <b>💚</b>.
       </p>
 
       <div class="game-wrap">
         <canvas id="gameCanvas" width="900" height="420"></canvas>
 
-        <!-- GAME OVER OVERLAY -->
-        <div id="gameOver" class="gameover" style="display:none;">
+        <div id="gameOver" class="gameover">
           <div class="gameover-card">
-            <h2 style="margin:0 0 6px;">Game Over 😭</h2>
+            <h2 style="margin:0 0 6px;">You lost 😭</h2>
             <p class="muted" style="margin:0 0 12px;">
-              You got: <b><span id="finalScore">0</span></b> points
+              Good try though. Score: <b><span id="finalScore">0</span></b>
             </p>
 
             <div class="row" style="justify-content:center; margin-top:10px;">
@@ -56,17 +89,21 @@
               <a class="btn" href="menu.html">Menu</a>
             </div>
 
-            <p class="muted small" style="margin:14px 0 0; text-align:center;">
-              Tip: Don’t chase 🚩. Collect 💚 = consistency.
+            <p class="muted small" style="margin:14px 0 0;">
+              Tip: red flags cost lives. green flags stack points + speed.
             </p>
           </div>
         </div>
       </div>
 
-      <p class="muted small" id="jsHint" style="margin-top:12px;"></p>
+      <p class="muted small" id="jsStatus" style="margin-top:12px;">
+        Loading game JS…
+      </p>
+
     </div>
   </div>
 
-  <script src="game.js?v=99"></script>
+  <!-- IMPORTANT: game.js must be in the SAME folder as game.html -->
+  <script src="game.js?v=777"></script>
 </body>
 </html>
