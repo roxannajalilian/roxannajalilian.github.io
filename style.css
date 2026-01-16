@@ -303,4 +303,40 @@ label{
     0 0 44px rgba(60,200,255,.18);
 }
 
+/* ===== GAME ===== */
+.game-wrap{
+  position:relative;
+  margin-top:10px;
+  border-radius: 22px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.12);
+}
+
+#gameCanvas{
+  width:100%;
+  display:block;
+}
+
+.gameover{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(8px);
+}
+
+.gameover-card{
+  width:min(420px, 92%);
+  padding:18px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.14);
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+  box-shadow: 0 22px 60px rgba(0,0,0,.45);
+  text-align:center;
+}
+
+
 
