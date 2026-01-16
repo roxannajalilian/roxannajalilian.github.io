@@ -1,151 +1,77 @@
-requireAdult("game.html");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Delulu Detector • Game</title>
+  <link rel="stylesheet" href="style.css?v=9999" />
+  <script src="shared.js?v=9999"></script>
+  <script>requireAdult("game.html");</script>
 
-// PROOF JS IS RUNNING:
-const jsPing = document.getElementById("jsPing");
-if (jsPing) jsPing.textContent = "JS: running ✅";
-
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
-
-const loading = document.getElementById("gameLoading");
-setTimeout(() => { if (loading) loading.style.display = "none"; }, 250);
-
-const scoreEl = document.getElementById("score");
-const highEl = document.getElementById("high");
-const livesEl = document.getElementById("lives");
-const restartBtn = document.getElementById("restart");
-
-const HIGH_KEY = "dd_game_highscore";
-
-let score = 0;
-let lives = 3;
-let high = Number(localStorage.getItem(HIGH_KEY) || 0);
-
-highEl.textContent = high;
-
-const player = { x: 420, y: 460, w: 70, h: 24, speed: 8 };
-const items = [];
-let keys = {};
-let gameOver = false;
-
-window.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
-window.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
-
-function spawn(){
-  items.push({
-    x: Math.random() * (canvas.width - 44),
-    y: -44,
-    s: 44,
-    v: 3.2 + Math.random() * 3.2,
-    type: Math.random() < 0.65 ? "red" : "green"
-  });
-}
-
-function reset(){
-  score = 0;
-  lives = 3;
-  gameOver = false;
-  items.length = 0;
-  scoreEl.textContent = "0";
-  livesEl.textContent = "3";
-}
-restartBtn.addEventListener("click", reset);
-
-function rectHit(a, b){
-  return (
-    a.x < b.x + b.w &&
-    a.x + a.w > b.x &&
-    a.y < b.y + b.h &&
-    a.y + a.h > b.y
-  );
-}
-
-function update(){
-  if (gameOver) return;
-
-  // movement
-  if (keys["arrowleft"] || keys["a"]) player.x -= player.speed;
-  if (keys["arrowright"] || keys["d"]) player.x += player.speed;
-  player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
-
-  // spawn
-  if (Math.random() < 0.035) spawn();
-
-  // move items + collision
-  for (let i = items.length - 1; i >= 0; i--){
-    const it = items[i];
-    it.y += it.v;
-
-    const itRect = { x: it.x, y: it.y, w: it.s, h: it.s };
-    const plRect = { x: player.x, y: player.y, w: player.w, h: player.h };
-
-    if (rectHit(itRect, plRect)){
-      if (it.type === "red"){
-        lives--;
-        livesEl.textContent = String(lives);
-      } else {
-        score += 10;
-        scoreEl.textContent = String(score);
-      }
-      items.splice(i, 1);
-      continue;
+  <style>
+    #wrap{
+      height:520px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
     }
+    canvas{ width:100%; height:520px; display:block; }
+  </style>
+</head>
+<body>
 
-    if (it.y > canvas.height + 80){
-      items.splice(i, 1);
-    }
-  }
+<nav>
+  <div class="brand">
+    <div class="logo">DD</div>
+    <div>
+      <div class="title">Delulu Detector</div>
+      <div class="sub">Game</div>
+    </div>
+  </div>
+  <div class="nav-actions">
+    <a class="btn ghost" href="menu.html">Menu</a>
+    <a class="btn ghost" href="quiz.html">Quiz</a>
+    <a class="btn ghost" href="plan.html">Plan</a>
+    <a class="btn ghost" href="scan.html">Analysis</a>
+  </div>
+</nav>
 
-  if (lives <= 0){
-    gameOver = true;
-    if (score > high){
-      high = score;
-      localStorage.setItem(HIGH_KEY, String(high));
-      highEl.textContent = String(high);
-    }
-    setTimeout(() => {
-      alert(`Game over 😭\nScore: ${score}\nHigh score: ${high}`);
-      reset();
-    }, 60);
-  }
-}
+<div class="container">
+  <div class="card">
+    <div class="row" style="justify-content:space-between;">
+      <div class="row">
+        <span class="badge">Score: <b id="score">0</b></span>
+        <span class="badge">High: <b id="high">0</b></span>
+        <span class="badge">Lives: <b id="lives">3</b></span>
+      </div>
+      <button class="btn ghost" id="restart" type="button">Restart</button>
+    </div>
 
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+    <p class="muted" style="margin:10px 0;">If you can see text inside the box, your canvas is working.</p>
 
-  // player
-  ctx.fillStyle = "rgba(255,255,255,.88)";
-  ctx.fillRect(player.x, player.y, player.w, player.h);
+    <div id="wrap">
+      <canvas id="game" width="900" height="520"></canvas>
+    </div>
+  </div>
+</div>
 
-  // items
-  for (const it of items){
-    if (it.type === "red"){
-      ctx.fillStyle = "rgba(255,80,120,.92)";
-      ctx.fillRect(it.x, it.y, it.s, it.s);
-      // little flag pole
-      ctx.fillStyle = "rgba(0,0,0,.25)";
-      ctx.fillRect(it.x + 6, it.y + 6, 6, it.s - 12);
-    } else {
-      ctx.fillStyle = "rgba(90,230,160,.92)";
-      ctx.fillRect(it.x, it.y, it.s, it.s);
-      // check mark vibe
-      ctx.fillStyle = "rgba(0,0,0,.25)";
-      ctx.fillRect(it.x + 10, it.y + 22, 22, 6);
-    }
-  }
+<script>
+  // This draws even if game.js is broken.
+  const c = document.getElementById("game");
+  const ctx = c.getContext("2d");
 
-  // floor line
-  ctx.strokeStyle = "rgba(255,255,255,.18)";
-  ctx.beginPath();
-  ctx.moveTo(0, player.y + player.h + 12);
-  ctx.lineTo(canvas.width, player.y + player.h + 12);
-  ctx.stroke();
-}
+  ctx.fillStyle = "rgba(124,77,255,.25)";
+  ctx.fillRect(0,0,c.width,c.height);
 
-function loop(){
-  update();
-  draw();
-  requestAnimationFrame(loop);
-}
+  ctx.fillStyle = "rgba(255,255,255,.92)";
+  ctx.font = "900 48px system-ui";
+  ctx.fillText("CANVAS OK ✅", 260, 260);
 
-loop();
+  ctx.font = "700 18px system-ui";
+  ctx.fillStyle = "rgba(255,255,255,.75)";
+  ctx.fillText("If you see this, your problem is game.js NOT loading.", 220, 310);
+</script>
+
+</body>
+</html>
