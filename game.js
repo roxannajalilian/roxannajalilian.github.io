@@ -1,5 +1,4 @@
-console.log("GAME JS LOADED ✅");
-
+// ELEMENTS
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
@@ -9,117 +8,134 @@ const livesEl = document.getElementById("lives");
 const restartBtn = document.getElementById("restart");
 const statusEl = document.getElementById("jsStatus");
 
-statusEl.textContent = "JS loaded ✔";
-
-let player = { x: canvas.width / 2, y: canvas.height - 30, w: 50, h: 10 };
-let flags = [];
+// GAME STATE
 let score = 0;
 let lives = 3;
-let speed = 2;
 let running = true;
 
-let high = Number(localStorage.getItem("dd_highscore") || 0);
-highEl.textContent = high;
+const HIGH_KEY = "delulu_highscore";
+let highScore = Number(localStorage.getItem(HIGH_KEY) || 0);
+highEl.textContent = highScore;
 
+// PLAYER
+const player = {
+  x: canvas.width / 2 - 30,
+  y: canvas.height - 30,
+  w: 60,
+  h: 12,
+  speed: 7
+};
+
+// FLAGS
+let flags = [];
+const flagSpeed = 3;
+const spawnRate = 55;
+
+// INPUT
+const keys = {};
+window.addEventListener("keydown", e => keys[e.key] = true);
+window.addEventListener("keyup", e => keys[e.key] = false);
+
+// STATUS
+statusEl.textContent = "JS loaded ✔";
+
+// HELPERS
 function spawnFlag() {
+  const isGreen = Math.random() < 0.3;
   flags.push({
-    x: Math.random() * (canvas.width - 20),
+    x: Math.random() * (canvas.width - 30),
     y: -20,
-    good: Math.random() > 0.6
+    size: 18,
+    good: isGreen
   });
 }
 
-function drawPlayer() {
-  ctx.fillStyle = "#a78bfa";
-  ctx.fillRect(player.x, player.y, player.w, player.h);
+function resetGame() {
+  score = 0;
+  lives = 3;
+  flags = [];
+  running = true;
+  player.x = canvas.width / 2 - player.w / 2;
+  updateUI();
 }
 
-function drawFlags() {
-  flags.forEach(f => {
-    ctx.font = "20px system-ui";
-    ctx.fillText(f.good ? "✅" : "🚩", f.x, f.y);
-  });
-}
-
-function updateFlags() {
-  flags.forEach(f => (f.y += speed));
-
-  flags = flags.filter(f => {
-    if (f.y > canvas.height) {
-      if (!f.good) {
-        lives--;
-        livesEl.textContent = lives;
-      }
-      return false;
-    }
-
-    const hit =
-      f.x < player.x + player.w &&
-      f.x + 20 > player.x &&
-      f.y < player.y + player.h &&
-      f.y + 20 > player.y;
-
-    if (hit) {
-      if (f.good) {
-        score += 10;
-      } else {
-        lives--;
-      }
-      scoreEl.textContent = score;
-      livesEl.textContent = lives;
-      return false;
-    }
-    return true;
-  });
+function updateUI() {
+  scoreEl.textContent = score;
+  livesEl.textContent = lives;
+  highEl.textContent = highScore;
 }
 
 function gameOver() {
   running = false;
-  if (score > high) {
-    high = score;
-    localStorage.setItem("dd_highscore", high);
-    highEl.textContent = high;
-  }
-
-  ctx.fillStyle = "rgba(0,0,0,.6)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.fillStyle = "#fff";
-  ctx.font = "28px system-ui";
-  ctx.fillText("Game Over", canvas.width / 2 - 70, canvas.height / 2 - 10);
-  ctx.font = "18px system-ui";
-  ctx.fillText("Press Restart", canvas.width / 2 - 65, canvas.height / 2 + 25);
+  statusEl.textContent = "Game over 💀  | Restart or go Menu";
 }
 
+// LOOP
+let tick = 0;
 function loop() {
-  if (!running) return gameOver();
-
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  drawPlayer();
-  drawFlags();
-  updateFlags();
+  // MOVE PLAYER
+  if ((keys["ArrowLeft"] || keys["a"]) && player.x > 0) {
+    player.x -= player.speed;
+  }
+  if ((keys["ArrowRight"] || keys["d"]) && player.x + player.w < canvas.width) {
+    player.x += player.speed;
+  }
 
-  if (lives <= 0) return gameOver();
+  // DRAW PLAYER
+  ctx.fillStyle = "#b983ff";
+  ctx.fillRect(player.x, player.y, player.w, player.h);
 
+  // SPAWN FLAGS
+  if (tick % spawnRate === 0 && running) spawnFlag();
+
+  // UPDATE FLAGS
+  flags.forEach(f => {
+    f.y += flagSpeed;
+    ctx.fillStyle = f.good ? "#5ae6a0" : "#ff4d6d";
+    ctx.fillRect(f.x, f.y, f.size, f.size);
+
+    // COLLISION
+    if (
+      f.x < player.x + player.w &&
+      f.x + f.size > player.x &&
+      f.y < player.y + player.h &&
+      f.y + f.size > player.y
+    ) {
+      if (f.good) {
+        score += 5;
+      } else {
+        lives -= 1;
+      }
+      f.hit = true;
+      updateUI();
+    }
+  });
+
+  // CLEAN FLAGS
+  flags = flags.filter(f => !f.hit && f.y < canvas.height + 40);
+
+  // CHECK GAME OVER
+  if (lives <= 0 && running) {
+    running = false;
+    if (score > highScore) {
+      highScore = score;
+      localStorage.setItem(HIGH_KEY, highScore);
+    }
+    gameOver();
+  }
+
+  tick++;
   requestAnimationFrame(loop);
 }
 
-document.addEventListener("keydown", e => {
-  if (e.key === "ArrowLeft" || e.key === "a") player.x -= 20;
-  if (e.key === "ArrowRight" || e.key === "d") player.x += 20;
-  player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
+// RESTART
+restartBtn.addEventListener("click", () => {
+  resetGame();
+  statusEl.textContent = "Restarted ✔";
 });
 
-restartBtn.onclick = () => {
-  flags = [];
-  score = 0;
-  lives = 3;
-  running = true;
-  scoreEl.textContent = 0;
-  livesEl.textContent = 3;
-  loop();
-};
-
-setInterval(spawnFlag, 900);
+// START
+resetGame();
 loop();
