@@ -296,4 +296,11 @@ label{
   text-shadow: 0 0 16px rgba(255,255,255,.12);
 }
 
+.glow-title{
+  text-shadow:
+    0 0 10px rgba(124,77,255,.55),
+    0 0 24px rgba(124,77,255,.30),
+    0 0 44px rgba(60,200,255,.18);
+}
+
 
