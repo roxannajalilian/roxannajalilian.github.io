@@ -3,129 +3,61 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delulu Detector • Flags Game</title>
-  <link rel="stylesheet" href="style.css?v=2201" />
-  <script src="shared.js?v=2201"></script>
+  <title>Delulu Detector • Game</title>
+
+  <link rel="stylesheet" href="style.css?v=999" />
+  <script src="shared.js?v=999"></script>
   <script>requireAdult("game.html");</script>
 
   <style>
-    .game-wrap{ display:grid; gap:14px; }
     canvas{
       width:100%;
-      height:auto;
+      height:520px;
       border-radius:18px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.16);
-      box-shadow: 0 18px 50px rgba(0,0,0,.30);
-      touch-action:none;
-      user-select:none;
-    }
-    .hud{
-      display:flex; gap:10px; flex-wrap:wrap;
-      justify-content:space-between; align-items:center;
-    }
-    .hud-left, .hud-right{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      font-weight:800;
-      font-size:13px;
-    }
-    .pill b{ font-weight:950; }
-    .smallhelp{ margin:0; }
-
-    .modal{
-      position:fixed; inset:0;
-      display:none; align-items:center; justify-content:center;
-      padding:18px;
-      background: rgba(0,0,0,.55);
-      backdrop-filter: blur(8px);
-      z-index:999;
-    }
-    .modal .box{
-      width:min(560px, 100%);
-      border-radius:22px;
       border:1px solid rgba(255,255,255,.14);
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      box-shadow: 0 24px 70px rgba(0,0,0,.45);
-      padding:18px;
+      background: rgba(0,0,0,.18);
+      display:block;
     }
-    .modal h2{ margin:0 0 10px; }
   </style>
 </head>
 <body>
-  <nav>
-    <div class="brand">
-      <div class="logo">DD</div>
-      <div>
-        <div class="title">Delulu Detector</div>
-        <div class="sub">Game • Flags Frenzy</div>
-      </div>
-    </div>
-    <div class="nav-actions">
-      <a class="btn ghost" href="menu.html">Menu</a>
-      <a class="btn ghost" href="quiz.html">Quiz</a>
-      <a class="btn ghost" href="plan.html">Plan</a>
-      <a class="btn ghost" href="scan.html">Analysis</a>
-    </div>
-  </nav>
 
-  <div class="container">
-    <div class="card game-wrap">
-      <div class="hud">
-        <div class="hud-left">
-          <span class="pill">Score: <b id="scoreText">0</b></span>
-          <span class="pill">High: <b id="highText">0</b></span>
-          <span class="pill">Lives: <b id="livesText">3</b></span>
-          <span class="pill">Streak: <b id="streakText">0</b></span>
-        </div>
-        <div class="hud-right">
-          <button class="btn ghost" id="btnHow" type="button">How</button>
-          <button class="btn ghost" id="btnRestart" type="button">Restart</button>
-        </div>
-      </div>
-
-      <p class="muted small smallhelp">
-        Move with <b>← →</b> (or <b>A / D</b>). On phone: drag left/right. ✅ = points + streak. 🚩 = lose a life.
-      </p>
-
-      <canvas id="game" width="920" height="520"></canvas>
+<nav>
+  <div class="brand">
+    <div class="logo">DD</div>
+    <div>
+      <div class="title">Delulu Detector</div>
+      <div class="sub">Game • Dodge the Flags</div>
     </div>
   </div>
+  <div class="nav-actions">
+    <a class="btn ghost" href="menu.html">Menu</a>
+    <a class="btn ghost" href="quiz.html">Quiz</a>
+    <a class="btn ghost" href="plan.html">Plan</a>
+    <a class="btn ghost" href="scan.html">Analysis</a>
+  </div>
+</nav>
 
-  <div class="modal" id="loseModal">
-    <div class="box">
-      <h2 class="glow-title">Good try 😭</h2>
-      <p class="muted" style="margin:0 0 14px;">
-        Score: <b id="finalScore">0</b> • High score: <b id="finalHigh">0</b>
-      </p>
+<div class="container">
+  <div class="card">
+    <div class="row" style="justify-content:space-between;">
       <div class="row">
-        <button class="btn primary" id="btnReplay" type="button">Replay</button>
-        <a class="btn" href="game.html">Return to Game</a>
-        <a class="btn ghost" href="menu.html">Menu</a>
+        <span class="badge">Score: <b id="score">0</b></span>
+        <span class="badge">High: <b id="high">0</b></span>
+        <span class="badge">Lives: <b id="lives">3</b></span>
       </div>
+      <button class="btn ghost" id="restart">Restart</button>
     </div>
-  </div>
 
-  <div class="modal" id="howModal">
-    <div class="box">
-      <h2 style="margin:0 0 10px;">How to play</h2>
-      <div class="tile">
-        <p class="muted" style="margin:0;">
-          ✅ Green flags give points and build your streak.  
-          🚩 Red flags take a life.  
-          Survive longer = faster falling flags = bigger score.  
-        </p>
-      </div>
-      <div class="row" style="margin-top:14px;">
-        <button class="btn primary" id="btnCloseHow" type="button">Ok</button>
-      </div>
-    </div>
-  </div>
+    <p class="muted" style="margin:10px 0;">
+      Move with ← → or A / D. Avoid 🚩 red flags. Catch ✅ green flags.
+    </p>
 
-  <script src="game.js?v=2201"></script>
+
+    <canvas id="game" width="900" height="520"></canvas>
+  </div>
+</div>
+
+<script src="game.js?v=999"></script>
 </body>
 </html>
