@@ -1,32 +1,32 @@
-const canvas = document.getElementById("gameCanvas");
+\const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 const scoreEl = document.getElementById("score");
 const highScoreEl = document.getElementById("highScore");
 const livesEl = document.getElementById("lives");
-const restartBtn = document.getElementById("restartBtn");
 
 const gameOverScreen = document.getElementById("gameOver");
 const finalScoreEl = document.getElementById("finalScore");
-const playAgainBtn = document.getElementById("playAgain");
 
 const W = canvas.width;
 const H = canvas.height;
 
 // PLAYER
 const player = {
-  x: W / 2 - 25,
-  y: H - 40,
-  w: 50,
+  x: W / 2 - 30,
+  y: H - 28,
+  w: 60,
   h: 12,
-  speed: 6
+  speed: 7
 };
 
-// STATE
+// GAME STATE
 let score = 0;
 let lives = 3;
+let speedMultiplier = 1;
 let running = true;
 let keys = {};
+let shake = 0;
 
 let highScore = Number(localStorage.getItem("dd_highscore") || 0);
 highScoreEl.textContent = highScore;
@@ -34,24 +34,24 @@ highScoreEl.textContent = highScore;
 // FLAGS
 const flags = [];
 
-function spawnFlag() {
-  const good = Math.random() < 0.35;
-  flags.push({
-    x: Math.random() * (W - 24),
-    y: -30,
-    size: 22,
-    speed: 2 + Math.random() * 2,
-    good
-  });
-}
-
-setInterval(spawnFlag, 900);
-
 // INPUT
 window.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
 window.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
 
-// GAME LOOP
+// SPAWN FLAGS
+function spawnFlag() {
+  flags.push({
+    x: Math.random() * (W - 28),
+    y: -30,
+    size: 26,
+    speed: (2 + Math.random() * 2) * speedMultiplier,
+    good: Math.random() < 0.4 // 40% green flags
+  });
+}
+
+setInterval(spawnFlag, 800);
+
+// UPDATE
 function update() {
   if (!running) return;
 
@@ -61,7 +61,7 @@ function update() {
 
   player.x = Math.max(0, Math.min(W - player.w, player.x));
 
-  // UPDATE FLAGS
+  // FLAGS
   for (let i = flags.length - 1; i >= 0; i--) {
     const f = flags[i];
     f.y += f.speed;
@@ -74,26 +74,38 @@ function update() {
       f.y + f.size > player.y
     ) {
       flags.splice(i, 1);
+
       if (f.good) {
-        score += 10;
+        score += 15;
+        speedMultiplier += 0.03;
       } else {
         lives--;
+        shake = 10;
       }
       continue;
     }
 
-    // OFF SCREEN
     if (f.y > H + 40) flags.splice(i, 1);
   }
 
-  // UPDATE UI
   scoreEl.textContent = score;
   livesEl.textContent = lives;
 
   if (lives <= 0) endGame();
 }
 
+// DRAW
 function draw() {
+  ctx.save();
+
+  if (shake > 0) {
+    ctx.translate(
+      (Math.random() - 0.5) * shake,
+      (Math.random() - 0.5) * shake
+    );
+    shake--;
+  }
+
   ctx.clearRect(0, 0, W, H);
 
   // PLAYER
@@ -102,17 +114,27 @@ function draw() {
 
   // FLAGS
   flags.forEach(f => {
-    ctx.fillStyle = f.good ? "#22c55e" : "#ef4444";
-    ctx.fillRect(f.x, f.y, f.size, f.size);
+    ctx.font = "22px system-ui";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(
+      f.good ? "💚" : "🚩",
+      f.x + f.size / 2,
+      f.y + f.size / 2
+    );
   });
+
+  ctx.restore();
 }
 
+// LOOP
 function loop() {
   update();
   draw();
   requestAnimationFrame(loop);
 }
 
+// GAME OVER
 function endGame() {
   running = false;
 
@@ -126,16 +148,9 @@ function endGame() {
   gameOverScreen.style.display = "flex";
 }
 
-function resetGame() {
-  score = 0;
-  lives = 3;
-  flags.length = 0;
-  running = true;
-  gameOverScreen.style.display = "none";
-}
-
-restartBtn.onclick = resetGame;
-playAgainBtn.onclick = resetGame;
+// RESTART
+document.getElementById("restartBtn").onclick = () => location.reload();
+document.getElementById("playAgain").onclick = () => location.reload();
 
 // START
 loop();
