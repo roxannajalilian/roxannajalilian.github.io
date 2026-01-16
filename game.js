@@ -73,5 +73,6 @@
   ctx.fillText("If you see this, your problem is game.js NOT loading.", 220, 310);
 </script>
 
+  <script src="game.js?v=20"></script>
 </body>
 </html>
