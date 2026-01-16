@@ -1,7 +1,3 @@
-// game.js — Delulu Dodge (Red flags vs Green flags)
-// Requires: shared.js + requireAdult("game.html") in game.html
-// HTML needs: <canvas id="game"> and #score #high #lives and #restart
-
 requireAdult("game.html");
 
 const APP_KEY = "dd_app_v1"; // same as your app
