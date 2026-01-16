@@ -4,95 +4,61 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Game</title>
-
-  <link rel="stylesheet" href="style.css?v=1000" />
-  <script src="shared.js?v=1000"></script>
+  <link rel="stylesheet" href="style.css?v=999" />
+  <script src="shared.js?v=999"></script>
   <script>requireAdult("game.html");</script>
-
-  <style>
-    #gameWrap{
-      position:relative;
-      width:100%;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      overflow:hidden;
-      height:520px;
-    }
-    canvas{
-      width:100%;
-      height:520px;
-      display:block;
-    }
-    #gameLoading{
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      gap:10px;
-      color:rgba(255,255,255,.85);
-      font-weight:900;
-      letter-spacing:.2px;
-      pointer-events:none;
-    }
-    #dot{
-      width:10px;height:10px;border-radius:999px;
-      background: rgba(124,77,255,.9);
-      box-shadow: 0 0 18px rgba(124,77,255,.55);
-      animation: pulse .9s ease-in-out infinite;
-    }
-    @keyframes pulse{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.6)} }
-  </style>
 </head>
 <body>
-
-<nav>
-  <div class="brand">
-    <div class="logo">DD</div>
-    <div>
-      <div class="title">Delulu Detector</div>
-      <div class="sub">Game • Dodge the Flags</div>
-    </div>
-  </div>
-  <div class="nav-actions">
-    <a class="btn ghost" href="menu.html">Menu</a>
-    <a class="btn ghost" href="quiz.html">Quiz</a>
-    <a class="btn ghost" href="plan.html">Plan</a>
-    <a class="btn ghost" href="scan.html">Analysis</a>
-  </div>
-</nav>
-
-<div class="container">
-  <div class="card">
-    <div class="row" style="justify-content:space-between;">
-      <div class="row">
-        <span class="badge">Score: <b id="score">0</b></span>
-        <span class="badge">High: <b id="high">0</b></span>
-        <span class="badge">Lives: <b id="lives">3</b></span>
+  <nav>
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div>
+        <div class="title">Delulu Detector</div>
+        <div class="sub">Game • Dodge the Flags</div>
       </div>
-      <button class="btn ghost" id="restart" type="button">Restart</button>
     </div>
 
-    <p class="muted" style="margin:10px 0;">
-      Move with ← → or A / D. Avoid 🚩 red flags. Catch ✅ green flags.
-    </p>
+    <div class="nav-actions">
+      <a class="btn ghost" href="menu.html">Menu</a>
+      <a class="btn ghost" href="quiz.html">Quiz</a>
+      <a class="btn ghost" href="plan.html">Plan</a>
+      <a class="btn ghost" href="scan.html">Analysis</a>
+    </div>
+  </nav>
 
-    <div id="gameWrap">
-      <div id="gameLoading">
-        <div id="dot"></div>
-        <div>Loading game…</div>
-        <div class="muted small" id="jsPing">JS: waiting…</div>
+  <div class="container">
+    <div class="card">
+      <div class="row" style="justify-content:space-between; align-items:center;">
+        <div class="row">
+          <span class="badge">Score: <span id="score">0</span></span>
+          <span class="badge">High: <span id="high">0</span></span>
+          <span class="badge">Lives: <span id="lives">3</span></span>
+        </div>
+        <button class="btn ghost" id="restart" type="button">Restart</button>
       </div>
 
-      <!-- IMPORTANT: this MUST exist -->
-      <canvas id="game" width="900" height="520"></canvas>
+      <p class="muted" style="margin:12px 0 10px;">
+        Move with ← → (or A / D). Avoid 🚩 red flags. Catch ✅ green flags.
+      </p>
+
+      <div style="border:1px solid rgba(255,255,255,.12); border-radius:18px; overflow:hidden;">
+        <canvas id="game" width="920" height="420" style="display:block; width:100%; height:auto;"></canvas>
+      </div>
+
+      <p class="muted small" id="jsStatus" style="margin:10px 0 0;">JS: waiting…</p>
     </div>
   </div>
-</div>
 
-<!-- IMPORTANT: filename must match EXACTLY -->
-<script src="game.js?v=1000"></script>
+  <script src="game.js?v=999"></script>
+
+  <script>
+
+    setTimeout(() => {
+      const el = document.getElementById("jsStatus");
+      if (el && el.textContent.includes("waiting")) {
+        el.textContent = "JS didn't load. Check filename/path + open Console (F12).";
+      }
+    }, 1200);
+  </script>
 </body>
 </html>
