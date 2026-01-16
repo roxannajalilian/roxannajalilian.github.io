@@ -1,85 +1,96 @@
 requireAdult("game.html");
 
-const HIGH_KEY = "dd_game_highscore_v1";
+const HIGH_KEY = "dd_game_highscore_v2";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
 const scoreText = document.getElementById("scoreText");
 const highText = document.getElementById("highText");
+const livesText = document.getElementById("livesText");
+const streakText = document.getElementById("streakText");
 
 const btnRestart = document.getElementById("btnRestart");
-
+const btnReplay = document.getElementById("btnReplay");
 const loseModal = document.getElementById("loseModal");
 const finalScore = document.getElementById("finalScore");
 const finalHigh = document.getElementById("finalHigh");
-const btnReplay = document.getElementById("btnReplay");
 
-function getHigh() {
-  return Number(localStorage.getItem(HIGH_KEY) || "0");
-}
-function setHigh(v) {
-  localStorage.setItem(HIGH_KEY, String(v));
-}
+const btnHow = document.getElementById("btnHow");
+const howModal = document.getElementById("howModal");
+const btnCloseHow = document.getElementById("btnCloseHow");
+
+function getHigh() { return Number(localStorage.getItem(HIGH_KEY) || "0"); }
+function setHigh(v) { localStorage.setItem(HIGH_KEY, String(v)); }
 
 let high = getHigh();
-highText.textContent = high;
+highText.textContent = String(high);
 
+// --- Game state ---
 let running = true;
 let score = 0;
-let t0 = performance.now();
-
-const player = {
-  x: canvas.width * 0.5,
-  y: canvas.height - 70,
-  w: 54,
-  h: 54,
-  vx: 0
-};
-
-const flags = [];
-let spawnTimer = 0;
+let lives = 3;
+let streak = 0;
 
 const keys = new Set();
+
 window.addEventListener("keydown", (e) => {
   const k = e.key.toLowerCase();
   if (["arrowleft","arrowright","a","d"].includes(k)) e.preventDefault();
   keys.add(k);
 });
-window.addEventListener("keyup", (e) => {
-  keys.delete(e.key.toLowerCase());
-});
+window.addEventListener("keyup", (e) => keys.delete(e.key.toLowerCase()));
 
-function reset() {
+// Touch / drag support
+let pointerX = null;
+canvas.addEventListener("pointerdown", (e) => { pointerX = e.clientX; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener("pointermove", (e) => { if (pointerX !== null) pointerX = e.clientX; });
+canvas.addEventListener("pointerup", () => { pointerX = null; });
+canvas.addEventListener("pointercancel", () => { pointerX = null; });
+
+const player = {
+  x: canvas.width * 0.5,
+  y: canvas.height - 76,
+  w: 62,
+  h: 62,
+  vx: 0
+};
+
+// falling items
+// type: "red" or "green"
+const items = [];
+
+// particles for fun
+const pops = []; // {x,y,txt,life}
+function pop(x, y, txt){
+  pops.push({ x, y, txt, life: 0.85 });
+}
+
+let spawnTimer = 0;
+
+function rand(min, max){ return Math.random() * (max - min) + min; }
+
+function reset(){
   running = true;
   loseModal.style.display = "none";
+
   score = 0;
-  t0 = performance.now();
+  lives = 3;
+  streak = 0;
+
   player.x = canvas.width * 0.5;
   player.vx = 0;
-  flags.length = 0;
+
+  items.length = 0;
+  pops.length = 0;
   spawnTimer = 0;
+
   scoreText.textContent = "0";
+  livesText.textContent = "3";
+  streakText.textContent = "0";
 }
 
-function rand(min, max) {
-  return Math.random() * (max - min) + min;
-}
-
-function spawnFlag() {
-  const size = rand(34, 56);
-  flags.push({
-    x: rand(20, canvas.width - 20 - size),
-    y: -size - 10,
-    w: size,
-    h: size,
-    vy: rand(170, 260),
-    rot: rand(0, Math.PI * 2),
-    vr: rand(-2.4, 2.4)
-  });
-}
-
-function rectHit(a, b) {
+function rectHit(a, b){
   return (
     a.x < b.x + b.w &&
     a.x + a.w > b.x &&
@@ -88,63 +99,135 @@ function rectHit(a, b) {
   );
 }
 
-function lose() {
+function spawnItem(){
+  // more reds over time but always some greens
+  const difficulty = Math.min(2.2, 0.9 + score / 900);
+  const redChance = Math.min(0.72, 0.46 + score / 2200);
+
+  const type = (Math.random() < redChance) ? "red" : "green";
+  const size = rand(34, 58);
+  items.push({
+    type,
+    x: rand(18, canvas.width - 18 - size),
+    y: -size - 12,
+    w: size,
+    h: size,
+    vy: rand(160, 260) * difficulty,
+    rot: rand(0, Math.PI*2),
+    vr: rand(-2.8, 2.8)
+  });
+}
+
+function loseLife(){
+  lives--;
+  livesText.textContent = String(lives);
+  streak = 0;
+  streakText.textContent = "0";
+  pop(player.x + player.w/2, player.y, "💔");
+
+  if (lives <= 0) endGame();
+}
+
+function gainPoints(base){
+  // streak bonus: every 5 streak adds extra
+  streak++;
+  streakText.textContent = String(streak);
+
+  const bonus = Math.floor(streak / 5) * 2;
+  score += base + bonus;
+  scoreText.textContent = String(score);
+
+  pop(player.x + player.w/2, player.y - 10, `+${base + bonus}`);
+}
+
+function endGame(){
   running = false;
 
-  const newHigh = Math.max(high, score);
-  if (newHigh !== high) {
-    high = newHigh;
+  if (score > high){
+    high = score;
     setHigh(high);
+    highText.textContent = String(high);
   }
 
-  highText.textContent = high;
   finalScore.textContent = String(score);
   finalHigh.textContent = String(high);
   loseModal.style.display = "flex";
 }
 
-function step(dt) {
-  // controls
+function update(dt){
+  // keyboard move
   const left = keys.has("arrowleft") || keys.has("a");
   const right = keys.has("arrowright") || keys.has("d");
-
   const target = (right ? 1 : 0) - (left ? 1 : 0);
-  player.vx = target * 420;
 
-  player.x += player.vx * dt;
+  // touch drag overrides keyboard when active
+  if (pointerX !== null){
+    // map pointerX to canvas coords
+    const rect = canvas.getBoundingClientRect();
+    const px = ((pointerX - rect.left) / rect.width) * canvas.width;
+    player.x += (px - (player.x + player.w/2)) * 0.18;
+  } else {
+    player.vx = target * 520;
+    player.x += player.vx * dt;
+  }
+
   player.x = Math.max(10, Math.min(canvas.width - player.w - 10, player.x));
 
-  // spawn rate increases slowly
+  // spawn gets faster with score
   spawnTimer -= dt;
-  const difficulty = Math.min(1.35, 0.65 + score / 250);
-  if (spawnTimer <= 0) {
-    spawnFlag();
-    spawnTimer = rand(0.32, 0.62) / difficulty;
+  const spawnRate = Math.max(0.22, 0.62 - score / 4000); // lower = more frequent
+  if (spawnTimer <= 0){
+    spawnItem();
+    spawnTimer = rand(spawnRate * 0.75, spawnRate * 1.15);
   }
 
-  // move flags
-  for (const f of flags) {
-    f.y += f.vy * dt * difficulty;
-    f.rot += f.vr * dt;
+  // move items
+  for (const it of items){
+    it.y += it.vy * dt;
+    it.rot += it.vr * dt;
   }
 
-  // cleanup
-  while (flags.length && flags[0].y > canvas.height + 120) flags.shift();
+  // collisions + cleanup
+  for (let k = items.length - 1; k >= 0; k--){
+    const it = items[k];
 
-  // collision
-  for (const f of flags) {
-    if (rectHit(player, f)) {
-      lose();
-      return;
+    if (rectHit(player, it)){
+      if (it.type === "red"){
+        pop(it.x + it.w/2, it.y + it.h/2, "🚩");
+        items.splice(k, 1);
+        loseLife();
+        continue;
+      } else {
+        pop(it.x + it.w/2, it.y + it.h/2, "✅");
+        items.splice(k, 1);
+        gainPoints(6);
+        continue;
+      }
+    }
+
+    // missed green breaks streak a bit
+    if (it.y > canvas.height + 90){
+      if (it.type === "green" && streak > 0){
+        streak = Math.max(0, streak - 2);
+        streakText.textContent = String(streak);
+      }
+      items.splice(k, 1);
     }
   }
 
-  // score
-  score += Math.floor(dt * 100);
+  // particles
+  for (let p = pops.length - 1; p >= 0; p--){
+    pops[p].life -= dt;
+    pops[p].y -= 40 * dt;
+    if (pops[p].life <= 0) pops.splice(p, 1);
+  }
+
+  // passive score while alive
+  score += Math.floor(dt * 4);
   scoreText.textContent = String(score);
 }
 
-function drawRoundedRect(x,y,w,h,r){
+function roundedRect(x,y,w,h,r){
   ctx.beginPath();
   ctx.moveTo(x+r, y);
   ctx.arcTo(x+w, y, x+w, y+h, r);
@@ -154,10 +237,10 @@ function drawRoundedRect(x,y,w,h,r){
   ctx.closePath();
 }
 
-function draw() {
+function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // background sheen
+  // glow background
   const g = ctx.createLinearGradient(0,0,canvas.width,canvas.height);
   g.addColorStop(0, "rgba(124,77,255,0.18)");
   g.addColorStop(0.55, "rgba(0,0,0,0.0)");
@@ -167,41 +250,56 @@ function draw() {
 
   // player
   ctx.save();
-  ctx.shadowColor = "rgba(124,77,255,0.45)";
+  ctx.shadowColor = "rgba(124,77,255,0.35)";
   ctx.shadowBlur = 18;
-  ctx.fillStyle = "rgba(255,255,255,0.10)";
-  ctx.strokeStyle = "rgba(255,255,255,0.20)";
+  ctx.fillStyle = "rgba(255,255,255,0.11)";
+  ctx.strokeStyle = "rgba(255,255,255,0.22)";
   ctx.lineWidth = 2;
-  drawRoundedRect(player.x, player.y, player.w, player.h, 14);
-  ctx.fill();
-  ctx.stroke();
+  roundedRect(player.x, player.y, player.w, player.h, 16);
+  ctx.fill(); ctx.stroke();
   ctx.shadowBlur = 0;
-
-  ctx.fillStyle = "rgba(255,255,255,0.90)";
-  ctx.font = "700 18px ui-sans-serif,system-ui";
-  ctx.fillText("YOU", player.x + 12, player.y + 32);
+  ctx.fillStyle = "rgba(255,255,255,0.92)";
+  ctx.font = "900 18px ui-sans-serif,system-ui";
+  ctx.fillText("YOU", player.x + 16, player.y + 38);
   ctx.restore();
 
-  // flags (red flags)
-  for (const f of flags) {
+  // items
+  for (const it of items){
     ctx.save();
-    ctx.translate(f.x + f.w/2, f.y + f.h/2);
-    ctx.rotate(f.rot);
-    ctx.shadowColor = "rgba(255,60,120,0.35)";
+    ctx.translate(it.x + it.w/2, it.y + it.h/2);
+    ctx.rotate(it.rot);
+
+    if (it.type === "red"){
+      ctx.shadowColor = "rgba(255,60,120,0.35)";
+      ctx.fillStyle = "rgba(255,60,120,0.44)";
+    } else {
+      ctx.shadowColor = "rgba(90,230,160,0.28)";
+      ctx.fillStyle = "rgba(90,230,160,0.30)";
+    }
     ctx.shadowBlur = 14;
-    ctx.fillStyle = "rgba(255,60,120,0.45)";
+
     ctx.strokeStyle = "rgba(255,255,255,0.18)";
     ctx.lineWidth = 2;
-    drawRoundedRect(-f.w/2, -f.h/2, f.w, f.h, 12);
-    ctx.fill();
-    ctx.stroke();
+    roundedRect(-it.w/2, -it.h/2, it.w, it.h, 14);
+    ctx.fill(); ctx.stroke();
 
     ctx.shadowBlur = 0;
     ctx.fillStyle = "rgba(255,255,255,0.92)";
-    ctx.font = "900 16px ui-sans-serif,system-ui";
-    ctx.fillText("🚩", -8, 6);
+    ctx.font = "900 18px ui-sans-serif,system-ui";
+    ctx.fillText(it.type === "red" ? "🚩" : "✅", -10, 7);
+
     ctx.restore();
   }
+
+  // pops
+  ctx.save();
+  ctx.fillStyle = "rgba(255,255,255,0.92)";
+  ctx.font = "900 16px ui-sans-serif,system-ui";
+  for (const p of pops){
+    ctx.globalAlpha = Math.max(0, p.life);
+    ctx.fillText(p.txt, p.x, p.y);
+  }
+  ctx.restore();
 }
 
 let last = performance.now();
@@ -209,14 +307,21 @@ function loop(now){
   const dt = Math.min(0.033, (now - last) / 1000);
   last = now;
 
-  if (running) step(dt);
+  if (running) update(dt);
   draw();
 
   requestAnimationFrame(loop);
 }
 
+// UI controls
 btnRestart.addEventListener("click", reset);
-btnReplay.addEventListener("click", reset);
+btnReplay.addEventListener("click", () => { reset(); });
 
+btnHow.addEventListener("click", () => { howModal.style.display = "flex"; });
+btnCloseHow.addEventListener("click", () => { howModal.style.display = "none"; });
+howModal.addEventListener("click", (e) => { if (e.target === howModal) howModal.style.display = "none"; });
+loseModal.addEventListener("click", (e) => { if (e.target === loseModal) loseModal.style.display = "none"; });
+
+// start
 reset();
 requestAnimationFrame(loop);
