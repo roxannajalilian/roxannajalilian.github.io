@@ -5,19 +5,45 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Delulu Detector • Game</title>
 
-  <link rel="stylesheet" href="style.css?v=999" />
-  <script src="shared.js?v=999"></script>
+  <link rel="stylesheet" href="style.css?v=1000" />
+  <script src="shared.js?v=1000"></script>
   <script>requireAdult("game.html");</script>
 
   <style>
-    canvas{
+    #gameWrap{
+      position:relative;
       width:100%;
-      height:520px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,.14);
       background: rgba(0,0,0,.18);
+      overflow:hidden;
+      height:520px;
+    }
+    canvas{
+      width:100%;
+      height:520px;
       display:block;
     }
+    #gameLoading{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      gap:10px;
+      color:rgba(255,255,255,.85);
+      font-weight:900;
+      letter-spacing:.2px;
+      pointer-events:none;
+    }
+    #dot{
+      width:10px;height:10px;border-radius:999px;
+      background: rgba(124,77,255,.9);
+      box-shadow: 0 0 18px rgba(124,77,255,.55);
+      animation: pulse .9s ease-in-out infinite;
+    }
+    @keyframes pulse{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.6)} }
   </style>
 </head>
 <body>
@@ -46,18 +72,27 @@
         <span class="badge">High: <b id="high">0</b></span>
         <span class="badge">Lives: <b id="lives">3</b></span>
       </div>
-      <button class="btn ghost" id="restart">Restart</button>
+      <button class="btn ghost" id="restart" type="button">Restart</button>
     </div>
 
     <p class="muted" style="margin:10px 0;">
       Move with ← → or A / D. Avoid 🚩 red flags. Catch ✅ green flags.
     </p>
 
+    <div id="gameWrap">
+      <div id="gameLoading">
+        <div id="dot"></div>
+        <div>Loading game…</div>
+        <div class="muted small" id="jsPing">JS: waiting…</div>
+      </div>
 
-    <canvas id="game" width="900" height="520"></canvas>
+      <!-- IMPORTANT: this MUST exist -->
+      <canvas id="game" width="900" height="520"></canvas>
+    </div>
   </div>
 </div>
 
-<script src="game.js?v=999"></script>
+<!-- IMPORTANT: filename must match EXACTLY -->
+<script src="game.js?v=1000"></script>
 </body>
 </html>
