@@ -2,58 +2,91 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Delulu Detector • Game</title>
-  <link rel="stylesheet" href="style.css?v=123" />
-  <script src="shared.js?v=123"></script>
+  <link rel="stylesheet" href="style.css" />
+  <script src="shared.js"></script>
   <script>requireAdult("game.html");</script>
 </head>
+
 <body>
-
-<nav>
-  <div class="brand">
-    <div class="logo">DD</div>
-    <div>
-      <div class="title">Delulu Detector</div>
-      <div class="sub">Game • Dodge the Flags</div>
-    </div>
-  </div>
-  <div class="nav-actions">
-    <a class="btn ghost" href="menu.html">Menu</a>
-    <a class="btn ghost" href="quiz.html">Quiz</a>
-    <a class="btn ghost" href="plan.html">Plan</a>
-    <a class="btn ghost" href="scan.html">Analysis</a>
-  </div>
-</nav>
-
-<div class="container">
-  <div class="card">
-
-    <div class="row">
-      <span class="badge">Score: <b id="score">0</b></span>
-      <span class="badge">High: <b id="high">0</b></span>
-      <span class="badge">Lives: <b id="lives">3</b></span>
+  <nav>
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div>
+        <div class="title">Delulu Detector</div>
+        <div class="sub">Game • Dodge the Flags</div>
+      </div>
     </div>
 
-    <p class="muted" style="margin-top:8px;">
-      Move with ← → or A / D. Avoid 🚩 red flags. Catch ✅ green flags.
-    </p>
-
-    <canvas
-      id="game"
-      width="720"
-      height="400"
-      style="margin-top:14px; border-radius:16px; background:rgba(0,0,0,.25); display:block;">
-    </canvas>
-
-    <div class="row" style="margin-top:14px;">
-      <button class="btn ghost" id="restart">Restart</button>
-      <span class="muted small" id="jsStatus">Loading game…</span>
+    <div class="nav-actions">
+      <a class="btn ghost" href="menu.html">Menu</a>
+      <a class="btn ghost" href="quiz.html">Quiz</a>
+      <a class="btn ghost" href="plan.html">Plan</a>
+      <a class="btn ghost" href="scan.html">Analysis</a>
     </div>
+  </nav>
 
+  <div class="container">
+    <div class="card">
+      <div class="row" style="justify-content:space-between; margin-bottom:10px;">
+        <div class="row">
+          <span class="badge">Score: <b id="score">0</b></span>
+          <span class="badge">High: <b id="highScore">0</b></span>
+          <span class="badge">Lives: <b id="lives">3</b></span>
+        </div>
+        <button class="btn ghost" id="restartBtn">Restart</button>
+      </div>
+
+      <p class="muted">
+        Move with ← → or A / D.  
+        Avoid 🚩 red flags. Catch ✅ green flags.
+      </p>
+
+      <!-- GAME AREA -->
+      <div id="gameWrap" style="
+        position:relative;
+        width:100%;
+        max-width:720px;
+        height:420px;
+        margin:16px auto;
+        border-radius:18px;
+        background:rgba(0,0,0,.25);
+        overflow:hidden;
+        border:1px solid rgba(255,255,255,.12);
+      ">
+        <canvas id="gameCanvas" width="720" height="420"></canvas>
+
+        <!-- GAME OVER OVERLAY -->
+        <div id="gameOver" style="
+          display:none;
+          position:absolute;
+          inset:0;
+          background:rgba(0,0,0,.55);
+          backdrop-filter:blur(8px);
+          align-items:center;
+          justify-content:center;
+          text-align:center;
+        ">
+          <div class="card" style="max-width:360px;">
+            <h2>Game Over</h2>
+            <p class="muted">You ran into too many red flags.</p>
+            <p><b>Final score:</b> <span id="finalScore">0</span></p>
+
+            <div class="row" style="justify-content:center; margin-top:14px;">
+              <button class="btn primary" id="playAgain">Play again</button>
+              <a class="btn ghost" href="menu.html">Menu</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="muted small" style="text-align:center;">
+        Tip: Green flags boost your score. Red flags cost a life.
+      </p>
+    </div>
   </div>
-</div>
 
-<script src="game.js?v=123"></script>
+  <script src="game.js"></script>
 </body>
 </html>
