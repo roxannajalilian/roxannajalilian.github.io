@@ -1,7 +1,14 @@
 requireAdult("game.html");
 
+// PROOF JS IS RUNNING:
+const jsPing = document.getElementById("jsPing");
+if (jsPing) jsPing.textContent = "JS: running ✅";
+
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
+
+const loading = document.getElementById("gameLoading");
+setTimeout(() => { if (loading) loading.style.display = "none"; }, 250);
 
 const scoreEl = document.getElementById("score");
 const highEl = document.getElementById("high");
@@ -16,77 +23,90 @@ let high = Number(localStorage.getItem(HIGH_KEY) || 0);
 
 highEl.textContent = high;
 
-const player = { x: 420, y: 460, w: 60, h: 40, speed: 7 };
-const flags = [];
-
+const player = { x: 420, y: 460, w: 70, h: 24, speed: 8 };
+const items = [];
 let keys = {};
+let gameOver = false;
 
-window.addEventListener("keydown", e => keys[e.key] = true);
-window.addEventListener("keyup", e => keys[e.key] = false);
+window.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
+window.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
 
-function spawnFlag(){
-  flags.push({
-    x: Math.random() * (canvas.width - 40),
-    y: -40,
-    size: 40,
-    speed: 3 + Math.random() * 3,
-    type: Math.random() < 0.6 ? "red" : "green"
+function spawn(){
+  items.push({
+    x: Math.random() * (canvas.width - 44),
+    y: -44,
+    s: 44,
+    v: 3.2 + Math.random() * 3.2,
+    type: Math.random() < 0.65 ? "red" : "green"
   });
 }
 
 function reset(){
   score = 0;
   lives = 3;
-  flags.length = 0;
+  gameOver = false;
+  items.length = 0;
   scoreEl.textContent = "0";
   livesEl.textContent = "3";
 }
+restartBtn.addEventListener("click", reset);
 
-restartBtn.onclick = reset;
+function rectHit(a, b){
+  return (
+    a.x < b.x + b.w &&
+    a.x + a.w > b.x &&
+    a.y < b.y + b.h &&
+    a.y + a.h > b.y
+  );
+}
 
 function update(){
-  if(keys["ArrowLeft"] || keys["a"]) player.x -= player.speed;
-  if(keys["ArrowRight"] || keys["d"]) player.x += player.speed;
+  if (gameOver) return;
 
+  // movement
+  if (keys["arrowleft"] || keys["a"]) player.x -= player.speed;
+  if (keys["arrowright"] || keys["d"]) player.x += player.speed;
   player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
 
-  if(Math.random() < 0.03) spawnFlag();
+  // spawn
+  if (Math.random() < 0.035) spawn();
 
-  for(let i = flags.length - 1; i >= 0; i--){
-    const f = flags[i];
-    f.y += f.speed;
+  // move items + collision
+  for (let i = items.length - 1; i >= 0; i--){
+    const it = items[i];
+    it.y += it.v;
 
-    const hit =
-      f.x < player.x + player.w &&
-      f.x + f.size > player.x &&
-      f.y < player.y + player.h &&
-      f.y + f.size > player.y;
+    const itRect = { x: it.x, y: it.y, w: it.s, h: it.s };
+    const plRect = { x: player.x, y: player.y, w: player.w, h: player.h };
 
-    if(hit){
-      if(f.type === "red"){
+    if (rectHit(itRect, plRect)){
+      if (it.type === "red"){
         lives--;
-        livesEl.textContent = lives;
+        livesEl.textContent = String(lives);
       } else {
         score += 10;
-        scoreEl.textContent = score;
+        scoreEl.textContent = String(score);
       }
-      flags.splice(i,1);
+      items.splice(i, 1);
       continue;
     }
 
-    if(f.y > canvas.height){
-      flags.splice(i,1);
+    if (it.y > canvas.height + 80){
+      items.splice(i, 1);
     }
   }
 
-  if(lives <= 0){
-    if(score > high){
+  if (lives <= 0){
+    gameOver = true;
+    if (score > high){
       high = score;
-      localStorage.setItem(HIGH_KEY, high);
-      highEl.textContent = high;
+      localStorage.setItem(HIGH_KEY, String(high));
+      highEl.textContent = String(high);
     }
-    alert("Game over 😭");
-    reset();
+    setTimeout(() => {
+      alert(`Game over 😭\nScore: ${score}\nHigh score: ${high}`);
+      reset();
+    }, 60);
   }
 }
 
@@ -94,16 +114,32 @@ function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
   // player
-  ctx.fillStyle = "rgba(255,255,255,.85)";
+  ctx.fillStyle = "rgba(255,255,255,.88)";
   ctx.fillRect(player.x, player.y, player.w, player.h);
 
-  // flags
-  for(const f of flags){
-    ctx.fillStyle = f.type === "red"
-      ? "rgba(255,80,120,.9)"
-      : "rgba(90,230,160,.9)";
-    ctx.fillRect(f.x, f.y, f.size, f.size);
+  // items
+  for (const it of items){
+    if (it.type === "red"){
+      ctx.fillStyle = "rgba(255,80,120,.92)";
+      ctx.fillRect(it.x, it.y, it.s, it.s);
+      // little flag pole
+      ctx.fillStyle = "rgba(0,0,0,.25)";
+      ctx.fillRect(it.x + 6, it.y + 6, 6, it.s - 12);
+    } else {
+      ctx.fillStyle = "rgba(90,230,160,.92)";
+      ctx.fillRect(it.x, it.y, it.s, it.s);
+      // check mark vibe
+      ctx.fillStyle = "rgba(0,0,0,.25)";
+      ctx.fillRect(it.x + 10, it.y + 22, 22, 6);
+    }
   }
+
+  // floor line
+  ctx.strokeStyle = "rgba(255,255,255,.18)";
+  ctx.beginPath();
+  ctx.moveTo(0, player.y + player.h + 12);
+  ctx.lineTo(canvas.width, player.y + player.h + 12);
+  ctx.stroke();
 }
 
 function loop(){
