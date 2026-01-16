@@ -1,219 +1,222 @@
-const KEY = "dd_game_v1";
+requireAdult("game.html");
 
-function loadGameData() {
-  try { return JSON.parse(localStorage.getItem(KEY) || "{}"); }
-  catch { return {}; }
-}
-function saveGameData(d) {
-  localStorage.setItem(KEY, JSON.stringify(d));
-}
+const HIGH_KEY = "dd_game_highscore_v1";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-const scoreEl = document.getElementById("score");
-const highEl = document.getElementById("highscore");
-const overlay = document.getElementById("overlay");
-const endText = document.getElementById("endText");
-const startBtn = document.getElementById("startBtn");
-const replayBtn = document.getElementById("replayBtn");
-const resetHSBtn = document.getElementById("resetHSBtn");
+const scoreText = document.getElementById("scoreText");
+const highText = document.getElementById("highText");
 
-let W = 900, H = 400;
-function resize() {
-  const rect = canvas.getBoundingClientRect();
-  canvas.width = Math.floor(rect.width * devicePixelRatio);
-  canvas.height = Math.floor(rect.height * devicePixelRatio);
-  ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+const btnRestart = document.getElementById("btnRestart");
 
-  W = rect.width;
-  H = rect.height;
+const loseModal = document.getElementById("loseModal");
+const finalScore = document.getElementById("finalScore");
+const finalHigh = document.getElementById("finalHigh");
+const btnReplay = document.getElementById("btnReplay");
+
+function getHigh() {
+  return Number(localStorage.getItem(HIGH_KEY) || "0");
 }
-window.addEventListener("resize", resize);
-resize();
+function setHigh(v) {
+  localStorage.setItem(HIGH_KEY, String(v));
+}
 
-let running = false;
+let high = getHigh();
+highText.textContent = high;
+
+let running = true;
 let score = 0;
+let t0 = performance.now();
 
-const data = loadGameData();
-let high = Number(data.high || 0);
-highEl.textContent = String(high);
+const player = {
+  x: canvas.width * 0.5,
+  y: canvas.height - 70,
+  w: 54,
+  h: 54,
+  vx: 0
+};
 
-const player = { x: 70, y: 0, r: 18, vy: 0 };
-const ground = () => H - 48;
+const flags = [];
+let spawnTimer = 0;
 
-let obstacles = [];
-let t = 0;
+const keys = new Set();
+window.addEventListener("keydown", (e) => {
+  const k = e.key.toLowerCase();
+  if (["arrowleft","arrowright","a","d"].includes(k)) e.preventDefault();
+  keys.add(k);
+});
+window.addEventListener("keyup", (e) => {
+  keys.delete(e.key.toLowerCase());
+});
 
-function resetGame() {
+function reset() {
+  running = true;
+  loseModal.style.display = "none";
   score = 0;
-  t = 0;
-  obstacles = [];
-  player.y = ground() - player.r;
-  player.vy = 0;
-
-  scoreEl.textContent = "0";
-  overlay.style.opacity = "0";
-  overlay.style.pointerEvents = "none";
+  t0 = performance.now();
+  player.x = canvas.width * 0.5;
+  player.vx = 0;
+  flags.length = 0;
+  spawnTimer = 0;
+  scoreText.textContent = "0";
 }
 
-function spawn() {
-  // red flag block
-  const w = 40 + Math.random() * 30;
-  const h = 50 + Math.random() * 90;
-  obstacles.push({
-    x: W + 30,
-    y: ground() - h,
-    w,
-    h,
-    speed: 4.2 + Math.min(3, score / 25)
+function rand(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function spawnFlag() {
+  const size = rand(34, 56);
+  flags.push({
+    x: rand(20, canvas.width - 20 - size),
+    y: -size - 10,
+    w: size,
+    h: size,
+    vy: rand(170, 260),
+    rot: rand(0, Math.PI * 2),
+    vr: rand(-2.4, 2.4)
   });
 }
 
-function die() {
-  running = false;
-
-  // highscore save
-  if (score > high) {
-    high = score;
-    highEl.textContent = String(high);
-    saveGameData({ high });
-  }
-
-  endText.textContent = `Score: ${score} • Highscore: ${high}`;
-  overlay.style.opacity = "1";
-  overlay.style.pointerEvents = "auto";
-}
-
-function jump() {
-  if (!running) return;
-  // if on ground
-  if (player.y >= ground() - player.r - 0.5) {
-    player.vy = -11.5;
-  }
-}
-
-function collide(a, b) {
+function rectHit(a, b) {
   return (
-    a.x + a.r > b.x &&
-    a.x - a.r < b.x + b.w &&
-    a.y + a.r > b.y &&
-    a.y - a.r < b.y + b.h
+    a.x < b.x + b.w &&
+    a.x + a.w > b.x &&
+    a.y < b.y + b.h &&
+    a.y + a.h > b.y
   );
 }
 
-function draw() {
-  // background
-  ctx.clearRect(0, 0, W, H);
+function lose() {
+  running = false;
 
-  // ground line
-  ctx.globalAlpha = 0.9;
-  ctx.fillRect(0, ground(), W, 2);
-
-  // player
-  ctx.globalAlpha = 1;
-  ctx.beginPath();
-  ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
-  ctx.fill();
-
-  // obstacles
-  for (const o of obstacles) {
-    ctx.fillRect(o.x, o.y, o.w, o.h);
+  const newHigh = Math.max(high, score);
+  if (newHigh !== high) {
+    high = newHigh;
+    setHigh(high);
   }
 
-  // hints text
-  ctx.globalAlpha = 0.7;
-  ctx.fillText("click/tap to jump", 16, 26);
-  ctx.globalAlpha = 1;
+  highText.textContent = high;
+  finalScore.textContent = String(score);
+  finalHigh.textContent = String(high);
+  loseModal.style.display = "flex";
 }
 
-function step() {
-  if (!running) {
-    draw();
-    return;
+function step(dt) {
+  // controls
+  const left = keys.has("arrowleft") || keys.has("a");
+  const right = keys.has("arrowright") || keys.has("d");
+
+  const target = (right ? 1 : 0) - (left ? 1 : 0);
+  player.vx = target * 420;
+
+  player.x += player.vx * dt;
+  player.x = Math.max(10, Math.min(canvas.width - player.w - 10, player.x));
+
+  // spawn rate increases slowly
+  spawnTimer -= dt;
+  const difficulty = Math.min(1.35, 0.65 + score / 250);
+  if (spawnTimer <= 0) {
+    spawnFlag();
+    spawnTimer = rand(0.32, 0.62) / difficulty;
   }
 
-  t++;
-
-  // gravity
-  player.vy += 0.55;
-  player.y += player.vy;
-
-  // clamp to ground
-  const gy = ground() - player.r;
-  if (player.y > gy) {
-    player.y = gy;
-    player.vy = 0;
+  // move flags
+  for (const f of flags) {
+    f.y += f.vy * dt * difficulty;
+    f.rot += f.vr * dt;
   }
 
-  // spawn timing
-  if (t % 65 === 0) spawn();
-
-  // move obstacles
-  for (const o of obstacles) {
-    o.x -= o.speed;
-  }
-  // remove offscreen + increase score
-  const before = obstacles.length;
-  obstacles = obstacles.filter(o => o.x + o.w > -30);
-  const removed = before - obstacles.length;
-  if (removed > 0) {
-    score += removed * 5;
-    scoreEl.textContent = String(score);
-  }
+  // cleanup
+  while (flags.length && flags[0].y > canvas.height + 120) flags.shift();
 
   // collision
-  for (const o of obstacles) {
-    if (collide(player, o)) {
-      die();
-      break;
+  for (const f of flags) {
+    if (rectHit(player, f)) {
+      lose();
+      return;
     }
   }
 
-  // slow score gain
-  if (t % 20 === 0) {
-    score += 1;
-    scoreEl.textContent = String(score);
-  }
-
-  draw();
-  requestAnimationFrame(step);
+  // score
+  score += Math.floor(dt * 100);
+  scoreText.textContent = String(score);
 }
 
-// controls
-document.addEventListener("keydown", (e) => {
-  if (e.code === "Space" || e.code === "ArrowUp") jump();
-});
+function drawRoundedRect(x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.arcTo(x+w, y, x+w, y+h, r);
+  ctx.arcTo(x+w, y+h, x, y+h, r);
+  ctx.arcTo(x, y+h, x, y, r);
+  ctx.arcTo(x, y, x+w, y, r);
+  ctx.closePath();
+}
 
-document.getElementById("gameWrap").addEventListener("pointerdown", () => {
-  // if game not started, start it
-  if (!running) {
-    running = true;
-    resetGame();
-    requestAnimationFrame(step);
-    return;
+function draw() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // background sheen
+  const g = ctx.createLinearGradient(0,0,canvas.width,canvas.height);
+  g.addColorStop(0, "rgba(124,77,255,0.18)");
+  g.addColorStop(0.55, "rgba(0,0,0,0.0)");
+  g.addColorStop(1, "rgba(60,200,255,0.14)");
+  ctx.fillStyle = g;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  // player
+  ctx.save();
+  ctx.shadowColor = "rgba(124,77,255,0.45)";
+  ctx.shadowBlur = 18;
+  ctx.fillStyle = "rgba(255,255,255,0.10)";
+  ctx.strokeStyle = "rgba(255,255,255,0.20)";
+  ctx.lineWidth = 2;
+  drawRoundedRect(player.x, player.y, player.w, player.h, 14);
+  ctx.fill();
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  ctx.fillStyle = "rgba(255,255,255,0.90)";
+  ctx.font = "700 18px ui-sans-serif,system-ui";
+  ctx.fillText("YOU", player.x + 12, player.y + 32);
+  ctx.restore();
+
+  // flags (red flags)
+  for (const f of flags) {
+    ctx.save();
+    ctx.translate(f.x + f.w/2, f.y + f.h/2);
+    ctx.rotate(f.rot);
+    ctx.shadowColor = "rgba(255,60,120,0.35)";
+    ctx.shadowBlur = 14;
+    ctx.fillStyle = "rgba(255,60,120,0.45)";
+    ctx.strokeStyle = "rgba(255,255,255,0.18)";
+    ctx.lineWidth = 2;
+    drawRoundedRect(-f.w/2, -f.h/2, f.w, f.h, 12);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = "rgba(255,255,255,0.92)";
+    ctx.font = "900 16px ui-sans-serif,system-ui";
+    ctx.fillText("🚩", -8, 6);
+    ctx.restore();
   }
-  jump();
-});
+}
 
-startBtn.addEventListener("click", () => {
-  running = true;
-  resetGame();
-  requestAnimationFrame(step);
-});
+let last = performance.now();
+function loop(now){
+  const dt = Math.min(0.033, (now - last) / 1000);
+  last = now;
 
-replayBtn.addEventListener("click", () => {
-  running = true;
-  resetGame();
-  requestAnimationFrame(step);
-});
+  if (running) step(dt);
+  draw();
 
-resetHSBtn.addEventListener("click", () => {
-  high = 0;
-  saveGameData({ high: 0 });
-  highEl.textContent = "0";
-});
+  requestAnimationFrame(loop);
+}
 
-// initial screen
-resetGame();
-draw();
+btnRestart.addEventListener("click", reset);
+btnReplay.addEventListener("click", reset);
+
+reset();
+requestAnimationFrame(loop);
